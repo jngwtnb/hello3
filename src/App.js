@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 //import ReactDOM from 'react-dom';
 //import logo from './logo.svg';
-//import './App.css';
+import './App.css';
 
 import '../node_modules/onsenui/css/onsenui.css';
 import '../node_modules/onsenui/css/onsen-css-components.css';
 import ons from 'onsenui';
 //import {Page, Button, Toolbar} from 'react-onsenui';
-import { Navigator, Page, Button, Toolbar, ToolbarButton, BackButton, Icon, Tab, Tabbar } from 'react-onsenui';
-
+import Ons, { Navigator, Page, Button, Toolbar, ToolbarButton, BackButton, Icon, Tab, Tabbar, Row, Col, Input } from 'react-onsenui';
+import Forms from './Forms';
 
 class TabPage3 extends React.Component {
   handleClick() {
@@ -107,10 +107,19 @@ class LoginPage extends React.Component {
     this.props.navigator.resetPage({ component: MainPage, title: "MainPage" });
   }
 
+  gotoforms() {
+    this.props.navigator.resetPage({ component: Forms, title: "Forms" })
+  }
+
   render() {
     return (
       <Page>
-        <div className="center"><Button onClick={this.resetPage.bind(this)}>login</Button></div>
+        <div className="inner">
+          <Input placeholder={'メールアドレス'} type={"text"} />
+          <div className="center"><Input placeholder={'パスワード'} type={"password"} /></div>
+          <div className="center"><Button onClick={this.resetPage.bind(this)}>login</Button></div>
+        </div>
+        <p style={{ textAlign: 'center' }}><Button onClick={this.gotoforms.bind(this)}>forms</Button></p>
       </Page>
     );
   }
