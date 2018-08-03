@@ -112,13 +112,19 @@ class LoginPage extends React.Component {
   }
 
   render() {
+//        <div className="outer"><div className="inner">
+//        </div></div>
+
+
     return (
       <Page>
-        <div className="inner">
-          <Input placeholder={'メールアドレス'} type={"text"} />
-          <div className="center"><Input placeholder={'パスワード'} type={"password"} /></div>
-          <div className="center"><Button onClick={this.resetPage.bind(this)}>login</Button></div>
-        </div>
+        <div className="inner"><div className="login-form-container">
+        <Input modifier="login-input-top" placeholder={'メールアドレス'} type={"text"} />
+        <Input modifier="login-input-middle" placeholder={'パスワード'} type={"password"} />
+        <Input modifier="login-input-bottom" placeholder={'パスワード'} type={"text"} />
+        <br />
+          <Button modifier="login-button-bottom" onClick={this.resetPage.bind(this)}>ログイン</Button>
+        </div></div>
         <p style={{ textAlign: 'center' }}><Button onClick={this.gotoforms.bind(this)}>forms</Button></p>
       </Page>
     );
