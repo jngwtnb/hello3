@@ -4,11 +4,13 @@ import React, { Component } from 'react';
 import './App.css';
 
 import '../node_modules/onsenui/css/onsenui.css';
-import '../node_modules/onsenui/css/onsen-css-components.css';
+//import '../node_modules/onsenui/css/onsen-css-components.css';
+import '../node_modules/onsenui/css/dark-onsen-css-components.css';
 import ons from 'onsenui';
 //import {Page, Button, Toolbar} from 'react-onsenui';
 import Ons, { Navigator, Page, Button, Toolbar, ToolbarButton, BackButton, Icon, Tab, Tabbar, Row, Col, Input } from 'react-onsenui';
 import Forms from './Forms';
+import dngr from './dongri_logo.png';
 
 class TabPage3 extends React.Component {
   handleClick() {
@@ -112,20 +114,21 @@ class LoginPage extends React.Component {
   }
 
   render() {
-//        <div className="outer"><div className="inner">
-//        </div></div>
-
-
     return (
       <Page>
-        <div className="inner"><div className="login-form-container">
-        <Input modifier="login-input-top" placeholder={'メールアドレス'} type={"text"} />
-        <Input modifier="login-input-middle" placeholder={'パスワード'} type={"password"} />
-        <Input modifier="login-input-bottom" placeholder={'パスワード'} type={"text"} />
-        <br />
-          <Button modifier="login-button-bottom" onClick={this.resetPage.bind(this)}>ログイン</Button>
-        </div></div>
-        <p style={{ textAlign: 'center' }}><Button onClick={this.gotoforms.bind(this)}>forms</Button></p>
+        <div className="login-container">
+          <img className="login-logo" src={dngr} alt="dngr" />
+          <div className="login-form">
+            <Input modifier="login-input-top" placeholder={'メールアドレス'} type={"text"} />
+            <Input modifier="login-input-middle" placeholder={'パスワード'} type={"password"} />
+            <Button modifier="login-button-bottom" onClick={this.resetPage.bind(this)}>ログイン</Button>
+          </div>
+        </div>
+        <p style={{
+  	      position: "absolute",
+          right: 0,
+          bottom: 0,
+        }}><Button onClick={this.gotoforms.bind(this)}>forms</Button></p>
       </Page>
     );
   }
@@ -140,6 +143,7 @@ export default class App extends React.Component {
   }
 
   render() {
+    ons.forcePlatformStyling('ios');
     return (
       <Navigator
         initialRoute={{ component: LoginPage, title: "LoginPage" }}
