@@ -1,16 +1,18 @@
 import React, { Component } from 'react';
 //import ReactDOM from 'react-dom';
 //import logo from './logo.svg';
-import './App.css';
 
 import '../node_modules/onsenui/css/onsenui.css';
-//import '../node_modules/onsenui/css/onsen-css-components.css';
-import '../node_modules/onsenui/css/dark-onsen-css-components.css';
+import '../node_modules/onsenui/css/onsen-css-components.css';
+import './App.css';
+
+//import '../node_modules/onsenui/css/dark-onsen-css-components.css';
 import ons from 'onsenui';
 //import {Page, Button, Toolbar} from 'react-onsenui';
 import Ons, { Navigator, Page, Button, Toolbar, ToolbarButton, BackButton, Icon, Tab, Tabbar, Row, Col, Input } from 'react-onsenui';
 import Forms from './Forms';
 import dngr from './dongri_logo.png';
+//import cordova from 'cordova';
 
 class TabPage3 extends React.Component {
   handleClick() {
@@ -24,12 +26,7 @@ class TabPage3 extends React.Component {
 
   render() {
     return (
-      <Page renderToolbar={() =>
-        <Toolbar>
-          <div className="center">{this.props.title}</div>
-        </Toolbar>
-      }>
-
+      <Page>
         <p style={{ padding: '0 15px' }}>
           This is the <strong>{this.props.title}</strong> page!
         </p>
@@ -47,11 +44,7 @@ class TabPage2 extends React.Component {
 
   render() {
     return (
-      <Page renderToolbar={() =>
-        <Toolbar>
-          <div className="center">{this.props.title}!!!</div>
-        </Toolbar>
-      }>
+      <Page>
 
         <p style={{ padding: '0 15px' }}>
           This is the <strong>{this.props.title}</strong> page!
@@ -63,40 +56,117 @@ class TabPage2 extends React.Component {
   }
 }
 
+class QrCodePage extends React.Component {
+  qr() {
+    console.log(window.cordova);
+/*
+  console.log(window);
+  console.log(window.cordova);
+  console.log(window.cordova.plugins);
+   */
 
-class MainPage extends React.Component {
-  renderTabs() {
-    const sections = [
-      'Home',
-      'Comments',
-    ];
+    if (window.cordova) {
+      window.plugins.barcodeScanner.scan(
+        function (result) {
+            alert("We got a barcode\n" +
+                  "Result: " + result.text + "\n" +
+                  "Format: " + result.format + "\n" +
+                  "Cancelled: " + result.cancelled);
+        }, 
+        function (error) {
+            alert("Scanning failed: " + error);
+        }
+      );  
+    }
 
-    let tabs = sections.map((section) => {
-      return {
-        content: <TabPage3 key={section} title={section} />,
-        tab: <Tab key={section} label={section} />
-      };
-    });
 
-    tabs.push({
-      content: <TabPage2 key={'Settings'} title={'Settings'} />,
-      tab: <Tab key={'Settings'} label={'Settings'} />
-    });
-
-    return tabs;
   }
 
-  popPage() {
-    this.props.navigator.popPage({ component: MainPage, title: "MainPage" });
+  handleClick() {
+    ons.notification.alert('Hello, world!');
+  }
+
+  render() {
+    return (
+      <Page>
+        <div className="send-form-container">
+          <div className="send-form-box">a</div>
+          <div className="send-form-label">送金に必要な項目を入力してください:</div>
+          <div className="send-form">
+            <Input modifier="underbar" placeholder={'メールアドレス'} type={"text"} />
+            <Input modifier="underbar" placeholder={'パスワード'} type={"text"} />
+            <Input modifier="underbar" placeholder={'メッセージ'} type={"text"} />
+            <Button modifier="send-button" onClick={this.qr.bind(this)}>送信</Button>
+          </div>
+        </div>
+      </Page>
+    )
+  }
+}
+
+class SendPage extends React.Component {
+  handleClick() {
+    ons.notification.alert('Hello, world!');
   }
 
   render() {
     return (
       <Page>
         <Tabbar
+          index={1}
+          swipeable={false}
+          position={"top"}
+          renderTabs={(activeIndex, tabbar) => [
+            {
+              content: <TabPage2 title="Send" key="Sendaa" active={activeIndex === 0} tabbar={tabbar} />,
+              tab: <Tab label="タッチ支払い" key="Sendaaaaaaaaaa" icon="home" />
+            },
+            {
+              content: <QrCodePage title="QrCode" key="QrCode" active={activeIndex === 1} tabbar={tabbar} />,
+              tab: <Tab label="QRコード" key="QrCodeTab" icon="md-settings" />
+            },
+          ]}
+        />
+      </Page>
+    )
+  }
+}
+
+class MainPage extends React.Component {
+  popPage() {
+    this.props.navigator.popPage({ component: MainPage, title: "MainPage" });
+  }
+
+  render() {
+    return (
+      <Page renderToolbar={() => 
+        <Toolbar>
+          <div className="left">ざんだか</div>
+          <div className="center">12,300DNGR</div>
+          <div className="right">をれっと</div>
+        </Toolbar>
+      }>
+        <Tabbar
           initialIndex={1}
-          renderTabs={this.renderTabs}
           swipeable={true}
+          renderTabs={(activeIndex, tabbar) => [
+            {
+              content: <SendPage title="Send" key="Send" active={activeIndex === 0} tabbar={tabbar} />,
+              tab: <Tab label="送金" key="SendTab" icon="home" />
+            },
+            {
+              content: <TabPage2 title="Receive" key="Receive" active={activeIndex === 1} tabbar={tabbar} />,
+              tab: <Tab label="受取" key="ReceiveTab" icon="md-settings" />
+            },
+            {
+              content: <TabPage2 title="History" key="History" active={activeIndex === 2} tabbar={tabbar} />,
+              tab: <Tab label="履歴" key="HistoryTab" icon="md-settings" />
+            },
+            {
+              content: <TabPage2 title="Settings" key="Setting" active={activeIndex === 3} tabbar={tabbar} />,
+              tab: <Tab label="設定" key="SettingsTab" icon="md-settings" />
+            },
+          ]}
         />
       </Page>
 
@@ -116,7 +186,7 @@ class LoginPage extends React.Component {
   render() {
     return (
       <Page>
-        <div className="login-container">
+        <div className="login-form-container">
           <img className="login-logo" src={dngr} alt="dngr" />
           <div className="login-form">
             <Input modifier="login-input-top" placeholder={'メールアドレス'} type={"text"} />
@@ -125,7 +195,7 @@ class LoginPage extends React.Component {
           </div>
         </div>
         <p style={{
-  	      position: "absolute",
+          position: "absolute",
           right: 0,
           bottom: 0,
         }}><Button onClick={this.gotoforms.bind(this)}>forms</Button></p>
@@ -148,7 +218,7 @@ export default class App extends React.Component {
       <Navigator
         initialRoute={{ component: LoginPage, title: "LoginPage" }}
         renderPage={this.renderPage}
-     //   animation={"none"}
+      //   animation={"none"}
       />
     );
   }
