@@ -9,7 +9,7 @@ import './App.css';
 //import '../node_modules/onsenui/css/dark-onsen-css-components.css';
 import ons from 'onsenui';
 //import {Page, Button, Toolbar} from 'react-onsenui';
-import Ons, { Navigator, Page, Button, Toolbar, ToolbarButton, BackButton, Icon, Tab, Tabbar, Row, Col, Input } from 'react-onsenui';
+import Ons, { Navigator, Page, Button, Toolbar, ToolbarButton, BackButton, Icon, Tab, Tabbar, Row, Col, Input, List, ListItem } from 'react-onsenui';
 import Forms from './Forms';
 import dngr from './dongri_logo.png';
 //import cordova from 'cordova';
@@ -56,6 +56,54 @@ class TabPage2 extends React.Component {
   }
 }
 
+class HistoryPage extends React.Component {
+  handleClick() {
+    ons.notification.alert('Hello, world!');
+  }
+
+  render() {
+    return (
+      <Page>
+        <Tabbar
+          index={0}
+          swipeable={false}
+          position={"top"}
+          renderTabs={(activeIndex, tabbar) => [
+            {
+              content: <HistoryPage2 title="History" key="History" active={activeIndex === 0} tabbar={tabbar} />,
+              tab: <Tab label="並べ替え" key="Hisotoryyyyyyyyyy" icon="home" />
+            },
+          ]}
+        />
+      </Page>
+    )
+  }
+}
+
+class HistoryPage2 extends React.Component {
+  handleClick() {
+    ons.notification.alert('Hello, world!');
+  }
+
+  render() {
+    return (
+      <Page>
+        <List
+          modifier="inset2 noborder"
+          dataSource={['Row 1', 'Row 2', 'Row 2', 'Row 2', 'Row 2', 'Row 2', 'Row 2', 'Row 2', 'Row 2', 'Row 2']}
+          renderRow={(row, idx) => 
+            <ListItem key={row+idx} modifier="nodivider inset">
+              <Icon size={{default: 32}} style={{color: "limegreen"}} icon={{default: 'fa-check-square'}}/>
+              {row}
+              <Button modifier="quiet">Remove</Button>
+            </ListItem>
+          }
+        />
+      </Page>
+    )
+  }
+}
+
 class QrCodePage extends React.Component {
   qr() {
     console.log(window.cordova);
@@ -90,7 +138,7 @@ class QrCodePage extends React.Component {
     return (
       <Page>
         <div className="send-form-container">
-          <div className="send-form-box">a</div>
+          <div className="send-form-box" />
           <div className="send-form-label">送金に必要な項目を入力してください:</div>
           <div className="send-form">
             <Input modifier="underbar" placeholder={'メールアドレス'} type={"text"} />
@@ -159,7 +207,7 @@ class MainPage extends React.Component {
               tab: <Tab label="受取" key="ReceiveTab" icon="md-settings" />
             },
             {
-              content: <TabPage2 title="History" key="History" active={activeIndex === 2} tabbar={tabbar} />,
+              content: <HistoryPage title="History" key="History" active={activeIndex === 2} tabbar={tabbar} />,
               tab: <Tab label="履歴" key="HistoryTab" icon="md-settings" />
             },
             {

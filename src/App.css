@@ -84,7 +84,7 @@
 }
 
 .send-form-container {
-  position: absolute;
+  position: relative;
   top: 50%;
   left: 50%;
   transform: translateY(-50%) translateX(-50%);
@@ -130,4 +130,18 @@
   min-height: 1vh;
   padding: 0px !important;
   text-align: center;
+}
+
+.list--inset2 {
+  margin: 16px;
+  background-color: transparent;
+  box-sizing: border-box;
+}
+
+.list-item--inset {
+  box-sizing: border-box;
+  margin: 8px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
 }
