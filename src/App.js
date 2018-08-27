@@ -86,16 +86,49 @@ class HistoryPage2 extends React.Component {
   }
 
   render() {
+    /*
+                  {data.datetime}
+              {data.amount}
+              <Button>{data.type}</Button>
+              {data.wallet}
+
+    */
     return (
       <Page>
         <List
-          modifier="inset2 noborder"
-          dataSource={['Row 1', 'Row 2', 'Row 2', 'Row 2', 'Row 2', 'Row 2', 'Row 2', 'Row 2', 'Row 2', 'Row 2']}
-          renderRow={(row, idx) => 
-            <ListItem key={row+idx} modifier="nodivider inset">
-              <Icon size={{default: 32}} style={{color: "limegreen"}} icon={{default: 'fa-check-square'}}/>
-              {row}
-              <Button modifier="quiet">Remove</Button>
+          modifier="myinset noborder"
+          dataSource={[
+            {'state': '完了',   'datetime': '2018/7/8 19:34', 'amount': '4469',    'type': '受取',     'wallet': "kawazu"},
+            {'state': '完了',   'datetime': '2018/7/8 19:34', 'amount': '198000',  'type': '送金',     'wallet': "Taketotto's"},
+            {'state': '完了',   'datetime': '2018/7/8 19:34', 'amount': '4980000', 'type': 'チャージ', 'wallet': "河島高志の財布"},
+            {'state': '未確認', 'datetime': '2018/7/8 19:34', 'amount': '4469',    'type': '受取',     'wallet': "kawazu"},
+            {'state': '不明',   'datetime': '2018/7/8 19:34', 'amount': '198000',  'type': '送金',     'wallet': "Taketotto's"},
+            {'state': '完了',   'datetime': '2018/7/8 19:34', 'amount': '4980000', 'type': 'チャージ', 'wallet': "河島高志の財布"},
+          ]}
+          renderRow={(data, idx) => 
+            <ListItem key={data+idx} modifier="nodivider inset">
+              <div className="list-item-container">
+                <div className="bordertest" style={{verticalAlign: "middle", display: "table", textAlign: "center"}}>
+                  <Icon size={{default: 32}} style={{color: "limegreen", textAlign: "center", verticalAlign: "middle"}} icon={{default: 'fa-check-square'}}/>
+                  <span style={{whiteSpace: "nowrap", fontSize: "12px", textAlign: "center", verticalAlign: "middle"}}>{data.state}</span>
+                </div>
+                <div className="bordertest" style={{}}>
+                  {data.datetime}
+                </div>
+                <div style={{display: "table", verticalAlign: "middle", width: "20%"}}>
+                  <span style={{display: "table-cell", verticalAlign: "middle"}}>
+                    <Icon size={{default: 32}} icon={{default: "fa-circle-o"}}/>
+                  </span>
+                  <span style={{display: "table-cell", verticalAlign: "middle"}}>{data.amount} DNGR</span>
+                </div>
+                <div style={{width: "10%"}}>
+                  <Button style={{margin: "0px 0px", whiteSpace: "pre-line"}}>{data.type}</Button>
+                </div>
+                <div style={{whiteSpace: "nowrap", display: "table", width: "20%"}}>
+                  <span style={{display: "table-cell", verticalAlign: "middle"}}><Icon size={{default: 32}} icon={{default: "md-balance-wallet"}}/></span>
+                  <span style={{whiteSpace: "normal", display: "table-cell", verticalAlign: "middle"}}>{data.wallet}</span>
+                </div>
+              </div>
             </ListItem>
           }
         />

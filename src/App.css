@@ -132,7 +132,7 @@
   text-align: center;
 }
 
-.list--inset2 {
+.list--myinset {
   margin: 16px;
   background-color: transparent;
   box-sizing: border-box;
@@ -144,4 +144,19 @@
   border: 1px solid #ccc;
   border-radius: 4px;
   background-color: #fff;
+}
+
+.list-item-container {
+  width: 100%;
+  display: flex !important;
+  flex-flow: row nowrap !important;
+  flex-basis: fill;
+  justify-content: space-between !important;
+  align-items: center !important;
+  padding: 0px;
+  margin: 0px;
+}
+
+.list-item-container div {
+  border: 1px solid #000;
 }
