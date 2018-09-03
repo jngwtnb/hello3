@@ -9,10 +9,15 @@ import './App.css';
 //import '../node_modules/onsenui/css/dark-onsen-css-components.css';
 import ons from 'onsenui';
 //import {Page, Button, Toolbar} from 'react-onsenui';
-import Ons, { Navigator, Page, Button, Toolbar, ToolbarButton, BackButton, Icon, Tab, Tabbar, Row, Col, Input, List, ListItem } from 'react-onsenui';
+import Ons, { Navigator, Page, Button, Toolbar, ToolbarButton, BackButton, Icon, Tab, Tabbar, Row, Col, Input, List, ListItem, PullHook } from 'react-onsenui';
 import Forms from './Forms';
 import dngr from './dongri_logo.png';
 //import cordova from 'cordova';
+import '../node_modules/@fortawesome/fontawesome';
+import '../node_modules/@fortawesome/fontawesome-free-solid';
+//require('@fortawesome/fontawesome')
+//require('@fortawesome/fontawesome-free-solid')
+import axios from 'axios';
 
 class TabPage3 extends React.Component {
   handleClick() {
@@ -81,52 +86,162 @@ class HistoryPage extends React.Component {
 }
 
 class HistoryPage2 extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      pullHookState: 'initial',
+      data: [],
+    }
+
+    this.icons = {
+      '完了':   {color: "limegreen", name:{default: 'fa-check-square'}},
+      '未確認': {color: "red", name:{default: 'fa-exclamation'}},
+      '不明':   {color: "yellow", name:{default: 'fa-question'}},
+    };
+  }
+
   handleClick() {
     ons.notification.alert('Hello, world!');
   }
 
+  handleLoad(done) {
+    if (this.timeout) {
+      clearTimeout(this.timeout);
+    }
+
+    axios.get("https://www.google.com/")
+      .then(response => {
+        ons.notification.alert('status:', response.status);
+        ons.notification.alert('body:', response.data);
+//        console.log('status:', response.status); // 200
+//        console.log('body:', response.data);     // response body.
+      })
+      .catch(err => {
+        ons.notification.alert('err:', err);
+      });
+
+    //    fetch("https://www.google.com/")
+
+/*
+    fetch('http://apps.cowry.co.jp/Monet2/api/wallet/history/?deviceId=13CZLXCy6MD2L4iwEeeyXTB8pDAmdQyhD5&limit=100&offset=0', {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      }})
+      .then((response) => {
+        console.log(response);
+        if(response.ok) {
+          return response.json();
+        } else {
+          throw new Error();
+        }
+      })
+      .then((json) => {
+        let history = json;
+
+
+  //{"amount":"324.00000000","cause":"Receive","createdAt":1535788541632}
+
+        let data = history.histories.map((data) => {
+          ons.notification.alert(data);
+        });
+
+
+        this.setState({
+          data: history.histories,
+        }, done);
+
+      })
+      .catch((error) => console.log(error));
+      */
+  }
+
+  componentWillUnmount() {
+    if (this.timeout) {
+      clearTimeout(this.timeout);
+    }
+  }
+
+  handleChange(event) {
+    this.setState({
+      pullHookState: event.state
+    });
+  }
+
   render() {
     /*
-                  {data.datetime}
-              {data.amount}
-              <Button>{data.type}</Button>
-              {data.wallet}
 
     */
+    let dataSource = [
+      {'status': '完了',   'datetime': '2018/7/8 19:34', price: {'amount': '4469'},    'cause': '受取',     'wallet': "kawazu"},
+      {'status': '完了',   'datetime': '2018/7/8 19:34', price: {'amount': '198000'},  'cause': '送金',     'wallet': "Taketotto's"},
+      {'status': '完了',   'datetime': '2018/7/8 19:34', price: {'amount': '4980000'}, 'cause': 'チャージ', 'wallet': "河島高志の財布"},
+      {'status': '未確認', 'datetime': '2018/7/8 19:34', price: {'amount': '4469'},    'cause': '受取',     'wallet': "kawazu"},
+      {'status': '不明',   'datetime': '2018/7/8 19:34', price: {'amount': '198000'},  'cause': '送金',     'wallet': "Taketotto's"},
+      {'status': '完了',   'datetime': '2018/7/8 19:34', price: {'amount': '4980000'}, 'cause': 'チャージ', 'wallet': "河島高志の財布"},
+    ];
+
+    for (let datum of dataSource ) {
+      datum.icon = this.icons[datum.status];
+
+      let priceLength = datum.price.amount.length;
+      if (priceLength >= 7) {
+        datum.price.color = "red";
+      } else if (priceLength >= 6) {
+        datum.price.color = "green";
+      } else {
+        datum.price.color = "black";
+      }
+
+    }
+
+    let pullHookContent;
+    const state = this.state.pullHookState;
+
+    if (state === 'initial') {
+      pullHookContent = 'Pull';
+    }
+    else if (state === 'preaction') {
+      pullHookContent = 'Release';
+    }
+    else {
+      pullHookContent = <Icon icon='spinner' spin />;
+    }
+
     return (
       <Page>
+        <PullHook onChange={this.handleChange.bind(this)} onLoad={this.handleLoad.bind(this)}>
+          {pullHookContent}
+        </PullHook>
         <List
           modifier="myinset noborder"
-          dataSource={[
-            {'state': '完了',   'datetime': '2018/7/8 19:34', 'amount': '4469',    'type': '受取',     'wallet': "kawazu"},
-            {'state': '完了',   'datetime': '2018/7/8 19:34', 'amount': '198000',  'type': '送金',     'wallet': "Taketotto's"},
-            {'state': '完了',   'datetime': '2018/7/8 19:34', 'amount': '4980000', 'type': 'チャージ', 'wallet': "河島高志の財布"},
-            {'state': '未確認', 'datetime': '2018/7/8 19:34', 'amount': '4469',    'type': '受取',     'wallet': "kawazu"},
-            {'state': '不明',   'datetime': '2018/7/8 19:34', 'amount': '198000',  'type': '送金',     'wallet': "Taketotto's"},
-            {'state': '完了',   'datetime': '2018/7/8 19:34', 'amount': '4980000', 'type': 'チャージ', 'wallet': "河島高志の財布"},
-          ]}
+          dataSource={this.state.data}
           renderRow={(data, idx) => 
             <ListItem key={data+idx} modifier="nodivider inset">
               <div className="list-item-container">
-                <div className="bordertest" style={{verticalAlign: "middle", display: "table", textAlign: "center"}}>
-                  <Icon size={{default: 32}} style={{color: "limegreen", textAlign: "center", verticalAlign: "middle"}} icon={{default: 'fa-check-square'}}/>
-                  <span style={{whiteSpace: "nowrap", fontSize: "12px", textAlign: "center", verticalAlign: "middle"}}>{data.state}</span>
+                <div className="status">
+                  <Icon size={{default: 24}} fixedWidth={true} style={{color: data.icon.color}} icon={data.icon.name}/>
+                  {data.status}
                 </div>
-                <div className="bordertest" style={{}}>
+                <div className="datetime">
                   {data.datetime}
                 </div>
-                <div style={{display: "table", verticalAlign: "middle", width: "20%"}}>
-                  <span style={{display: "table-cell", verticalAlign: "middle"}}>
-                    <Icon size={{default: 32}} icon={{default: "fa-circle-o"}}/>
+                <div className="price">
+                  <span className="icon"><Icon size={{default: 24}} icon={{default: "fa-coins"}}/></span>
+                  <span className="text">
+                    <span className="amount" style={{color: data.price.color}}>{data.price.amount}</span>
+                    <br/>
+                    <span className="ticker">DNGR</span>
                   </span>
-                  <span style={{display: "table-cell", verticalAlign: "middle"}}>{data.amount} DNGR</span>
                 </div>
-                <div style={{width: "10%"}}>
-                  <Button style={{margin: "0px 0px", whiteSpace: "pre-line"}}>{data.type}</Button>
+                <div className="cause">
+                  <span>{data.cause}</span>
                 </div>
-                <div style={{whiteSpace: "nowrap", display: "table", width: "20%"}}>
-                  <span style={{display: "table-cell", verticalAlign: "middle"}}><Icon size={{default: 32}} icon={{default: "md-balance-wallet"}}/></span>
-                  <span style={{whiteSpace: "normal", display: "table-cell", verticalAlign: "middle"}}>{data.wallet}</span>
+                <div className="wallet">
+                  <span className="wallet-icon"><Icon size={{default: 16}} icon={{default: "fa-wallet"}}/></span>
+                  <span className="wallet-text">{data.wallet}</span>
                 </div>
               </div>
             </ListItem>
