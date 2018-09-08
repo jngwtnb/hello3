@@ -1085,10 +1085,6 @@ balanced-match@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/balanced-match/-/balanced-match-1.0.0.tgz#89b4d199ab2bee49de164ea02b89ce462d71b767"
 
-base64-js@1.1.2:
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/base64-js/-/base64-js-1.1.2.tgz#d6400cac1c4c660976d90d07a04351d89395f5e8"
-
 base64-js@1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/base64-js/-/base64-js-1.2.0.tgz#a39992d723584811982be5e290bb6a53d86700f1"
@@ -1191,21 +1187,11 @@ boxen@^1.2.1:
     term-size "^1.2.0"
     widest-line "^2.0.0"
 
-bplist-creator@0.0.7:
-  version "0.0.7"
-  resolved "https://registry.yarnpkg.com/bplist-creator/-/bplist-creator-0.0.7.tgz#37df1536092824b87c42f957b01344117372ae45"
-  dependencies:
-    stream-buffers "~2.2.0"
-
-bplist-parser@0.1.1, bplist-parser@^0.1.0:
+bplist-parser@^0.1.0:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/bplist-parser/-/bplist-parser-0.1.1.tgz#d60d5dcc20cba6dc7e1f299b35d3e1f95dafbae6"
   dependencies:
     big-integer "^1.6.7"
-
-bplist-parser@^0.0.6:
-  version "0.0.6"
-  resolved "https://registry.yarnpkg.com/bplist-parser/-/bplist-parser-0.0.6.tgz#38da3471817df9d44ab3892e27707bbbd75a11b9"
 
 brace-expansion@^1.0.0, brace-expansion@^1.1.7:
   version "1.1.11"
@@ -1685,7 +1671,7 @@ compressible@~2.0.14:
   dependencies:
     mime-db ">= 1.34.0 < 2"
 
-compression@^1.5.2, compression@^1.6.0:
+compression@^1.5.2:
   version "1.7.3"
   resolved "https://registry.yarnpkg.com/compression/-/compression-1.7.3.tgz#27e0e176aaf260f7f2c2813c3e440adb9f1993db"
   dependencies:
@@ -1788,16 +1774,7 @@ cordova-android@^7.0.0:
     shelljs "0.5.3"
     xmlbuilder "8.2.2"
 
-cordova-browser@^5.0.3:
-  version "5.0.3"
-  resolved "https://registry.yarnpkg.com/cordova-browser/-/cordova-browser-5.0.3.tgz#f7e54202fdf09694385d78c0ad872410cb094df5"
-  dependencies:
-    cordova-common "^2.1.1"
-    cordova-serve "^2.0.0"
-    nopt "^3.0.6"
-    shelljs "^0.5.3"
-
-cordova-common@2.2.5, cordova-common@^2.0.0, cordova-common@^2.1.1:
+cordova-common@2.2.5:
   version "2.2.5"
   resolved "https://registry.yarnpkg.com/cordova-common/-/cordova-common-2.2.5.tgz#f93cef2ad494cfcbf56c46e3d612aaa9cb5fcc32"
   dependencies:
@@ -1813,28 +1790,6 @@ cordova-common@2.2.5, cordova-common@^2.0.0, cordova-common@^2.1.1:
     underscore "^1.8.3"
     unorm "^1.3.3"
 
-cordova-ios@^4.5.5:
-  version "4.5.5"
-  resolved "https://registry.yarnpkg.com/cordova-ios/-/cordova-ios-4.5.5.tgz#af73dab0650ea8a38fff0e7863fde5fc7bad753c"
-  dependencies:
-    base64-js "1.2.0"
-    cordova-common "2.2.5"
-    elementtree "0.1.6"
-    glob "5.0.15"
-    ios-sim "6.1.3"
-    nopt "3.0.6"
-    plist "2.1.0"
-    q "1.5.1"
-    sax "0.3.5"
-    shelljs "0.5.3"
-    simple-plist "0.2.1"
-    stream-buffers "2.2.0"
-    tail "0.4.0"
-    uuid "3.0.1"
-    xcode "0.9.3"
-    xml-escape "1.1.0"
-    xmlbuilder "8.2.2"
-
 cordova-plugin-whitelist@^1.3.3:
   version "1.3.3"
   resolved "https://registry.yarnpkg.com/cordova-plugin-whitelist/-/cordova-plugin-whitelist-1.3.3.tgz#b5e85ecdbbfe5aeded40a1bf4ee2372e67d96fb4"
@@ -1842,29 +1797,6 @@ cordova-plugin-whitelist@^1.3.3:
 cordova-registry-mapper@^1.1.8:
   version "1.1.15"
   resolved "https://registry.yarnpkg.com/cordova-registry-mapper/-/cordova-registry-mapper-1.1.15.tgz#e244b9185b8175473bff6079324905115f83dc7c"
-
-cordova-serve@^2.0.0:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/cordova-serve/-/cordova-serve-2.0.1.tgz#79e384b9da0d45fb3bd6ea46bd69120dbfda3971"
-  dependencies:
-    chalk "^1.1.1"
-    compression "^1.6.0"
-    express "^4.13.3"
-    opn "^5.3.0"
-    shelljs "^0.5.3"
-
-cordova-windows@^5.0.0:
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/cordova-windows/-/cordova-windows-5.0.0.tgz#7d645393e6f212cb4bd17156719945484cee75fe"
-  dependencies:
-    cordova-common "^2.0.0"
-    elementtree "^0.1.6"
-    node-uuid "^1.4.3"
-    nopt "^3.0.4"
-    q "^1.4.1"
-    semver "^5.3.0"
-    shelljs "^0.5.3"
-    winjs "^4.4.0"
 
 core-js@^1.0.0:
   version "1.2.7"
@@ -2370,12 +2302,6 @@ elementtree@0.1.6:
   resolved "https://registry.yarnpkg.com/elementtree/-/elementtree-0.1.6.tgz#2ac4c46ea30516c8c4cbdb5e3ac7418e592de20c"
   dependencies:
     sax "0.3.5"
-
-elementtree@^0.1.6:
-  version "0.1.7"
-  resolved "https://registry.yarnpkg.com/elementtree/-/elementtree-0.1.7.tgz#9ac91be6e52fb6e6244c4e54a4ac3ed8ae8e29c0"
-  dependencies:
-    sax "1.1.4"
 
 elliptic@^6.0.0:
   version "6.4.0"
@@ -3736,15 +3662,6 @@ invariant@^2.2.2:
 invert-kv@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/invert-kv/-/invert-kv-1.0.0.tgz#104a8e4aaca6d3d8cd157a8ef8bfab2d7a3ffdb6"
-
-ios-sim@6.1.3:
-  version "6.1.3"
-  resolved "https://registry.yarnpkg.com/ios-sim/-/ios-sim-6.1.3.tgz#4ca2c63f8beea01b21f92a4fb9fa125b3afeb00c"
-  dependencies:
-    bplist-parser "^0.0.6"
-    nopt "1.0.9"
-    plist "^2.1.0"
-    simctl "^1.1.1"
 
 ip@^1.1.0, ip@^1.1.5:
   version "1.1.5"
@@ -5125,25 +5042,9 @@ node-pre-gyp@^0.10.0:
     semver "^5.3.0"
     tar "^4"
 
-node-uuid@^1.4.3:
-  version "1.4.8"
-  resolved "https://registry.yarnpkg.com/node-uuid/-/node-uuid-1.4.8.tgz#b040eb0923968afabf8d32fb1f17f1167fdab907"
-
-nopt@1.0.9:
-  version "1.0.9"
-  resolved "https://registry.yarnpkg.com/nopt/-/nopt-1.0.9.tgz#3bc0d7cba7bfb0d5a676dbed7c0ebe48a4fd454e"
-  dependencies:
-    abbrev "1"
-
 nopt@3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/nopt/-/nopt-3.0.1.tgz#bce5c42446a3291f47622a370abbf158fbbacbfd"
-  dependencies:
-    abbrev "1"
-
-nopt@3.0.6, nopt@^3.0.4, nopt@^3.0.6:
-  version "3.0.6"
-  resolved "https://registry.yarnpkg.com/nopt/-/nopt-3.0.6.tgz#c6465dbf08abcd4db359317f79ac68a646b28ff9"
   dependencies:
     abbrev "1"
 
@@ -5314,7 +5215,7 @@ opn@5.2.0:
   dependencies:
     is-wsl "^1.1.0"
 
-opn@^5.1.0, opn@^5.3.0:
+opn@^5.1.0:
   version "5.3.0"
   resolved "https://registry.yarnpkg.com/opn/-/opn-5.3.0.tgz#64871565c863875f052cfdf53d3e3cb5adb53b1c"
   dependencies:
@@ -5535,10 +5436,6 @@ pbkdf2@^3.0.3:
     safe-buffer "^5.0.1"
     sha.js "^2.4.8"
 
-pegjs@^0.10.0:
-  version "0.10.0"
-  resolved "https://registry.yarnpkg.com/pegjs/-/pegjs-0.10.0.tgz#cf8bafae6eddff4b5a7efb185269eaaf4610ddbd"
-
 performance-now@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/performance-now/-/performance-now-2.1.0.tgz#6309f4e0e5fa913ec1c69307ae364b4b377c9e7b"
@@ -5576,14 +5473,6 @@ pkg-dir@^2.0.0:
   resolved "https://registry.yarnpkg.com/pkg-dir/-/pkg-dir-2.0.0.tgz#f6d5d1109e19d63edf428e0bd57e12777615334b"
   dependencies:
     find-up "^2.1.0"
-
-plist@2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/plist/-/plist-2.0.1.tgz#0a32ca9481b1c364e92e18dc55c876de9d01da8b"
-  dependencies:
-    base64-js "1.1.2"
-    xmlbuilder "8.2.2"
-    xmldom "0.1.x"
 
 plist@2.1.0, plist@^2.1.0:
   version "2.1.0"
@@ -6031,7 +5920,7 @@ q@1.4.1:
   version "1.4.1"
   resolved "https://registry.yarnpkg.com/q/-/q-1.4.1.tgz#55705bcd93c5f3673530c2c2cbc0c2b3addc286e"
 
-q@1.5.1, q@^1.1.2, q@^1.4.1:
+q@^1.1.2, q@^1.4.1:
   version "1.5.1"
   resolved "https://registry.yarnpkg.com/q/-/q-1.5.1.tgz#7e32f75b41381291d04611f1bf14109ac00651d7"
 
@@ -6548,10 +6437,6 @@ sax@0.3.5:
   version "0.3.5"
   resolved "https://registry.yarnpkg.com/sax/-/sax-0.3.5.tgz#88fcfc1f73c0c8bbd5b7c776b6d3f3501eed073d"
 
-sax@1.1.4:
-  version "1.1.4"
-  resolved "https://registry.yarnpkg.com/sax/-/sax-1.1.4.tgz#74b6d33c9ae1e001510f179a91168588f1aedaa9"
-
 sax@>=0.6.0, sax@^1.2.1, sax@^1.2.4, sax@~1.2.1:
   version "1.2.4"
   resolved "https://registry.yarnpkg.com/sax/-/sax-1.2.4.tgz#2816234e2378bddc4e5354fab5caa895df7100d9"
@@ -6702,10 +6587,6 @@ shelljs@0.5.3, shelljs@^0.5.3:
   version "0.5.3"
   resolved "https://registry.yarnpkg.com/shelljs/-/shelljs-0.5.3.tgz#c54982b996c76ef0c1e6b59fbdc5825f5b713113"
 
-shelljs@^0.2.6:
-  version "0.2.6"
-  resolved "https://registry.yarnpkg.com/shelljs/-/shelljs-0.2.6.tgz#90492d72ffcc8159976baba62fb0f6884f0c3378"
-
 shellwords@^0.1.1:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/shellwords/-/shellwords-0.1.1.tgz#d6b9181c1a48d397324c84871efbcfc73fc0654b"
@@ -6713,21 +6594,6 @@ shellwords@^0.1.1:
 signal-exit@^3.0.0, signal-exit@^3.0.2:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/signal-exit/-/signal-exit-3.0.2.tgz#b5fdc08f1287ea1178628e415e25132b73646c6d"
-
-simctl@^1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/simctl/-/simctl-1.1.1.tgz#e26cc3c04e662250b4457b5b4c48cc12484f3814"
-  dependencies:
-    shelljs "^0.2.6"
-    tail "^0.4.0"
-
-simple-plist@0.2.1, simple-plist@^0.2.1:
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/simple-plist/-/simple-plist-0.2.1.tgz#71766db352326928cf3a807242ba762322636723"
-  dependencies:
-    bplist-creator "0.0.7"
-    bplist-parser "0.1.1"
-    plist "2.0.1"
 
 slash@^1.0.0:
   version "1.0.0"
@@ -6930,10 +6796,6 @@ stream-browserify@^2.0.1:
     inherits "~2.0.1"
     readable-stream "^2.0.2"
 
-stream-buffers@2.2.0, stream-buffers@~2.2.0:
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/stream-buffers/-/stream-buffers-2.2.0.tgz#91d5f5130d1cef96dcfa7f726945188741d09ee4"
-
 stream-combiner@~0.0.4:
   version "0.0.4"
   resolved "https://registry.yarnpkg.com/stream-combiner/-/stream-combiner-0.0.4.tgz#4d5e433c185261dde623ca3f44c586bcf5c4ad14"
@@ -7106,10 +6968,6 @@ table@^4.0.1:
     lodash "^4.17.4"
     slice-ansi "1.0.0"
     string-width "^2.1.1"
-
-tail@0.4.0, tail@^0.4.0:
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/tail/-/tail-0.4.0.tgz#d29de72750cc99db1e053aff13c359ecfb713002"
 
 tapable@^0.2.7:
   version "0.2.8"
@@ -7469,10 +7327,6 @@ utils-merge@1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/utils-merge/-/utils-merge-1.0.1.tgz#9f95710f50a267947b2ccc124741c1028427e713"
 
-uuid@3.0.1:
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.0.1.tgz#6544bba2dfda8c1cf17e629a3a305e2bb1fee6c1"
-
 uuid@^2.0.2:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-2.0.3.tgz#67e2e863797215530dff318e5bf9dcebfd47b21a"
@@ -7722,10 +7576,6 @@ window-size@0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/window-size/-/window-size-0.1.0.tgz#5438cd2ea93b202efa3a19fe8887aee7c94f9c9d"
 
-winjs@^4.4.0:
-  version "4.4.3"
-  resolved "https://registry.yarnpkg.com/winjs/-/winjs-4.4.3.tgz#085a105018ffe16f9797bf69bd9c1fd6d428ade3"
-
 wordwrap@0.0.2:
   version "0.0.2"
   resolved "https://registry.yarnpkg.com/wordwrap/-/wordwrap-0.0.2.tgz#b79669bb42ecb409f83d583cad52ca17eaa1643f"
@@ -7769,21 +7619,9 @@ write@^0.2.1:
   dependencies:
     mkdirp "^0.5.1"
 
-xcode@0.9.3:
-  version "0.9.3"
-  resolved "https://registry.yarnpkg.com/xcode/-/xcode-0.9.3.tgz#910a89c16aee6cc0b42ca805a6d0b4cf87211cf3"
-  dependencies:
-    pegjs "^0.10.0"
-    simple-plist "^0.2.1"
-    uuid "3.0.1"
-
 xdg-basedir@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/xdg-basedir/-/xdg-basedir-3.0.0.tgz#496b2cc109eca8dbacfe2dc72b603c17c5870ad4"
-
-xml-escape@1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/xml-escape/-/xml-escape-1.1.0.tgz#3904c143fa8eb3a0030ec646d2902a2f1b706c44"
 
 xml-name-validator@^2.0.1:
   version "2.0.1"
