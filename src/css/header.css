@@ -1,0 +1,22 @@
+.toolbar--header {
+  height: 80px;
+  background-color: white;
+  width: 100%;
+}
+
+.toolbar+.page__background+.page__content {
+  top: 80px;
+}
+
+.toolbar-container {
+  border: 1px solid #000;
+  width: 100vw;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.hidden-tab {
+  display: none;
+}

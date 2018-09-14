@@ -4,20 +4,19 @@ import React, { Component } from 'react';
 
 import '../node_modules/onsenui/css/onsenui.css';
 import '../node_modules/onsenui/css/onsen-css-components.css';
-import './App.css';
-
-//import '../node_modules/onsenui/css/dark-onsen-css-components.css';
-import ons from 'onsenui';
-//import {Page, Button, Toolbar} from 'react-onsenui';
-import Ons, { Navigator, Page, Button, Toolbar, ToolbarButton, BackButton, Icon, Tab, Tabbar, Row, Col, Input, List, ListItem, PullHook, ListHeader } from 'react-onsenui';
-import Forms from './Forms';
-import dngr from './dongri_logo.png';
-//import cordova from 'cordova';
 import '../node_modules/@fortawesome/fontawesome';
 import '../node_modules/@fortawesome/fontawesome-free-solid';
+import './App.css';
+import './css/list.css';
+import './css/header.css';
 //require('@fortawesome/fontawesome')
 //require('@fortawesome/fontawesome-free-solid')
-import axios from 'axios';
+//import '../node_modules/onsenui/css/dark-onsen-css-components.css';
+
+import ons from 'onsenui';
+import Ons, { Navigator, Page, Button, BottomToolbar, Toolbar, ToolbarButton, BackButton, Icon, Tab, Tabbar, Row, Col, Input, List, ListItem, PullHook, ListHeader } from 'react-onsenui';
+import Forms from './Forms';
+import dngr from './dongri_logo.png';
 
 class TabPage3 extends React.Component {
   handleClick() {
@@ -108,23 +107,6 @@ class HistoryPage2 extends React.Component {
   }
 
   handleLoad(done) {
-//    if (this.timeout) {
-//      clearTimeout(this.timeout);
-//    }
-
-/*
-    fetch("http://www.google.com/", {mode: 'no-cors'})
-      .then((response) => {
-        console.log(response);
-        if(response.ok) {
-          return response.json();
-        } else {
-          throw new Error();
-        }
-      })
-      .catch((error) => console.log(error));
-*/
-
     fetch('http://apps.cowry.co.jp/Monet2/api/wallet/history/?deviceId=13CZLXCy6MD2L4iwEeeyXTB8pDAmdQyhD5&limit=100&offset=0')
       .then((response) => {
         if(response.ok) {
@@ -134,8 +116,8 @@ class HistoryPage2 extends React.Component {
         }
       })
       .then((history) => {
-        const statuses = ["完了", "完了", "未確認", "不明"];
-        const wallets = ["kawazu", "Taketotto's", "河島高志の財布"];
+        const statuses = ["完了", "完了", "完了", "完了", "未確認", "不明"];
+        const wallets = ["suzuki", "ichirooooooh's", "鈴木一郎の財布"];
 
         let data = history.histories.map(h => {
           let priceLength = h.amount.length;
@@ -183,7 +165,7 @@ class HistoryPage2 extends React.Component {
     ];
 */
 
-return (
+    return (
       <Page>
         <PullHook onChange={this.handleChange.bind(this)} onLoad={this.handleLoad.bind(this)}>
           {
@@ -287,10 +269,6 @@ class QrCodePage extends React.Component {
 }
 
 class SendPage extends React.Component {
-  handleClick() {
-    ons.notification.alert('Hello, world!');
-  }
-
   render() {
     return (
       <Page>
@@ -315,22 +293,65 @@ class SendPage extends React.Component {
 }
 
 class MainPage extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      index: 0,
+    }
+  }
+
   popPage() {
     this.props.navigator.popPage({ component: MainPage, title: "MainPage" });
+  }
+
+  handleClickBalanceTab() {
+    this.state.index = 4;
+    this.refs.tabbar._tabbar.setActiveTab(4, { reject: false });
+  }
+
+  handleClickWalletTab() {
+    this.state.index = 5;
+    this.refs.tabbar._tabbar.setActiveTab(5, { reject: false });
   }
 
   render() {
     return (
       <Page renderToolbar={() => 
-        <Toolbar>
-          <div className="left">ざんだか</div>
-          <div className="center">12,300DNGR</div>
-          <div className="right">をれっと</div>
+        <Toolbar modifier="header">
+          <div className="center toolbar-container">
+            <div className="lefta">
+              <input type="radio" style={{display: "none"}} id="balanceTab" />
+              <button className="tabbar__button" onClick={this.handleClickBalanceTab.bind(this)}>
+                <div className="tabbar__icon">
+                  <ons-icon icon="fa-coins"></ons-icon>
+                </div>
+                <div className="tabbar__label">残高</div>
+              </button>
+            </div>
+            <div className="centera">12,300DNGR</div>
+            <div className="righta">
+              <input type="radio" style={{display: "none"}} id="walletTab" />
+              <button className="tabbar__button" onClick={this.handleClickWalletTab.bind(this)}>
+                <div className="tabbar__icon">
+                  <ons-icon icon="fa-wallet"></ons-icon>
+                </div>
+                <div className="tabbar__label">ウォレット</div>
+              </button>
+            </div>
+          </div>
         </Toolbar>
       }>
         <Tabbar
-          initialIndex={1}
+          ref="tabbar"
+          initialIndex={0}
           swipeable={true}
+          index={this.state.index}
+          visible={true}
+          onPreChange={ev => {
+            document.getElementById("balanceTab").checked = ev.activeIndex === 4;
+            document.getElementById("walletTab").checked = ev.activeIndex === 5;
+          }}
           renderTabs={(activeIndex, tabbar) => [
             {
               content: <SendPage title="Send" key="Send" active={activeIndex === 0} tabbar={tabbar} />,
@@ -348,10 +369,17 @@ class MainPage extends React.Component {
               content: <TabPage2 title="Settings" key="Setting" active={activeIndex === 3} tabbar={tabbar} />,
               tab: <Tab label="設定" key="SettingsTab" icon="md-settings" />
             },
+            {
+              content: <SendPage title="Sendddd" key="Sendddddddddddd" active={activeIndex === 4} tabbar={tabbar} />,
+              tab: <Tab label="残高" key="SendTabaaaaaaaaaaa" icon="fa-coins" className="hidden-tab" />
+            },
+            {
+              content: <SendPage title="Senddddddd" key="Senddddddddddddddd" active={activeIndex === 5} tabbar={tabbar} />,
+              tab: <Tab label="ウォレット" key="SendTabaaaaaaaaaaaaa" icon="fa-wallet" className="hidden-tab" />
+            },
           ]}
         />
       </Page>
-
     );
   }
 }
