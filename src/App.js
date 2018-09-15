@@ -9,6 +9,7 @@ import '../node_modules/@fortawesome/fontawesome-free-solid';
 import './App.css';
 import './css/list.css';
 import './css/header.css';
+import './css/footer.css';
 //require('@fortawesome/fontawesome')
 //require('@fortawesome/fontawesome-free-solid')
 //import '../node_modules/onsenui/css/dark-onsen-css-components.css';
@@ -273,6 +274,7 @@ class SendPage extends React.Component {
     return (
       <Page>
         <Tabbar
+          style={{backgroundColor: "inherit"}}
           index={1}
           swipeable={false}
           position={"top"}
@@ -318,19 +320,28 @@ class MainPage extends React.Component {
   render() {
     return (
       <Page renderToolbar={() => 
-        <Toolbar modifier="header">
+        <Toolbar modifier="noshadow header">
           <div className="center toolbar-container">
-            <div className="lefta">
+            <div className="balance-button">
               <input type="radio" style={{display: "none"}} id="balanceTab" />
               <button className="tabbar__button" onClick={this.handleClickBalanceTab.bind(this)}>
                 <div className="tabbar__icon">
-                  <ons-icon icon="fa-coins"></ons-icon>
+                  <ons-icon icon="fa-coins" />
                 </div>
                 <div className="tabbar__label">残高</div>
               </button>
             </div>
-            <div className="centera">12,300DNGR</div>
-            <div className="righta">
+
+            <div className="balance">
+              <span className="balance-amount">12,300</span>
+              <span className="balance-ticker">DNGR</span>
+            </div>
+
+            <div className="partition" />
+
+            <div className="wallet-name">Ichroh</div>
+ 
+            <div className="wallet-button">
               <input type="radio" style={{display: "none"}} id="walletTab" />
               <button className="tabbar__button" onClick={this.handleClickWalletTab.bind(this)}>
                 <div className="tabbar__icon">
@@ -344,6 +355,7 @@ class MainPage extends React.Component {
       }>
         <Tabbar
           ref="tabbar"
+          modifier="footer"
           initialIndex={0}
           swipeable={true}
           index={this.state.index}
@@ -370,7 +382,7 @@ class MainPage extends React.Component {
               tab: <Tab label="設定" key="SettingsTab" icon="md-settings" />
             },
             {
-              content: <SendPage title="Sendddd" key="Sendddddddddddd" active={activeIndex === 4} tabbar={tabbar} />,
+              content: <SendPage title="Balance" key="Balance" active={activeIndex === 4} tabbar={tabbar} />,
               tab: <Tab label="残高" key="SendTabaaaaaaaaaaa" icon="fa-coins" className="hidden-tab" />
             },
             {

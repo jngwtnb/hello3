@@ -1,0 +1,22 @@
+.tabbar--footer {
+  height: 80px;
+  background-color: white;
+  align-items: center;
+  justify-content: center;
+}
+
+.tabbar--footer .tabbar__item {
+  width: 18vw;
+  flex: none;
+}
+
+.tabbar--footer .tabbar__button {
+  width: 100%;
+  flex: none;
+}  
+
+.hidden-tab {
+  display: none;
+}
+  
+  
