@@ -3,6 +3,11 @@
   background-color: white;
   align-items: center;
   justify-content: center;
+  border-top: 0px;
+}
+
+.tabbar--footer__content {
+  bottom: 80px;
 }
 
 .tabbar--footer .tabbar__item {

@@ -4,7 +4,7 @@
 }
 
 .toolbar+.page__background+.page__content {
-  top: 80px;
+  top: 76px;
   z-index: 10001;
 }
 

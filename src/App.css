@@ -137,6 +137,50 @@
   text-align: center;
 }
 
-.tabbar {
-  background-color: transparent;
+.tabbar--half {
+  box-sizing: border-box;
+  height: 64px;
+  background: linear-gradient(#fff 26px, #efeff4 0px);
+  border-bottom: 0px;
+  align-items: center;
+  justify-content: center;
+
+  border: 0px solid #000;
+  padding: 0px;
+}
+
+.tabbar--half__content {
+  top: 64px;
+}
+
+.tabbar--half__item {
+  width: 18vw;
+  flex: none;
+  height: 60px;
+  line-height: 60px;
+}
+
+.tabbar--half__button {
+  height: 60px;
+  line-height: 60px;
+}
+
+.tabbar--half__button .tabbar__icon{
+  height: 44px;
+}
+
+.tabbar--half__button .tabbar__icon > * {
+  box-sizing: border-box;
+  background-color: white;
+  padding: 6px;
+  border: 3px solid #efeff4;
+  border-radius: 50%;
+  width: 42px;
+  height: 42px;
+
+  vertical-align: middle;
+}
+
+.tabbar--half__button .tabbar__label {
+  position: relative;
 }

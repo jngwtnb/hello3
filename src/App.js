@@ -16,7 +16,6 @@ import './css/footer.css';
 
 import ons from 'onsenui';
 import Ons, { Navigator, Page, Button, BottomToolbar, Toolbar, ToolbarButton, BackButton, Icon, Tab, Tabbar, Row, Col, Input, List, ListItem, PullHook, ListHeader } from 'react-onsenui';
-import Forms from './Forms';
 import dngr from './dongri_logo.png';
 
 class TabPage3 extends React.Component {
@@ -50,6 +49,13 @@ class TabPage2 extends React.Component {
   render() {
     return (
       <Page>
+        <Tabbar
+          modifier="half"
+          swipeable={false}
+          position={"top"}
+          renderTabs={(activeIndex, tabbar) => [
+          ]}
+        />
 
         <p style={{ padding: '0 15px' }}>
           This is the <strong>{this.props.title}</strong> page!
@@ -66,13 +72,14 @@ class HistoryPage extends React.Component {
     return (
       <Page>
         <Tabbar
+          modifier="half"
           index={0}
           swipeable={false}
           position={"top"}
           renderTabs={(activeIndex, tabbar) => [
             {
               content: <HistoryPage2 title="History" key="Historrrry" active={activeIndex === 0} tabbar={tabbar} />,
-              tab: <Tab label="並べ替え" key="Hisotoryyyyyyyyyy" icon="home" />
+              tab: <Tab label="並べ替え" key="Hisotoryyyyyyyyyy" icon="fa-arrows-alt-v" />
             },
           ]}
         />
@@ -274,7 +281,7 @@ class SendPage extends React.Component {
     return (
       <Page>
         <Tabbar
-          style={{backgroundColor: "inherit"}}
+          modifier="half"
           index={1}
           swipeable={false}
           position={"top"}
@@ -401,10 +408,6 @@ class LoginPage extends React.Component {
     this.props.navigator.resetPage({ component: MainPage, title: "MainPage" });
   }
 
-  gotoforms() {
-    this.props.navigator.resetPage({ component: Forms, title: "Forms" })
-  }
-
   render() {
     return (
       <Page>
@@ -416,11 +419,6 @@ class LoginPage extends React.Component {
             <Button modifier="login-button-bottom" onClick={this.resetPage.bind(this)}>ログイン</Button>
           </div>
         </div>
-        <p style={{
-          position: "absolute",
-          right: 0,
-          bottom: 0,
-        }}><Button onClick={this.gotoforms.bind(this)}>forms</Button></p>
       </Page>
     );
   }
