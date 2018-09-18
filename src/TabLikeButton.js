@@ -1,36 +1,96 @@
+import React from 'react';
+import ReactDOM from 'react-dom';
+import PropTypes from 'prop-types';
 
-export default class TabLikeButton extends BasicComponent {
+class TabLikeButton extends React.Component {
+//  constructor(props) {
+//    super(props);
   constructor(...args) {
     super(...args);
 
-    const callback = (name, event) => {
-      if (this.props[name]) {
-        return this.props[name](event);
+    this.onClick = event => {
+      if (this.props.onClick) {
+        return this.props.onClick(event);
       }
     };
-    this.onClick = callback.bind(this, 'onClick');
+
+    this.state = {
+      active: false
+    };
+  }
+
+  componentDidMount() {
+    var node = ReactDOM.findDOMNode(this);
+    node.addEventListener('click', this.onClick);
   }
 
   componentWillUnmount() {
-    const node = this._tabbar;
-    node.removeEventListener('prechange', this.onPreChange);
-    node.removeEventListener('postchange', this.onPostChange);
-    node.removeEventListener('reactive', this.onReactive);
+    var node = ReactDOM.findDOMNode(this);
+    node.removeEventListener('click', this.onClick);
+}
+
+/*
+render() {
+  return React.createElement(this._getDomNodeName(), Util.getAttrs(this), this.props.children);
+}
+
+render() {
+  const pages = this.props.dataSource.map((data, idx) => this.props.renderRow(data, idx));
+
+  return (
+    <ons-list { ...attrs } ref={(list) => { this._list = list; }}>
+      {this.props.renderHeader()}
+      {pages}
+      {this.props.children}
+      {this.props.renderFooter()}
+    </ons-list>
+  );
+}
+*/
+
+  setActive(active) {
+//    this.refs.radio.checked = active;
+    this.setState({ "active": active });
   }
 
   render() {
+//    const attrs = Util.getAttrs(this);
+//onClick={this.handleClickBalanceTab.bind(this)}
+    const active = this.state.active;
+
     return (
-      <div className="balance-button">
-        <input type="radio" style={{display: "none"}} id="balanceTab" />
-        <button className="tabbar__button" onClick={this.handleClickBalanceTab.bind(this)}>
-        <div className="tabbar__icon">
-          <ons-icon icon="fa-coins" />
-        </div>
-        <div className="tabbar__label">残高</div>
+      <div className={`tab-like-button ${this.props.className}`}>
+        <input type="radio" style={{display: "none"}} checked={active} />
+        <button className="tabbar__button" >
+          <div className="tabbar__icon">
+            <ons-icon icon={this.props.icon} />
+          </div>
+          <div className="tabbar__label">{this.props.label}</div>
         </button>
       </div>
     );
-} 
-
+  }
 }
 
+TabLikeButton.propTypes = {
+  /**
+   * @name modifier
+   * @type string
+   * @required false
+   * @description
+   *  [en]The appearance of the button.[/en]
+   *  [ja][/ja]
+   */
+  modifier: PropTypes.string,
+
+  /**
+   * @name onClick
+   * @type function
+   * @description
+   *  [en] This function will be called ones the button is clicked. [/en]
+   *  [ja][/ja]
+   */
+  onClick: PropTypes.func
+};
+
+export default TabLikeButton;

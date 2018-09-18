@@ -17,6 +17,7 @@ import './css/footer.css';
 import ons from 'onsenui';
 import Ons, { Navigator, Page, Button, BottomToolbar, Toolbar, ToolbarButton, BackButton, Icon, Tab, Tabbar, Row, Col, Input, List, ListItem, PullHook, ListHeader } from 'react-onsenui';
 import dngr from './dongri_logo.png';
+import TabLikeButton from './TabLikeButton';
 
 class TabPage3 extends React.Component {
   handleClick() {
@@ -324,11 +325,11 @@ class MainPage extends React.Component {
     this.refs.tabbar._tabbar.setActiveTab(5, { reject: false });
   }
 
-  render() {
-    return (
-      <Page renderToolbar={() => 
-        <Toolbar modifier="noshadow header">
-          <div className="center toolbar-container">
+  handleTabLikeButton() {
+    ons.notification.alert('Hello, world!');
+  }
+/*
+
             <div className="balance-button">
               <input type="radio" style={{display: "none"}} id="balanceTab" />
               <button className="tabbar__button" onClick={this.handleClickBalanceTab.bind(this)}>
@@ -338,6 +339,22 @@ class MainPage extends React.Component {
                 <div className="tabbar__label">残高</div>
               </button>
             </div>
+
+
+*/
+  render() {
+    return (
+      <Page renderToolbar={() => 
+        <Toolbar modifier="noshadow header">
+          <div className="center toolbar-container">
+            <TabLikeButton
+              ref="balanceTab"
+              className="balance-button"
+              icon="fa-coins"
+              label="残高"
+              onClick={this.handleClickBalanceTab.bind(this)}
+            />
+
 
             <div className="balance">
               <span className="balance-amount">12,300</span>
@@ -368,7 +385,9 @@ class MainPage extends React.Component {
           index={this.state.index}
           visible={true}
           onPreChange={ev => {
-            document.getElementById("balanceTab").checked = ev.activeIndex === 4;
+/*            document.getElementById("balanceTab").checked = ev.activeIndex === 4;*/
+///            this.refs.balanceTabButton.setActive(ev.activeIndex === 4);
+            console.log(this.refs);
             document.getElementById("walletTab").checked = ev.activeIndex === 5;
           }}
           renderTabs={(activeIndex, tabbar) => [
