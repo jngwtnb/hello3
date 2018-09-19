@@ -307,7 +307,9 @@ class MainPage extends React.Component {
     super(props);
 
     this.state = {
-      index: 0,
+      tabIndex: 0,
+      activeBalanceTab: false,
+      activeWalletTab: false,
     }
   }
 
@@ -316,45 +318,36 @@ class MainPage extends React.Component {
   }
 
   handleClickBalanceTab() {
-    this.state.index = 4;
-    this.refs.tabbar._tabbar.setActiveTab(4, { reject: false });
+    if (this.state.tabIndex !== 4) {
+      this.refs.tabbar._tabbar.setActiveTab(4, { reject: false });
+      this.setState({
+        tabIndex: 4,
+      });
+    }
   }
 
   handleClickWalletTab() {
-    this.state.index = 5;
-    this.refs.tabbar._tabbar.setActiveTab(5, { reject: false });
+    if (this.state.tabIndex !== 5) {
+      this.refs.tabbar._tabbar.setActiveTab(5, { reject: false });
+      this.setState({
+        tabIndex: 5,
+      });
+    }
   }
 
-  handleTabLikeButton() {
-    ons.notification.alert('Hello, world!');
-  }
-/*
-
-            <div className="balance-button">
-              <input type="radio" style={{display: "none"}} id="balanceTab" />
-              <button className="tabbar__button" onClick={this.handleClickBalanceTab.bind(this)}>
-                <div className="tabbar__icon">
-                  <ons-icon icon="fa-coins" />
-                </div>
-                <div className="tabbar__label">残高</div>
-              </button>
-            </div>
-
-
-*/
   render() {
     return (
       <Page renderToolbar={() => 
         <Toolbar modifier="noshadow header">
           <div className="center toolbar-container">
             <TabLikeButton
-              ref="balanceTab"
               className="balance-button"
+              key="BalanceTabLikeButton"
               icon="fa-coins"
               label="残高"
+              active={this.state.activeBalanceTab}
               onClick={this.handleClickBalanceTab.bind(this)}
             />
-
 
             <div className="balance">
               <span className="balance-amount">12,300</span>
@@ -364,16 +357,15 @@ class MainPage extends React.Component {
             <div className="partition" />
 
             <div className="wallet-name">Ichroh</div>
- 
-            <div className="wallet-button">
-              <input type="radio" style={{display: "none"}} id="walletTab" />
-              <button className="tabbar__button" onClick={this.handleClickWalletTab.bind(this)}>
-                <div className="tabbar__icon">
-                  <ons-icon icon="fa-wallet"></ons-icon>
-                </div>
-                <div className="tabbar__label">ウォレット</div>
-              </button>
-            </div>
+
+            <TabLikeButton
+              className="wallet-button"
+              key="WalletTabLikeButton"
+              icon="fa-wallet"
+              label="ウォレット"
+              active={this.state.activeWalletTab}
+              onClick={this.handleClickWalletTab.bind(this)}
+            />
           </div>
         </Toolbar>
       }>
@@ -382,13 +374,12 @@ class MainPage extends React.Component {
           modifier="footer"
           initialIndex={0}
           swipeable={true}
-          index={this.state.index}
-          visible={true}
           onPreChange={ev => {
-/*            document.getElementById("balanceTab").checked = ev.activeIndex === 4;*/
-///            this.refs.balanceTabButton.setActive(ev.activeIndex === 4);
-            console.log(this.refs);
-            document.getElementById("walletTab").checked = ev.activeIndex === 5;
+            this.setState({
+              tabIndex: ev.activeIndex,
+              activeBalanceTab: ev.activeIndex === 4,
+              activeWalletTab: ev.activeIndex === 5,
+            });
           }}
           renderTabs={(activeIndex, tabbar) => [
             {

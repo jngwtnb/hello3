@@ -13,10 +13,6 @@ class TabLikeButton extends React.Component {
         return this.props.onClick(event);
       }
     };
-
-    this.state = {
-      active: false
-    };
   }
 
   componentDidMount() {
@@ -27,7 +23,16 @@ class TabLikeButton extends React.Component {
   componentWillUnmount() {
     var node = ReactDOM.findDOMNode(this);
     node.removeEventListener('click', this.onClick);
-}
+    console.log("TabLikeButton.componentWillUnmount");
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.refs.radio.checked = nextProps.active;
+
+//    this.setState({
+//      active: nextProps.active,
+//    });
+  }
 
 /*
 render() {
@@ -48,19 +53,11 @@ render() {
 }
 */
 
-  setActive(active) {
-//    this.refs.radio.checked = active;
-    this.setState({ "active": active });
-  }
-
   render() {
-//    const attrs = Util.getAttrs(this);
-//onClick={this.handleClickBalanceTab.bind(this)}
-    const active = this.state.active;
 
     return (
       <div className={`tab-like-button ${this.props.className}`}>
-        <input type="radio" style={{display: "none"}} checked={active} />
+        <input type="radio" style={{display: "none"}} ref="radio"/>
         <button className="tabbar__button" >
           <div className="tabbar__icon">
             <ons-icon icon={this.props.icon} />
