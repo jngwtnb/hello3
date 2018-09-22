@@ -10,37 +10,17 @@ import './App.css';
 import './css/list.css';
 import './css/header.css';
 import './css/footer.css';
+import './css/tabbar.css';
 //require('@fortawesome/fontawesome')
 //require('@fortawesome/fontawesome-free-solid')
 //import '../node_modules/onsenui/css/dark-onsen-css-components.css';
 
 import ons from 'onsenui';
 import Ons, { Navigator, Page, Button, BottomToolbar, Toolbar, ToolbarButton, BackButton, Icon, Tab, Tabbar, Row, Col, Input, List, ListItem, PullHook, ListHeader } from 'react-onsenui';
-import dngr from './dongri_logo.png';
-import TabLikeButton from './TabLikeButton';
+import TabLikeButton from './components/TabLikeButton';
 
-class TabPage3 extends React.Component {
-  handleClick() {
-    ons.notification.alert('Hello, world!');
-  }
+import dngr from './images/dongri_logo.png';
 
-  popPage() {
-    this.props.navigator.popPage();
-  }
-
-
-  render() {
-    return (
-      <Page>
-        <p style={{ padding: '0 15px' }}>
-          This is the <strong>{this.props.title}</strong> page!
-        </p>
-
-        <Button onClick={this.handleClick}>Push!</Button>
-      </Page>
-    )
-  }
-}
 
 class TabPage2 extends React.Component {
   handleClick() {
@@ -49,12 +29,12 @@ class TabPage2 extends React.Component {
 
   render() {
     return (
-      <Page>
+      <Page >
         <Tabbar
           modifier="half"
           swipeable={false}
           position={"top"}
-          renderTabs={(activeIndex, tabbar) => [
+          renderTabs={(activeIndex, tabbar) => [{}            
           ]}
         />
 
@@ -73,7 +53,7 @@ class HistoryPage extends React.Component {
     return (
       <Page>
         <Tabbar
-          modifier="half"
+          modifier="circle"
           index={0}
           swipeable={false}
           position={"top"}
@@ -282,7 +262,7 @@ class SendPage extends React.Component {
     return (
       <Page>
         <Tabbar
-          modifier="half"
+          modifier="circle"
           index={1}
           swipeable={false}
           position={"top"}
@@ -320,26 +300,18 @@ class MainPage extends React.Component {
   handleClickBalanceTab() {
     if (this.state.tabIndex !== 4) {
       this.refs.tabbar._tabbar.setActiveTab(4, { reject: false });
-      this.setState({
-        tabIndex: 4,
-      });
+      this.setState({tabIndex: 4});
     }
   }
 
   handleClickWalletTab() {
     if (this.state.tabIndex !== 5) {
       this.refs.tabbar._tabbar.setActiveTab(5, { reject: false });
-      this.setState({
-        tabIndex: 5,
-      });
+      this.setState({tabIndex: 5});
     }
   }
+/*
 
-  render() {
-    return (
-      <Page renderToolbar={() => 
-        <Toolbar modifier="noshadow header">
-          <div className="center toolbar-container">
             <TabLikeButton
               className="balance-button"
               key="BalanceTabLikeButton"
@@ -348,6 +320,23 @@ class MainPage extends React.Component {
               active={this.state.activeBalanceTab}
               onClick={this.handleClickBalanceTab.bind(this)}
             />
+
+            <TabLikeButton
+              className="wallet-button"
+              key="WalletTabLikeButton"
+              icon="fa-wallet"
+              label="ウォレット"
+              active={this.state.activeWalletTab}
+              onClick={this.handleClickWalletTab.bind(this)}
+            />
+
+
+*/
+  render() {
+    return (
+      <Page renderToolbar={() => 
+        <Toolbar modifier="noshadow header">
+          <div className="center toolbar-container">
 
             <div className="balance">
               <span className="balance-amount">12,300</span>
@@ -358,14 +347,6 @@ class MainPage extends React.Component {
 
             <div className="wallet-name">Ichroh</div>
 
-            <TabLikeButton
-              className="wallet-button"
-              key="WalletTabLikeButton"
-              icon="fa-wallet"
-              label="ウォレット"
-              active={this.state.activeWalletTab}
-              onClick={this.handleClickWalletTab.bind(this)}
-            />
           </div>
         </Toolbar>
       }>
@@ -381,22 +362,30 @@ class MainPage extends React.Component {
               activeWalletTab: ev.activeIndex === 5,
             });
           }}
-          renderTabs={(activeIndex, tabbar) => [
+          renderTabs={(activeIndex, tabbar) => {
+//            let tab = <Tab  label="" key="SendTab" icon="fa-wallet-icon"/>;
+//            let tab = <TabLikeButton label="test" key="testTab" icon="home" />
+//            console.log(tab);
+
+
+
+            return [
             {
               content: <SendPage title="Send" key="Send" active={activeIndex === 0} tabbar={tabbar} />,
-              tab: <Tab label="送金" key="SendTab" icon="home" />
+//              tab: <Tab label="送金" key="SendTab" icon="home" />
+              tab: <Tab label="" key="SendTab" className="send-icon" />
             },
             {
               content: <TabPage2 title="Receive" key="Receive" active={activeIndex === 1} tabbar={tabbar} />,
-              tab: <Tab label="受取" key="ReceiveTab" icon="md-settings" />
+              tab: <Tab key="ReceiveTab" className="receive-icon" />
             },
             {
               content: <HistoryPage title="History" key="History" active={activeIndex === 2} tabbar={tabbar} />,
-              tab: <Tab label="履歴" key="HistoryTab" icon="md-settings" />
+              tab: <Tab key="HistoryTab" className="history-icon" />
             },
             {
               content: <TabPage2 title="Settings" key="Setting" active={activeIndex === 3} tabbar={tabbar} />,
-              tab: <Tab label="設定" key="SettingsTab" icon="md-settings" />
+              tab: <Tab key="SettingsTab" className="setting-icon" />
             },
             {
               content: <SendPage title="Balance" key="Balance" active={activeIndex === 4} tabbar={tabbar} />,
@@ -406,7 +395,7 @@ class MainPage extends React.Component {
               content: <SendPage title="Senddddddd" key="Senddddddddddddddd" active={activeIndex === 5} tabbar={tabbar} />,
               tab: <Tab label="ウォレット" key="SendTabaaaaaaaaaaaaa" icon="fa-wallet" className="hidden-tab" />
             },
-          ]}
+          ]}}
         />
       </Page>
     );

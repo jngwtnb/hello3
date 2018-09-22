@@ -1,5 +1,5 @@
 .tabbar--footer {
-  height: 80px;
+  height: 120px;
   background-color: white;
   align-items: center;
   justify-content: center;
@@ -7,11 +7,12 @@
 }
 
 .tabbar--footer__content {
-  bottom: 80px;
+  bottom: 120px;
 }
 
 .tabbar--footer .tabbar__item {
-  width: 18vw;
+  height: 100%;
+  width: 20vw;
   flex: none;
 }
 
@@ -23,5 +24,43 @@
 .hidden-tab {
   display: none;
 }
-  
-  
+
+.send-icon {
+  height: 100%;
+  background: url('../images/tabBar/send.jpg') center/contain no-repeat;
+}
+
+.send-icon input:checked + .tabbar__button {
+  height: 100%;
+  background: url('../images/tabBar/sendActive.jpg') center/contain no-repeat;
+}
+
+.receive-icon {
+  height: 100%;
+  background: url('../images/tabBar/receive.jpg') center/contain no-repeat;
+}
+
+.receive-icon input:checked + .tabbar__button {
+  height: 100%;
+  background: url('../images/tabBar/receiveActive.jpg') center/contain no-repeat;
+}
+
+.history-icon {
+  height: 100%;
+  background: url('../images/tabBar/history.jpg') center/contain no-repeat;
+}
+
+.history-icon input:checked + .tabbar__button {
+  height: 100%;
+  background: url('../images/tabBar/historyActive.jpg') center/contain no-repeat;
+}
+
+.setting-icon {
+  height: 100%;
+  background: url('../images/tabBar/setting.jpg') center/contain no-repeat;
+}
+
+.setting-icon input:checked + .tabbar__button {
+  height: 100%;
+  background: url('../images/tabBar/settingActive.jpg') center/contain no-repeat;
+}
