@@ -27,12 +27,15 @@ export default class TabLikeButton extends React.Component {
   }
 
   render() {
+
+    const icon = this.props.hasOwnProperty("icon") ? <ons-icon icon={this.props.icon} /> : ""
+
     return (
         <div className={`tab-like-button ${this.props.className}`}>
           <input type="radio" style={{display: "none"}} ref="radio"/>
           <button className="tabbar__button" >
             <div className="tabbar__icon">
-              <ons-icon icon={this.props.icon} />
+              {icon}
             </div>
             <div className="tabbar__label">{this.props.label}</div>
           </button>

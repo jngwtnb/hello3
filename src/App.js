@@ -18,6 +18,7 @@ import './css/tabbar.css';
 import ons from 'onsenui';
 import Ons, { Navigator, Page, Button, BottomToolbar, Toolbar, ToolbarButton, BackButton, Icon, Tab, Tabbar, Row, Col, Input, List, ListItem, PullHook, ListHeader } from 'react-onsenui';
 import TabLikeButton from './components/TabLikeButton';
+import TabLikeBar from './components/TabLikeBar';
 
 import dngr from './images/dongri_logo.png';
 
@@ -30,25 +31,21 @@ class TabPage2 extends React.Component {
   render() {
     return (
       <Page >
-        <Tabbar
-          modifier="half"
-          swipeable={false}
-          position={"top"}
-          renderTabs={(activeIndex, tabbar) => [{}            
-          ]}
-        />
+        <div className="tab-like-bar half"></div>
+        <div className="tab-like-bar__content half">
+          <p style={{ padding: '0 15px' }}>
+            This is the <strong>{this.props.title}</strong> page!
+          </p>
 
-        <p style={{ padding: '0 15px' }}>
-          This is the <strong>{this.props.title}</strong> page!
-        </p>
+          <Button onClick={this.handleClick}>Push!</Button>
+        </div>
 
-        <Button onClick={this.handleClick}>Push!</Button>
       </Page>
     )
   }
 }
 
-class HistoryPage extends React.Component {
+class HistoryPage2 extends React.Component {
   render() {
     return (
       <Page>
@@ -69,7 +66,7 @@ class HistoryPage extends React.Component {
   }
 }
 
-class HistoryPage2 extends React.Component {
+class HistoryPage extends React.Component {
   constructor(props) {
     super(props);
 
@@ -156,54 +153,66 @@ class HistoryPage2 extends React.Component {
 
     return (
       <Page>
-        <PullHook onChange={this.handleChange.bind(this)} onLoad={this.handleLoad.bind(this)}>
-          {
-            (this.state.pullHookState === 'initial') ?
-              <span >
-                <Icon size={35} spin={false} icon='ion-arrow-down-a' />
-                Pull down to refresh
-              </span>
-            : (this.state.pullHookState === 'preaction') ?
-              <span>
-                <Icon size={35} spin={false} icon='ion-arrow-up-a' />
-                Release to refresh
-              </span>
-            :
-              <span><Icon size={35} spin={true} icon='ion-load-d'></Icon> Loading data...</span>
-          }
-        </PullHook>
-        <List
-          modifier="myinset noborder"
-          dataSource={this.state.data}
-          renderRow={(data, idx) =>
-            <ListItem key={`row-${idx}`} modifier="nodivider inset">
-              <div className="list-item-container">
-                <div className="status">
-                  <Icon size={{default: 24}} fixedWidth={true} style={{color: data.status.icon.color}} icon={data.status.icon.name}/>
-                  {data.status.label}
+        <div className="tab-like-bar">
+          <Button modifier="quiet" className="nfc-icon"/>
+        </div>
+
+        <div className="tab-like-bar__content">
+          <PullHook onChange={this.handleChange.bind(this)} onLoad={this.handleLoad.bind(this)}>
+            {
+              (this.state.pullHookState === 'initial') ?
+                <span >
+                  <Icon size={35} spin={false} icon='ion-arrow-down-a' />
+                  Pull down to refresh
+                </span>
+              : (this.state.pullHookState === 'preaction') ?
+                <span>
+                  <Icon size={35} spin={false} icon='ion-arrow-up-a' />
+                  Release to refresh
+                </span>
+              :
+                <span><Icon size={35} spin={true} icon='ion-load-d'></Icon> Loading data...</span>
+            }
+          </PullHook>
+
+          <List
+            modifier="myinset noborder"
+            dataSource={this.state.data}
+            renderRow={(data, idx) =>
+              <ListItem key={`row-${idx}`} modifier="nodivider inset">
+                <div className="list-item-container">
+                  <div className="status">
+                    <Icon size={{default: 24}} fixedWidth={true} style={{color: data.status.icon.color}} icon={data.status.icon.name}/>
+                    {data.status.label}
+                  </div>
+                  <div className="datetime">
+                    {data.datetime}
+                  </div>
+                  <div className="price">
+                    <span className="icon"><Icon size={{default: 24}} icon={{default: "fa-coins"}}/></span>
+                    <span className="text">
+                      <span className="amount" style={{color: data.price.color}}>{data.price.amount}</span>
+                      <br/>
+                      <span className="ticker">DNGR</span>
+                    </span>
+                  </div>
+                  <div className="cause">
+                    <span>{data.cause}</span>
+                  </div>
+                  <div className="wallet">
+                    <span className="wallet-icon"><Icon size={{default: 16}} icon={{default: "fa-wallet"}}/></span>
+                    <span className="wallet-text">{data.wallet}</span>
+                  </div>
                 </div>
-                <div className="datetime">
-                  {data.datetime}
-                </div>
-                <div className="price">
-                  <span className="icon"><Icon size={{default: 24}} icon={{default: "fa-coins"}}/></span>
-                  <span className="text">
-                    <span className="amount" style={{color: data.price.color}}>{data.price.amount}</span>
-                    <br/>
-                    <span className="ticker">DNGR</span>
-                  </span>
-                </div>
-                <div className="cause">
-                  <span>{data.cause}</span>
-                </div>
-                <div className="wallet">
-                  <span className="wallet-icon"><Icon size={{default: 16}} icon={{default: "fa-wallet"}}/></span>
-                  <span className="wallet-text">{data.wallet}</span>
-                </div>
-              </div>
-            </ListItem>
-          }
-        />
+              </ListItem>
+            }
+          />
+
+
+
+        </div>
+
+
       </Page>
     )
   }
@@ -258,18 +267,69 @@ class QrCodePage extends React.Component {
 }
 
 class SendPage extends React.Component {
+  qr() {
+    console.log(window.cordova);
+/*
+  console.log(window);
+  console.log(window.cordova);
+  console.log(window.cordova.plugins);
+   */
+
+    if (window.cordova) {
+      window.plugins.barcodeScanner.scan(
+        function (result) {
+            alert("We got a barcode\n" +
+                  "Result: " + result.text + "\n" +
+                  "Format: " + result.format + "\n" +
+                  "Cancelled: " + result.cancelled);
+        }, 
+        function (error) {
+            alert("Scanning failed: " + error);
+        }
+      );  
+    }
+
+
+  }
+
+  handleClick() {
+    ons.notification.alert('Hello, world!');
+  }
+
   render() {
     return (
       <Page>
+        <div className="tab-like-bar">
+          <Button modifier="quiet" className="nfc-icon"/>
+          <Button modifier="quiet" className="qr-icon"/>
+        </div>
+
+        <div className="tab-like-bar__content">
+          <div className="send-form-container">
+            <div className="send-form-box" />
+            <div className="send-form-label">送金に必要な項目を入力してください:</div>
+            <div className="send-form">
+              <Input modifier="underbar" placeholder={'メールアドレス'} type={"text"} />
+              <Input modifier="underbar" placeholder={'パスワード'} type={"text"} />
+              <Input modifier="underbar" placeholder={'メッセージ'} type={"text"} />
+              <Button modifier="send-button" onClick={this.qr.bind(this)}>送信</Button>
+            </div>
+          </div>
+        </div>
+
+      </Page>
+    )
+  }
+/*
         <Tabbar
           modifier="circle"
-          index={1}
           swipeable={false}
+          initialIndex={0}
           position={"top"}
           renderTabs={(activeIndex, tabbar) => [
             {
-              content: <TabPage2 title="Send" key="Sendaa" active={activeIndex === 0} tabbar={tabbar} />,
-              tab: <Tab label="タッチ支払い" key="Sendaaaaaaaaaa" icon="home" />
+              content: <QrCodePage title="Touch" key="Touchhhh" active={activeIndex === 0} tabbar={tabbar} />,
+              tab: <Tab label="タッチ支払い" key="Touchhhhhhhh" icon="home" />
             },
             {
               content: <QrCodePage title="QrCode" key="QrCode" active={activeIndex === 1} tabbar={tabbar} />,
@@ -277,9 +337,9 @@ class SendPage extends React.Component {
             },
           ]}
         />
-      </Page>
-    )
-  }
+
+*/
+
 }
 
 class MainPage extends React.Component {
@@ -310,33 +370,18 @@ class MainPage extends React.Component {
       this.setState({tabIndex: 5});
     }
   }
-/*
 
-            <TabLikeButton
-              className="balance-button"
-              key="BalanceTabLikeButton"
-              icon="fa-coins"
-              label="残高"
-              active={this.state.activeBalanceTab}
-              onClick={this.handleClickBalanceTab.bind(this)}
-            />
-
-            <TabLikeButton
-              className="wallet-button"
-              key="WalletTabLikeButton"
-              icon="fa-wallet"
-              label="ウォレット"
-              active={this.state.activeWalletTab}
-              onClick={this.handleClickWalletTab.bind(this)}
-            />
-
-
-*/
   render() {
     return (
       <Page renderToolbar={() => 
         <Toolbar modifier="noshadow header">
           <div className="center toolbar-container">
+            <TabLikeButton
+              className="balance-button balance-icon"
+              key="BalanceTabLikeButton"
+              active={this.state.activeBalanceTab}
+              onClick={this.handleClickBalanceTab.bind(this)}
+            />
 
             <div className="balance">
               <span className="balance-amount">12,300</span>
@@ -347,6 +392,12 @@ class MainPage extends React.Component {
 
             <div className="wallet-name">Ichroh</div>
 
+            <TabLikeButton
+              className="wallet-button wallet-icon"
+              key="WalletTabLikeButton"
+              active={this.state.activeWalletTab}
+              onClick={this.handleClickWalletTab.bind(this)}
+            />
           </div>
         </Toolbar>
       }>
@@ -362,18 +413,10 @@ class MainPage extends React.Component {
               activeWalletTab: ev.activeIndex === 5,
             });
           }}
-          renderTabs={(activeIndex, tabbar) => {
-//            let tab = <Tab  label="" key="SendTab" icon="fa-wallet-icon"/>;
-//            let tab = <TabLikeButton label="test" key="testTab" icon="home" />
-//            console.log(tab);
-
-
-
-            return [
+          renderTabs={(activeIndex, tabbar) => [
             {
               content: <SendPage title="Send" key="Send" active={activeIndex === 0} tabbar={tabbar} />,
-//              tab: <Tab label="送金" key="SendTab" icon="home" />
-              tab: <Tab label="" key="SendTab" className="send-icon" />
+              tab: <Tab key="SendTab" className="send-icon" />
             },
             {
               content: <TabPage2 title="Receive" key="Receive" active={activeIndex === 1} tabbar={tabbar} />,
@@ -395,7 +438,7 @@ class MainPage extends React.Component {
               content: <SendPage title="Senddddddd" key="Senddddddddddddddd" active={activeIndex === 5} tabbar={tabbar} />,
               tab: <Tab label="ウォレット" key="SendTabaaaaaaaaaaaaa" icon="fa-wallet" className="hidden-tab" />
             },
-          ]}}
+          ]}
         />
       </Page>
     );
