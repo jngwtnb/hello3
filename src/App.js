@@ -18,7 +18,6 @@ import './css/tabbar.css';
 import ons from 'onsenui';
 import Ons, { Navigator, Page, Button, BottomToolbar, Toolbar, ToolbarButton, BackButton, Icon, Tab, Tabbar, Row, Col, Input, List, ListItem, PullHook, ListHeader } from 'react-onsenui';
 import TabLikeButton from './components/TabLikeButton';
-import TabLikeBar from './components/TabLikeBar';
 
 import dngr from './images/dongri_logo.png';
 
@@ -32,7 +31,7 @@ class TabPage2 extends React.Component {
     return (
       <Page >
         <div className="tab-like-bar half"></div>
-        <div className="tab-like-bar__content half">
+        <div className="tab-like-bar__content">
           <p style={{ padding: '0 15px' }}>
             This is the <strong>{this.props.title}</strong> page!
           </p>
@@ -40,27 +39,6 @@ class TabPage2 extends React.Component {
           <Button onClick={this.handleClick}>Push!</Button>
         </div>
 
-      </Page>
-    )
-  }
-}
-
-class HistoryPage2 extends React.Component {
-  render() {
-    return (
-      <Page>
-        <Tabbar
-          modifier="circle"
-          index={0}
-          swipeable={false}
-          position={"top"}
-          renderTabs={(activeIndex, tabbar) => [
-            {
-              content: <HistoryPage2 title="History" key="Historrrry" active={activeIndex === 0} tabbar={tabbar} />,
-              tab: <Tab label="並べ替え" key="Hisotoryyyyyyyyyy" icon="fa-arrows-alt-v" />
-            },
-          ]}
-        />
       </Page>
     )
   }
@@ -218,54 +196,6 @@ class HistoryPage extends React.Component {
   }
 }
 
-class QrCodePage extends React.Component {
-  qr() {
-    console.log(window.cordova);
-/*
-  console.log(window);
-  console.log(window.cordova);
-  console.log(window.cordova.plugins);
-   */
-
-    if (window.cordova) {
-      window.plugins.barcodeScanner.scan(
-        function (result) {
-            alert("We got a barcode\n" +
-                  "Result: " + result.text + "\n" +
-                  "Format: " + result.format + "\n" +
-                  "Cancelled: " + result.cancelled);
-        }, 
-        function (error) {
-            alert("Scanning failed: " + error);
-        }
-      );  
-    }
-
-
-  }
-
-  handleClick() {
-    ons.notification.alert('Hello, world!');
-  }
-
-  render() {
-    return (
-      <Page>
-        <div className="send-form-container">
-          <div className="send-form-box" />
-          <div className="send-form-label">送金に必要な項目を入力してください:</div>
-          <div className="send-form">
-            <Input modifier="underbar" placeholder={'メールアドレス'} type={"text"} />
-            <Input modifier="underbar" placeholder={'パスワード'} type={"text"} />
-            <Input modifier="underbar" placeholder={'メッセージ'} type={"text"} />
-            <Button modifier="send-button" onClick={this.qr.bind(this)}>送信</Button>
-          </div>
-        </div>
-      </Page>
-    )
-  }
-}
-
 class SendPage extends React.Component {
   qr() {
     console.log(window.cordova);
@@ -320,26 +250,6 @@ class SendPage extends React.Component {
       </Page>
     )
   }
-/*
-        <Tabbar
-          modifier="circle"
-          swipeable={false}
-          initialIndex={0}
-          position={"top"}
-          renderTabs={(activeIndex, tabbar) => [
-            {
-              content: <QrCodePage title="Touch" key="Touchhhh" active={activeIndex === 0} tabbar={tabbar} />,
-              tab: <Tab label="タッチ支払い" key="Touchhhhhhhh" icon="home" />
-            },
-            {
-              content: <QrCodePage title="QrCode" key="QrCode" active={activeIndex === 1} tabbar={tabbar} />,
-              tab: <Tab label="QRコード" key="QrCodeTab" icon="md-settings" />
-            },
-          ]}
-        />
-
-*/
-
 }
 
 class MainPage extends React.Component {
@@ -406,6 +316,7 @@ class MainPage extends React.Component {
           modifier="footer"
           initialIndex={0}
           swipeable={true}
+//          onSwipe={ev = {}}
           onPreChange={ev => {
             this.setState({
               tabIndex: ev.activeIndex,

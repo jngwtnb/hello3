@@ -4,15 +4,15 @@
   background-size: 0px;
 }
 
-.toolbar+.page__background+.page__content {
+.toolbar--header+.page__background+.page__content {
   top: 15vh;
   z-index: 10001;
 }
 
 .toolbar-container {
   width: 100%;
-  height: 65%;
-  top: 35%;
+  height: 10vh;
+  top: 5vh;
   position: absolute;
   box-sizing: border-box;
   display: flex;
@@ -23,29 +23,24 @@
   font-family: "Yu Gothic UI";
   font-weight: 100 !important;
   padding: 0px 0px;
+  margin: 0px;
 
   box-sizing: border-box;
   border: 0px solid #ccc;
 }
 
 .toolbar-container > div {
+  height: 10vh;
+  box-sizing: border-box;
   border: 0px solid #ccc;
 }
 
-.toolbar-container .balance {
-}
-
-.toolbar-container .balance-button {
-  padding: 0px 12px;
-}
-
 .toolbar-container .balance-amount {
-  font-weight: 100;
-  font-size: 12vmin;
+  font-size: 10vh;
 }
 
 .toolbar-container .balance-ticker {
-  font-size: 5vmin;
+  font-size: 4vh;
 }
 
 .toolbar-container .partition {
@@ -55,18 +50,25 @@
   margin-right: 20px;
 }
 
-.toolbar-container .wallet-button {
-  padding: 0px 8px;
-}
-
 .balance-icon {
-  height: 100%;
-  width: 100%;
+  height: 9vh;
+  width: 9vh;
   background: url('../images/balance.png') center/contain no-repeat;
 }
 
-.wallet-icon {
+.balance-icon input:checked + .tabbar__button {
   height: 100%;
-  width: 100%;
+  background: url('../images/balanceActive.png') center/contain no-repeat;
+}
+
+.wallet-icon {
+  height: 9vh;
+  width: 9vh;
+  min-width: 4vh;
   background: url('../images/wallet.png') center/contain no-repeat;
+}
+
+.wallet-icon input:checked + .tabbar__button {
+  height: 100%;
+  background: url('../images/walletActive.png') center/contain no-repeat;
 }
