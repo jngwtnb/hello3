@@ -1,0 +1,76 @@
+.tab-like-bar {
+  position: fixed;
+  width: 100%;
+  z-index: 20003;
+
+  background: linear-gradient(white 4.5vh, #efeff4 0px);
+  height: 12vh;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: stretch;
+
+  box-sizing: border-box;
+  border: 0px solid #ccc;
+}
+
+.tab-like-bar ~ .tab-like-bar__content {
+  z-index: 0;
+  position: fixed;
+  width: 100%;
+  height: calc(100% - 12vh);
+  top: 12vh;
+  overflow: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  box-sizing: border-box;
+  border: 0px solid red;
+}
+
+.tab-like-bar.half {
+  height: 4.5vh;
+  background-color: white;
+}
+
+.tab-like-bar.half ~ .tab-like-bar__content {
+  top: 4.5vh;
+  height: calc(100% - 4.5vh);
+}
+
+.tab-like-bar .button {
+  height: 100%;
+  width: 22vw;
+}
+
+.tab-like-bar .button.nfc-icon:active {
+  opacity: 0.5;
+  background: url('../images/nfcActive.png') center/contain no-repeat;
+}
+
+.tab-like-bar .nfc-icon.button:disabled, .nfc-icon.button[disabled] {
+  opacity: 1.0;
+  pointer-events: unset;
+  background: url('../images/nfcActive.png') center/contain no-repeat;
+}
+
+.tab-like-bar .button.qr-icon:active {
+  opacity: 0.5;
+  background: url('../images/qrActive.png') center/contain no-repeat;
+}
+
+.tab-like-bar .qr-icon.button:disabled, .qr-icon.button[disabled] {
+  opacity: 1.0;
+  pointer-events: unset;
+  background: url('../images/qrActive.png') center/contain no-repeat;
+}
+
+.nfc-icon {
+  height: 100%;
+  background: url('../images/nfc.png') center/contain no-repeat;
+}
+
+.qr-icon {
+  height: 100%;
+  background: url('../images/qr.png') center/contain no-repeat;
+}

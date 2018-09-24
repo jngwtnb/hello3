@@ -1,6 +1,4 @@
-import React, { Component } from 'react';
-//import ReactDOM from 'react-dom';
-//import logo from './logo.svg';
+import React from 'react';
 
 import '../node_modules/onsenui/css/onsenui.css';
 import '../node_modules/onsenui/css/onsen-css-components.css';
@@ -10,13 +8,13 @@ import './App.css';
 import './css/list.css';
 import './css/header.css';
 import './css/footer.css';
-import './css/tabbar.css';
-//require('@fortawesome/fontawesome')
-//require('@fortawesome/fontawesome-free-solid')
-//import '../node_modules/onsenui/css/dark-onsen-css-components.css';
+import './css/tablikebar.css';
 
 import ons from 'onsenui';
-import Ons, { Navigator, Page, Button, BottomToolbar, Toolbar, ToolbarButton, BackButton, Icon, Tab, Tabbar, Row, Col, Input, List, ListItem, PullHook, ListHeader } from 'react-onsenui';
+import {Navigator, Page, Button, BottomToolbar, Toolbar, ToolbarButton, BackButton, Icon, Tab, Tabbar, Input, List, ListItem, PullHook} from 'react-onsenui';
+
+import SendPage from './components/SendPage';
+import ReceivePage from './components/ReceivePage';
 import TabLikeButton from './components/TabLikeButton';
 
 import dngr from './images/dongri_logo.png';
@@ -196,68 +194,13 @@ class HistoryPage extends React.Component {
   }
 }
 
-class SendPage extends React.Component {
-  qr() {
-    console.log(window.cordova);
-/*
-  console.log(window);
-  console.log(window.cordova);
-  console.log(window.cordova.plugins);
-   */
-
-    if (window.cordova) {
-      window.plugins.barcodeScanner.scan(
-        function (result) {
-            alert("We got a barcode\n" +
-                  "Result: " + result.text + "\n" +
-                  "Format: " + result.format + "\n" +
-                  "Cancelled: " + result.cancelled);
-        }, 
-        function (error) {
-            alert("Scanning failed: " + error);
-        }
-      );  
-    }
-
-
-  }
-
-  handleClick() {
-    ons.notification.alert('Hello, world!');
-  }
-
-  render() {
-    return (
-      <Page>
-        <div className="tab-like-bar">
-          <Button modifier="quiet" className="nfc-icon"/>
-          <Button modifier="quiet" className="qr-icon"/>
-        </div>
-
-        <div className="tab-like-bar__content">
-          <div className="send-form-container">
-            <div className="send-form-box" />
-            <div className="send-form-label">送金に必要な項目を入力してください:</div>
-            <div className="send-form">
-              <Input modifier="underbar" placeholder={'メールアドレス'} type={"text"} />
-              <Input modifier="underbar" placeholder={'パスワード'} type={"text"} />
-              <Input modifier="underbar" placeholder={'メッセージ'} type={"text"} />
-              <Button modifier="send-button" onClick={this.qr.bind(this)}>送信</Button>
-            </div>
-          </div>
-        </div>
-
-      </Page>
-    )
-  }
-}
 
 class MainPage extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      tabIndex: 0,
+      tabIndex: 1,
       activeBalanceTab: false,
       activeWalletTab: false,
     }
@@ -268,16 +211,14 @@ class MainPage extends React.Component {
   }
 
   handleClickBalanceTab() {
-    if (this.state.tabIndex !== 4) {
-      this.refs.tabbar._tabbar.setActiveTab(4, { reject: false });
-      this.setState({tabIndex: 4});
+    if (this.state.tabIndex !== 0) {
+      this.refs.tabbar._tabbar.setActiveTab(0, { reject: false });
     }
   }
 
   handleClickWalletTab() {
     if (this.state.tabIndex !== 5) {
       this.refs.tabbar._tabbar.setActiveTab(5, { reject: false });
-      this.setState({tabIndex: 5});
     }
   }
 
@@ -288,7 +229,6 @@ class MainPage extends React.Component {
           <div className="center toolbar-container">
             <TabLikeButton
               className="balance-button balance-icon"
-              key="BalanceTabLikeButton"
               active={this.state.activeBalanceTab}
               onClick={this.handleClickBalanceTab.bind(this)}
             />
@@ -304,7 +244,6 @@ class MainPage extends React.Component {
 
             <TabLikeButton
               className="wallet-button wallet-icon"
-              key="WalletTabLikeButton"
               active={this.state.activeWalletTab}
               onClick={this.handleClickWalletTab.bind(this)}
             />
@@ -314,23 +253,26 @@ class MainPage extends React.Component {
         <Tabbar
           ref="tabbar"
           modifier="footer"
-          initialIndex={0}
+          index={1}
           swipeable={true}
-//          onSwipe={ev = {}}
           onPreChange={ev => {
             this.setState({
               tabIndex: ev.activeIndex,
-              activeBalanceTab: ev.activeIndex === 4,
+              activeBalanceTab: ev.activeIndex === 0,
               activeWalletTab: ev.activeIndex === 5,
             });
           }}
           renderTabs={(activeIndex, tabbar) => [
             {
+              content: <SendPage title="Balance" key="Balance" active={activeIndex === 4} tabbar={tabbar} />,
+              tab: <Tab label="残高" key="SendTabaaaaaaaaaaa" icon="fa-coins" className="hidden-tab" />
+            },
+            {
               content: <SendPage title="Send" key="Send" active={activeIndex === 0} tabbar={tabbar} />,
               tab: <Tab key="SendTab" className="send-icon" />
             },
             {
-              content: <TabPage2 title="Receive" key="Receive" active={activeIndex === 1} tabbar={tabbar} />,
+              content: <ReceivePage title="Receive" key="Receive" active={activeIndex === 1} tabbar={tabbar} />,
               tab: <Tab key="ReceiveTab" className="receive-icon" />
             },
             {
@@ -340,10 +282,6 @@ class MainPage extends React.Component {
             {
               content: <TabPage2 title="Settings" key="Setting" active={activeIndex === 3} tabbar={tabbar} />,
               tab: <Tab key="SettingsTab" className="setting-icon" />
-            },
-            {
-              content: <SendPage title="Balance" key="Balance" active={activeIndex === 4} tabbar={tabbar} />,
-              tab: <Tab label="残高" key="SendTabaaaaaaaaaaa" icon="fa-coins" className="hidden-tab" />
             },
             {
               content: <SendPage title="Senddddddd" key="Senddddddddddddddd" active={activeIndex === 5} tabbar={tabbar} />,

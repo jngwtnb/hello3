@@ -1,0 +1,62 @@
+.send-form-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateY(-50%) translateX(-50%);
+  width: 50%;
+  height: 100%;
+  display: flex;
+  flex-direction: column !important;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: nowrap;
+
+  box-sizing: border-box;
+  border: 0px solid green;
+}
+
+.send-form-container .send-form-box {
+  min-height: 18vh;
+  min-width: 18vh;
+  border: 1px solid #0076ff;
+  margin-top: 4vh;
+  margin-bottom: 3vh;
+}
+
+.send-form-container .send-form-label {
+  font-size: 1.8vh;
+  color: gray;
+  white-space: nowrap;
+}
+
+.send-form-container .send-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column !important;
+  justify-content: center;
+  align-items: stretch;
+  flex-flow: nowrap;
+  box-sizing: border-box;
+}
+
+.send-form-container .send-form .text-input {
+  font-size: 2.5vh;
+  height: 3vh;
+}
+
+.send-form-container .send-form > * {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.send-form-container .button--send-button {
+  font-size: 2vh;
+  line-height: 4vh;
+  height: 4vh;
+  min-height: 4vh;
+  padding: 0px;
+  text-align: center;
+
+  color: black;
+  background-color: #ccc;
+}

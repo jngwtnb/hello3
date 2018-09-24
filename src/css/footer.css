@@ -1,5 +1,5 @@
 .tabbar--footer {
-  height: 18vh;
+  height: 16vh;
   background-color: white;
   align-items: center;
   justify-content: center;
@@ -7,12 +7,12 @@
 }
 
 .tabbar--footer__content {
-  bottom: 18vh;
+  bottom: 16vh;
 }
 
 .tabbar--footer .tabbar__item {
   height: 100%;
-  width: 20vw;
+  width: 12vh;
   flex: none;
 }
 
@@ -61,5 +61,6 @@
 }
 
 .setting-icon input:checked + .tabbar__button {
+  height: 100%;
   background: url('../images/tabBar/settingActive.jpg') center/contain no-repeat;
 }
