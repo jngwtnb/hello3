@@ -5,10 +5,7 @@ import '../node_modules/onsenui/css/onsen-css-components.css';
 import '../node_modules/@fortawesome/fontawesome';
 import '../node_modules/@fortawesome/fontawesome-free-solid';
 import './App.css';
-import './css/list.css';
-import './css/header.css';
-import './css/footer.css';
-import './css/tablikebar.css';
+import './css/';
 
 import ons from 'onsenui';
 import {Navigator, Page, Button, BottomToolbar, Toolbar, ToolbarButton, BackButton, Icon, Tab, Tabbar, Input, List, ListItem, PullHook} from 'react-onsenui';
@@ -102,7 +99,7 @@ class HistoryPage extends React.Component {
         });
 
 
-        this.setState({data: []});
+        this.setState({data: []}); // 更新
         this.setState({data: data}, done);
       })
       .catch((error) => console.log(error));
@@ -130,11 +127,15 @@ class HistoryPage extends React.Component {
     return (
       <Page>
         <div className="tab-like-bar">
-          <Button modifier="quiet" className="nfc-icon"/>
+          <Button modifier="quiet" className="sort-icon"/>
         </div>
 
         <div className="tab-like-bar__content">
-          <PullHook onChange={this.handleChange.bind(this)} onLoad={this.handleLoad.bind(this)}>
+        <Page>
+          <PullHook
+            onChange={this.handleChange.bind(this)}
+            onLoad={this.handleLoad.bind(this)}
+          >
             {
               (this.state.pullHookState === 'initial') ?
                 <span >
@@ -185,7 +186,7 @@ class HistoryPage extends React.Component {
           />
 
 
-
+</Page>
         </div>
 
 

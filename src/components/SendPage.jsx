@@ -1,9 +1,6 @@
 import React from 'react';
 import {AlertDialog, Page, Button, Input} from 'react-onsenui';
 
-import '../css/sendpage.css';
-import '../css/tablikebar.css';
-
 export default class SendPage extends React.Component {
   constructor(...args){
     super(...args);
