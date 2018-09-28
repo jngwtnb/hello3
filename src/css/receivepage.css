@@ -16,8 +16,10 @@
 }
 
 .receive-container .receive-box {
-  min-height: 30vh;
-  min-width: 30vh;
+  min-height: 30vmin;
+  max-height: 30vmin;
+  min-width: 30vmin;
+  max-width: 30vmin;
   border: 0px solid #0076ff;
   margin-top: 2vh;
   margin-bottom: 1vh;
@@ -30,7 +32,7 @@
 }
 
 .receive-container .receive-form {
-  width: 100%;
+  width: 32vmin;
   display: flex;
   flex-direction: column !important;
   justify-content: center;

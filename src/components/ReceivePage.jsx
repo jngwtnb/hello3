@@ -41,7 +41,9 @@ export default class ReceivePage extends React.Component {
 
         <div className="tab-like-bar__content">
           <div className="receive-container">
-            <Input modifier="underbar" placeholder="aaaaaaaaaaaa" type={"text"} value=""/>
+            <div className="receive-form">
+              <Input modifier="underbar" placeholder="" type={"text"} value="aaaaaaaaaaaa"/>
+            </div>
 
             <QRCode value={this.state.uri} className="receive-box" />
 
@@ -50,13 +52,14 @@ export default class ReceivePage extends React.Component {
               <Input
                 modifier="underbar"
                 placeholder=""
-                type={"text"}
                 inputId="receive-amount"
                 onChange={() => {
                   this.setState({
                     uri: `money://atmk.jp/amount=${document.getElementById("receive-amount").value}`,
                   });
                 }}
+                type={"number"}
+                inputmode={"numeric"}
               />
             </div>
           </div>
