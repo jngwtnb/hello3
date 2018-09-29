@@ -43,7 +43,7 @@
   width: 22vw;
 }
 
-.nfc-icon {
+.tab-like-bar .nfc-icon {
   height: 100%;
   background: url('../images/2nfc.png') center/contain no-repeat;
 }
@@ -59,7 +59,7 @@
   background: url('../images/2nfcActive.png') center/contain no-repeat;
 }
 
-.qr-icon {
+.tab-like-bar .qr-icon {
   height: 100%;
   background: url('../images/qr.png') center/contain no-repeat;
 }
@@ -75,7 +75,7 @@
   background: url('../images/qrActive.png') center/contain no-repeat;
 }
 
-.sort-icon {
+.tab-like-bar .sort-icon {
   height: 100%;
   background: url('../images/sort.png') center/contain no-repeat;
 }
@@ -83,4 +83,24 @@
 .tab-like-bar .button.sort-icon:active {
   opacity: 1.0;
   background: url('../images/sortActive.png') center/contain no-repeat;
+}
+
+.tab-like-bar .create-icon {
+  height: 100%;
+  background: url('../images/create.png') center/contain no-repeat;
+}
+
+.tab-like-bar .button.create-icon:active {
+  opacity: 1.0;
+  background: url('../images/createActive.png') center/contain no-repeat;
+}
+
+.tab-like-bar .manage-icon {
+  height: 100%;
+  background: url('../images/manage.png') center/contain no-repeat;
+}
+
+.tab-like-bar .button.manage-icon:active {
+  opacity: 1.0;
+  background: url('../images/manageActive.png') center/contain no-repeat;
 }

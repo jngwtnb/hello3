@@ -76,17 +76,6 @@ export default class HistoryPage extends React.Component {
   }
 
   render() {
-/*
-    let dataSource = [
-      {'status': '完了',   'datetime': '2018/7/8 19:34', price: {'amount': '4469'},    'cause': '受取',     'wallet': "kawazu"},
-      {'status': '完了',   'datetime': '2018/7/8 19:34', price: {'amount': '198000'},  'cause': '送金',     'wallet': "Taketotto's"},
-      {'status': '完了',   'datetime': '2018/7/8 19:34', price: {'amount': '4980000'}, 'cause': 'チャージ', 'wallet': "河島高志の財布"},
-      {'status': '未確認', 'datetime': '2018/7/8 19:34', price: {'amount': '4469'},    'cause': '受取',     'wallet': "kawazu"},
-      {'status': '不明',   'datetime': '2018/7/8 19:34', price: {'amount': '198000'},  'cause': '送金',     'wallet': "Taketotto's"},
-      {'status': '完了',   'datetime': '2018/7/8 19:34', price: {'amount': '4980000'}, 'cause': 'チャージ', 'wallet': "河島高志の財布"},
-    ];
-*/
-
     return (
       <Page>
         <div className="tab-like-bar">
@@ -120,7 +109,7 @@ export default class HistoryPage extends React.Component {
             dataSource={this.state.data}
             renderRow={(data, idx) =>
               <ListItem key={`row-${idx}`} modifier="nodivider inset">
-                <div className="list-item-container">
+                <div className="history-item-container">
                   <div className="status">
                     <Icon size={{default: 24}} fixedWidth={true} style={{color: data.status.icon.color}} icon={data.status.icon.name}/>
                     {data.status.label}

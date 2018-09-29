@@ -45,7 +45,7 @@ export default class ReceivePage extends React.Component {
               <Input modifier="underbar" placeholder="" type={"text"} value="aaaaaaaaaaaa"/>
             </div>
 
-            <QRCode value={this.state.uri} className="receive-box" />
+            <QRCode value={this.state.uri} renderAs="svg" className="receive-box" />
 
             <div className="receive-label">入金予定金額を入力してください:</div>
             <div className="receive-form">

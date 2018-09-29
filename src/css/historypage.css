@@ -1,19 +1,4 @@
-.list--myinset {
-  margin: 16px;
-  background-color: transparent;
-  box-sizing: border-box;
-}
-
-.list-item--inset {
-  box-sizing: border-box;
-  margin: 4px 0px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  background-color: #fff;
-  padding: 0px 4px;
-}
-
-.list-item-container {
+.history-item-container {
   display: inline-flex;
   flex-flow: row nowrap;
   justify-content: space-between;
@@ -24,14 +9,14 @@
   height: 5vh;
 }
 
-.list-item-container > div {
+.history-item-container > div {
   border: 0px solid red;
   box-sizing: border-box;
   padding: 0px;
   margin: 0px;
 }
 
-.list-item-container > .status {
+.history-item-container > .status {
   flex: none;
   width: 30px;
   display: table;
@@ -41,14 +26,14 @@
   line-height: 12px;
 }
 
-.list-item-container > .datetime {
+.history-item-container > .datetime {
   flex: none;
   width: 60px;
   font-size: 12px;
   line-height: 12px;
 }
 
-.list-item-container > .price {
+.history-item-container > .price {
   flex: none;
   width: 86px;
   display: table;
@@ -57,7 +42,7 @@
   vertical-align: middle;
 }
 
-.list-item-container > .price > .icon {
+.history-item-container > .price > .icon {
   width: 30px;
   display: table-cell;
   vertical-align: middle;
@@ -69,7 +54,7 @@
 }
 
 
-.list-item-container > .price > .text {
+.history-item-container > .price > .text {
   padding: 0px 0px;
   margin: 0px;
   width: 100%;
@@ -81,17 +66,17 @@
   line-height: 16px;
 }
 
-.list-item-container > .price > .text > .amount {
+.history-item-container > .price > .text > .amount {
   vertical-align: bottom;
   font-size: 14px;
 }
 
-.list-item-container > .price > .text > .ticker {
+.history-item-container > .price > .text > .ticker {
   vertical-align: top;
   font-size: 10px;
 }
 
-.list-item-container > .cause {
+.history-item-container > .cause {
   flex: none;
   width: 28px;
   height: 24px;
@@ -110,7 +95,7 @@
   border-radius: 5px;
 }
 
-.list-item-container > .cause span {
+.history-item-container > .cause span {
   color: white;
   user-select: none;
   white-space: pre-line;
@@ -118,20 +103,20 @@
   line-height: 8px;
 }
 
-.list-item-container > .wallet {
+.history-item-container > .wallet {
   flex: none;
   width: 60px;
   display: table;
   table-layout: fixed;
 }
 
-.list-item-container .wallet-icon {
+.history-item-container .wallet-icon {
   width: 18px;
   display: table-cell;
   vertical-align: middle;
 }
 
-.list-item-container .wallet-text {
+.history-item-container .wallet-text {
   white-space: pre-line;
   word-break: break-all;
   display: table-cell;

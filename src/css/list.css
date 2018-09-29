@@ -1,0 +1,14 @@
+.list--myinset {
+  margin: 16px;
+  background-color: transparent;
+  box-sizing: border-box;
+}
+
+.list-item--inset {
+  box-sizing: border-box;
+  margin: 4px 0px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  padding: 0px 4px;
+}
