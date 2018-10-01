@@ -8,24 +8,21 @@ export default class WalletPage extends React.Component {
 
     this.state = {
       pullHookState: 'initial',
-      data: [],
+      data: [
+        {label: "suzuki",         ticker: "DNGR", address: this.generateAddress()},
+        {label: "Ichirooooooh's", ticker: "DNGR", address: this.generateAddress()},
+        {label: "鈴木一郎の財布",  ticker: "BTC" , address: this.generateAddress()},
+        {label: "suzuki",         ticker: "BTC",  address: this.generateAddress()},
+      ],
+      selected: 0,
     }
 
-    this.icons = {
-      '完了':   {color: "limegreen", name:{default: 'fa-check-square'}},
-      '未確認': {color: "red", name:{default: 'fa-exclamation'}},
-      '不明':   {color: "yellow", name:{default: 'fa-question'}},
+    this.onSelect = event => {
+      if (this.props.onSelect) {
+        return this.props.onSelect(event);
+      }
     };
 
-    this.causes = {
-      'Receive': '受取',
-      'Send': '送金',
-      'Payment': 'チャージ',
-    };
-  }
-
-  handleClick() {
-    ons.notification.alert('Hello, world!');
   }
 
   handleLoad(done) {
@@ -86,18 +83,11 @@ export default class WalletPage extends React.Component {
     return addr;
   }
 
+  componentWillUpdate(nextProps, nextState) {
+    this.onSelect(nextState.data[nextState.selected]);
+  }
+
   render() {
-    let dataSource = [
-      {wallet: "suzuki",         ticker: "DNGR", address: ""},
-      {wallet: "Ichirooooooh's", ticker: "DNGR", address: ""},
-      {wallet: "鈴木一郎の財布",  ticker: "BTC" , address: ""},
-      {wallet: "suzuki",         ticker: "BTC",  address: ""},
-    ];
-
-    dataSource.forEach(data => {
-      data.address = this.generateAddress();
-    });
-
     return (
       <Page>
         <div className="tab-like-bar">
@@ -108,19 +98,34 @@ export default class WalletPage extends React.Component {
         <div className="tab-like-bar__content">
           <List
             modifier="myinset noborder"
-            dataSource={dataSource}
+            dataSource={this.state.data}
             renderRow={(data, idx) =>
-              <ListItem key={`row-${idx}`} modifier="nodivider inset" tappable={true}>
+              <ListItem
+                key={`wallet-item-${idx}`}
+                modifier="nodivider inset selectable"
+                tappable={true}
+//                disabled={this.state.data[idx].disabled}
+                disabled={data.disabled}
+                onClick={() => {
+                  this.state.data.forEach((d, i) => {
+                    d.disabled = i === idx ? true : null;
+                  });
+                  this.setState({selected: idx});
+                }
+              }>
                 <div className="wallet-item-container">
                   <div className="wallet">
                     <span className="wallet-icon"><Icon size={{default: 20}} icon={{default: "fa-wallet"}}/></span>
-                    <span className="wallet-text">{data.wallet}</span>
+                    <span className="wallet-text">{data.label}</span>
                   </div>
 
                   <div className="ticker">{data.ticker}</div>
                   <div className="address">{data.address}</div>
                   <div className="delete">
-                    <Button className="delete-icon" onClick={() => console.log("delete!!")}/>
+                    <Button className="delete-icon" onClick={ev => {
+                      ev.stopPropagation();
+                      console.log("delete!!")
+                      }}/>
                   </div>
                 </div>
               </ListItem>

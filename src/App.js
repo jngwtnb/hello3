@@ -21,8 +21,6 @@ import TabLikeButton from './components/TabLikeButton';
 import dngr from './images/dongri_logo.png';
 
 
-
-
 class MainPage extends React.Component {
   constructor(props) {
     super(props);
@@ -31,6 +29,7 @@ class MainPage extends React.Component {
       tabIndex: 1,
       activeBalanceTab: false,
       activeWalletTab: false,
+      wallet: {},
     }
   }
 
@@ -50,7 +49,14 @@ class MainPage extends React.Component {
     }
   }
 
+  handleSelect(data) {
+    console.log(data);
+    this.setState({wallet: data});
+  }
+
   render() {
+    const wallet = this.state.wallet;
+
     return (
       <Page renderToolbar={() => 
         <Toolbar modifier="noshadow header">
@@ -63,12 +69,12 @@ class MainPage extends React.Component {
 
             <div className="balance">
               <span className="balance-amount">12,300</span>
-              <span className="balance-ticker">DNGR</span>
+              <span className="balance-ticker">{wallet.ticker}</span>
             </div>
 
             <div className="partition" />
 
-            <div className="wallet-name">Ichroh</div>
+            <div className="wallet-name">{wallet.label}</div>
 
             <TabLikeButton
               className="wallet-button wallet-icon"
@@ -112,7 +118,7 @@ class MainPage extends React.Component {
               tab: <Tab key="SettingTab" className="setting-icon" />
             },
             {
-              content: <WalletPage title="Wallet" key="Senddddddddddddddd" active={activeIndex === 5} tabbar={tabbar} />,
+              content: <WalletPage title="Wallet" key="Senddddddddddddddd" active={activeIndex === 5} tabbar={tabbar} onSelect={this.handleSelect.bind(this)} />,
               tab: <Tab label="ウォレット" key="SendTabaaaaaaaaaaaaa" icon="fa-wallet" className="hidden-tab" />
             },
           ]}

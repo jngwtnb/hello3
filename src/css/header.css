@@ -60,6 +60,7 @@
 }
 
 .toolbar-container .wallet-name {
+  height: 100%;
   font-size: 3vh;
   line-height: 6vh;
 }

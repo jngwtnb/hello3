@@ -1,3 +1,10 @@
+.list-item--selectable {
+}
+
+.list-item--selectable[disabled="true"] {
+  filter: invert(100%);
+}
+
 .wallet-item-container {
   display: inline-flex;
   flex-flow: row nowrap;
@@ -7,6 +14,7 @@
   margin: 0px;
   width: 100%;
   height: 4vh;
+  color: black;
 
   border: 0px solid blue;
   box-sizing: border-box;
