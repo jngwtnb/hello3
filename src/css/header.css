@@ -36,7 +36,9 @@
 }
 
 .toolbar-container .balance {
+  text-align: left;
   height: 100%;
+  width: 40%;
 }
 
 .toolbar-container .balance-amount {
@@ -61,8 +63,12 @@
 
 .toolbar-container .wallet-name {
   height: 100%;
+  width: 20%;
   font-size: 3vh;
-  line-height: 6vh;
+  line-height: 3vh;
+  text-align: left;
+  white-space: pre-wrap;
+  word-break: break-all;
 }
 
 .toolbar-container .balance-button .tabbar__button {

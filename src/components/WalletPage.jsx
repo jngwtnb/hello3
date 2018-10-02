@@ -1,6 +1,6 @@
 import React from 'react';
 import ons from 'onsenui';
-import {Page, Button, Icon, PullHook, List, ListItem} from 'react-onsenui';
+import {Page, Button, Icon, PullHook, List, ListItem, Radio} from 'react-onsenui';
 
 export default class WalletPage extends React.Component {
   constructor(props) {
@@ -105,14 +105,17 @@ export default class WalletPage extends React.Component {
                 modifier="nodivider inset selectable"
                 tappable={true}
 //                disabled={this.state.data[idx].disabled}
-                disabled={data.disabled}
-                onClick={() => {
-                  this.state.data.forEach((d, i) => {
-                    d.disabled = i === idx ? true : null;
-                  });
-                  this.setState({selected: idx});
+                onClick={ev => {
+                  console.log(ev.currentTarget.firstChild.firstChild);
+                  ev.currentTarget.firstChild.firstChild.checked = true;
+//                  this.state.data.forEach((d, i) => {
+//                    d.disabled = i === idx ? true : null;
+//                  });
+//                  this.setState({selected: idx});
                 }
               }>
+                <input type="radio" name="wallet-list-item" value={idx} style={{display: "none"}} />
+ 
                 <div className="wallet-item-container">
                   <div className="wallet">
                     <span className="wallet-icon"><Icon size={{default: 20}} icon={{default: "fa-wallet"}}/></span>
@@ -125,7 +128,7 @@ export default class WalletPage extends React.Component {
                     <Button className="delete-icon" onClick={ev => {
                       ev.stopPropagation();
                       console.log("delete!!")
-                      }}/>
+                    }}/>
                   </div>
                 </div>
               </ListItem>
