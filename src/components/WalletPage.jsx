@@ -1,6 +1,6 @@
 import React from 'react';
 import ons from 'onsenui';
-import {Page, Button, Icon, PullHook, List, ListItem, Radio} from 'react-onsenui';
+import {Page, Button, Icon, PullHook, List, ListItem, Radio, AlertDialog, Row, Col} from 'react-onsenui';
 
 export default class WalletPage extends React.Component {
   constructor(props) {
@@ -14,7 +14,9 @@ export default class WalletPage extends React.Component {
         {label: "鈴木一郎の財布",  ticker: "BTC" , address: this.generateAddress()},
         {label: "suzuki",         ticker: "BTC",  address: this.generateAddress()},
       ],
-      selected: 0,
+      selectedIndex: 0,
+      deleteDialogOpened: false,
+      clickedDeleteButtonIndex: 0,
     }
 
     this.onSelect = event => {
@@ -83,8 +85,14 @@ export default class WalletPage extends React.Component {
     return addr;
   }
 
+  handleDeleteDialogCancel() {
+    this.setState({
+      deleteDialogOpened: false,
+    });
+  }
+
   componentWillUpdate(nextProps, nextState) {
-    this.onSelect(nextState.data[nextState.selected]);
+    this.onSelect(nextState.data[nextState.selectedIndex]);
   }
 
   render() {
@@ -104,18 +112,14 @@ export default class WalletPage extends React.Component {
                 key={`wallet-item-${idx}`}
                 modifier="nodivider inset selectable"
                 tappable={true}
-//                disabled={this.state.data[idx].disabled}
+                selected={this.state.data[idx].selectedIndex}
                 onClick={ev => {
-                  console.log(ev.currentTarget.firstChild.firstChild);
-                  ev.currentTarget.firstChild.firstChild.checked = true;
-//                  this.state.data.forEach((d, i) => {
-//                    d.disabled = i === idx ? true : null;
-//                  });
-//                  this.setState({selected: idx});
+                  this.state.data.forEach((d, i) => {
+                    d.selectedIndex = i === idx ? true : null;
+                  });
+                  this.setState({selectedIndex: idx});
                 }
               }>
-                <input type="radio" name="wallet-list-item" value={idx} style={{display: "none"}} />
- 
                 <div className="wallet-item-container">
                   <div className="wallet">
                     <span className="wallet-icon"><Icon size={{default: 20}} icon={{default: "fa-wallet"}}/></span>
@@ -124,10 +128,13 @@ export default class WalletPage extends React.Component {
 
                   <div className="ticker">{data.ticker}</div>
                   <div className="address">{data.address}</div>
-                  <div className="delete">
+                  <div className="delete-button">
                     <Button className="delete-icon" onClick={ev => {
                       ev.stopPropagation();
-                      console.log("delete!!")
+                      this.setState({
+                        deleteDialogOpened: true,
+                        clickedDeleteButtonIndex: idx,
+                      });
                     }}/>
                   </div>
                 </div>
@@ -136,6 +143,28 @@ export default class WalletPage extends React.Component {
           />
         </div>
 
+        <AlertDialog isOpen={this.state.deleteDialogOpened} onCancel={this.handleDeleteDialogCancel.bind(this)} isCancelable={false}>
+          <div className="alert-dialog-title"></div>
+          <div className="alert-dialog-content">
+            <div className="wallet-dialog-content">
+              label: {this.state.data[this.state.clickedDeleteButtonIndex].label}<br/>
+              ticker: {this.state.data[this.state.clickedDeleteButtonIndex].ticker}<br/>
+              address: <span className="address">{this.state.data[this.state.clickedDeleteButtonIndex].address}</span><br/>
+            </div>
+
+            <br/>
+
+            削除しますか？
+          </div>
+          <div className="alert-dialog-footer alert-dialog-footer--rowfooter">
+            <Button onClick={this.handleDeleteDialogCancel.bind(this)} className="alert-dialog-button alert-dialog-button--rowfooter">
+              はい（未実装）
+            </Button>
+            <Button onClick={this.handleDeleteDialogCancel.bind(this)} className="alert-dialog-button alert-dialog-button--rowfooter alert-dialog-button--primal">
+              いいえ
+            </Button>
+          </div>
+        </AlertDialog>
 
       </Page>
     )
