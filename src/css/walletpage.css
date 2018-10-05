@@ -32,7 +32,7 @@
   margin-left: 6px;
   margin-right: 4px;
   flex: none;
-  width: 72px;
+  width: 82px;
   display: table;
   table-layout: fixed;
 }
@@ -43,6 +43,13 @@
   vertical-align: middle;
 }
 
+.wallet-item-container .single-wallet-icon {
+  display: block;
+  height: 22px;
+  width: 22px;
+  background: url('../images/singleWallet.png') center/cover no-repeat;  
+}
+
 .wallet-item-container .wallet-text {
   white-space: pre-line;
   word-break: break-all;
@@ -50,6 +57,7 @@
   vertical-align: middle;
   font-size: 12px;
   line-height: 100%;
+  padding-left: 4px;
 }
 
 .wallet-item-container .ticker {
@@ -70,25 +78,25 @@
   overflow: hidden;
 }
 
-.wallet-item-container .delete-button {
+.wallet-item-container .delete {
   flex: none;
   width: 36px;
   height: 40px;
 }
 
-.wallet-item-container .delete-button .delete-icon {
+.wallet-item-container .delete .delete-icon {
   height: 100%;
   width: 100%;
   background: url('../images/delete.png') center/cover no-repeat;  
 }
 
-.wallet-item-container .button.delete-icon:active {
+.wallet-item-container .button.delete-icon:active,
+.wallet-item-container .button.delete-icon[disabled] {
   opacity: 1.0;
   background: url('../images/deleteActive.png') center/cover no-repeat;
 }
 
 .wallet-dialog-content {
-  white-space: nowrap;
   border-radius: 8px;
   background-color: white;
   box-sizing: border-box;
@@ -96,9 +104,13 @@
   margin: 8px;
   padding: 16px;
   text-align: left;
-}
 
-.wallet-dialog-content > .address {
   white-space: normal;
   word-break: break-all;
+}
+
+.wallet-dialog-content td.name,
+.wallet-dialog-content td.name + td {
+  vertical-align: top;
+  white-space: nowrap;
 }

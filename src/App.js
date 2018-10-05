@@ -50,7 +50,7 @@ class MainPage extends React.Component {
   }
 
   handleSelect(data) {
-    console.log(data);
+//    console.log(data);
     this.setState({wallet: data});
   }
 
@@ -98,28 +98,28 @@ class MainPage extends React.Component {
           }}
           renderTabs={(activeIndex, tabbar) => [
             {
-              content: <BalancePage title="Balance" key="Balance" active={activeIndex === 4} tabbar={tabbar} />,
-              tab: <Tab label="残高" key="SendTabaaaaaaaaaaa" icon="fa-coins" className="hidden-tab" />
+              content: <BalancePage title="Balance" key="balance-page" active={activeIndex === 4} tabbar={tabbar} />,
+              tab: <Tab label="残高" key="balance-tab" icon="fa-coins" className="hidden-tab" />
             },
             {
-              content: <SendPage title="Send" key="Send" active={activeIndex === 0} tabbar={tabbar} />,
-              tab: <Tab key="SendTab" className="send-icon" />
+              content: <SendPage title="Send" key="send-page" active={activeIndex === 0} tabbar={tabbar} />,
+              tab: <Tab key="send-tab" className="send-icon" />
             },
             {
-              content: <ReceivePage title="Receive" key="Receive" active={activeIndex === 1} tabbar={tabbar} />,
-              tab: <Tab key="ReceiveTab" className="receive-icon" />
+              content: <ReceivePage title="Receive" key="receive-page" active={activeIndex === 1} tabbar={tabbar} />,
+              tab: <Tab key="receive-tab" className="receive-icon" />
             },
             {
-              content: <HistoryPage title="History" key="History" active={activeIndex === 2} tabbar={tabbar} />,
-              tab: <Tab key="HistoryTab" className="history-icon" />
+              content: <HistoryPage title="History" key="history-page" active={activeIndex === 2} tabbar={tabbar} />,
+              tab: <Tab key="history-tab" className="history-icon" />
             },
             {
-              content: <SettingPage title="Setting" key="Setting" active={activeIndex === 3} tabbar={tabbar} />,
-              tab: <Tab key="SettingTab" className="setting-icon" />
+              content: <SettingPage title="Setting" key="setting-page" active={activeIndex === 3} tabbar={tabbar} />,
+              tab: <Tab key="setting-tab" className="setting-icon" />
             },
             {
-              content: <WalletPage title="Wallet" key="Senddddddddddddddd" active={activeIndex === 5} tabbar={tabbar} onSelect={this.handleSelect.bind(this)} />,
-              tab: <Tab label="ウォレット" key="SendTabaaaaaaaaaaaaa" icon="fa-wallet" className="hidden-tab" />
+              content: <WalletPage title="Wallet" key="wallet-page" active={activeIndex === 5} tabbar={tabbar} onSelect={this.handleSelect.bind(this)} />,
+              tab: <Tab key="wallet-tab" label="ウォレット" icon="fa-wallet" className="hidden-tab" />
             },
           ]}
         />

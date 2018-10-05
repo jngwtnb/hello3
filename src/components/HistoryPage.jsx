@@ -24,8 +24,8 @@ export default class HistoryPage extends React.Component {
     };
   }
 
-  handleClick() {
-    ons.notification.alert('Hello, world!');
+  componentDidMount() {
+    this.handleLoad(() => {});
   }
 
   handleLoad(done) {

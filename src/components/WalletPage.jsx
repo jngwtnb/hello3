@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import ons from 'onsenui';
 import {Page, Button, Icon, PullHook, List, ListItem, Radio, AlertDialog, Row, Col} from 'react-onsenui';
 
@@ -16,10 +17,11 @@ export default class WalletPage extends React.Component {
       ],
       selectedIndex: 0,
       deleteDialogOpened: false,
+      clickedDeleteButton: null,
       clickedDeleteButtonIndex: 0,
     }
 
-    this.onSelect = event => {
+    this._onSelect = event => {
       if (this.props.onSelect) {
         return this.props.onSelect(event);
       }
@@ -86,13 +88,21 @@ export default class WalletPage extends React.Component {
   }
 
   handleDeleteDialogCancel() {
+    let buttons = ReactDOM.findDOMNode(this).getElementsByClassName("delete-button")
+    buttons.item(this.state.clickedDeleteButtonIndex).disabled = false;
+
     this.setState({
       deleteDialogOpened: false,
     });
   }
 
+  componentDidMount() {
+    this.setState({selectedIndex: 0});
+    this._onSelect(this.state.data[0]);
+  }
+
   componentWillUpdate(nextProps, nextState) {
-    this.onSelect(nextState.data[nextState.selectedIndex]);
+    this._onSelect(nextState.data[nextState.selectedIndex]);
   }
 
   render() {
@@ -112,25 +122,22 @@ export default class WalletPage extends React.Component {
                 key={`wallet-item-${idx}`}
                 modifier="nodivider inset selectable"
                 tappable={true}
-                selected={this.state.data[idx].selectedIndex}
-                onClick={ev => {
-                  this.state.data.forEach((d, i) => {
-                    d.selectedIndex = i === idx ? true : null;
-                  });
-                  this.setState({selectedIndex: idx});
-                }
-              }>
+                selected={idx === this.state.selectedIndex}
+                onClick={() => this.setState({selectedIndex: idx})}
+              >
                 <div className="wallet-item-container">
                   <div className="wallet">
-                    <span className="wallet-icon"><Icon size={{default: 20}} icon={{default: "fa-wallet"}}/></span>
+                    <span className="wallet-icon"><span className="single-wallet-icon"/></span>
                     <span className="wallet-text">{data.label}</span>
                   </div>
 
                   <div className="ticker">{data.ticker}</div>
                   <div className="address">{data.address}</div>
-                  <div className="delete-button">
-                    <Button className="delete-icon" onClick={ev => {
+                  <div className="delete">
+                    <Button className="delete-button delete-icon" onClick={ev => {
                       ev.stopPropagation();
+                      ev.currentTarget.disabled = true;
+
                       this.setState({
                         deleteDialogOpened: true,
                         clickedDeleteButtonIndex: idx,
@@ -147,13 +154,15 @@ export default class WalletPage extends React.Component {
           <div className="alert-dialog-title"></div>
           <div className="alert-dialog-content">
             <div className="wallet-dialog-content">
-              label: {this.state.data[this.state.clickedDeleteButtonIndex].label}<br/>
-              ticker: {this.state.data[this.state.clickedDeleteButtonIndex].ticker}<br/>
-              address: <span className="address">{this.state.data[this.state.clickedDeleteButtonIndex].address}</span><br/>
+              <table>
+                <tbody>
+                  <tr><td className="name">label</td><td>: </td><td>{this.state.data[this.state.clickedDeleteButtonIndex].label}</td></tr>
+                  <tr><td className="name">ticker</td><td>: </td><td>{this.state.data[this.state.clickedDeleteButtonIndex].ticker}</td></tr>
+                  <tr><td className="name">address</td><td>: </td><td>{this.state.data[this.state.clickedDeleteButtonIndex].address}</td></tr>
+                </tbody>
+              </table>
             </div>
-
             <br/>
-
             削除しますか？
           </div>
           <div className="alert-dialog-footer alert-dialog-footer--rowfooter">

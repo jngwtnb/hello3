@@ -42,14 +42,14 @@
 }
 
 .toolbar-container .balance-amount {
-  font-size: 7vh;
-  line-height: 7vh;
+  font-size: 34px;
+  line-height: 34px;
 }
 
 .toolbar-container .balance-ticker {
   height: 100%;
-  font-size: 3vh;
-  line-height: 3vh;
+  font-size: 14px;
+  line-height: 14px;
 }
 
 .toolbar-container .partition {
