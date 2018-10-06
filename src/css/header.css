@@ -21,7 +21,6 @@
   align-items: flex-start;
 
   font-family: "Yu Gothic UI";
-  font-weight: 100 !important;
   padding: 0px;
   margin: 0px;
 
@@ -36,27 +35,34 @@
 }
 
 .toolbar-container .balance {
+  display: table;
   text-align: left;
-  height: 100%;
+  height: auto;
   width: 40%;
+  font-weight: 100;
 }
 
 .toolbar-container .balance-amount {
-  font-size: 34px;
-  line-height: 34px;
+  display: table-cell;
+  width: 1px;
+  white-space: nowrap;
+  font-size: 6.5vh;
+  line-height: 1em;
+  vertical-align: bottom;
 }
 
 .toolbar-container .balance-ticker {
-  height: 100%;
-  font-size: 14px;
-  line-height: 14px;
+  display: table-cell;
+  vertical-align: bottom;
+  font-size: 3vh;
+  line-height: 1em;
 }
 
 .toolbar-container .partition {
   border-left: 2px solid #000;
   position: relative;
   top: 0.5vh;
-  height: 7vh;
+  height: 6vh;
   margin-left: 8px;
   margin-right: 20px;
 }
@@ -69,6 +75,7 @@
   text-align: left;
   white-space: pre-wrap;
   word-break: break-all;
+  font-weight: 400;
 }
 
 .toolbar-container .balance-button .tabbar__button {
@@ -80,7 +87,7 @@
 }
 
 .toolbar-container .balance-icon {
-  height: 9vh;
+  height: 10vh;
   width: 9vh;
   background: url('../images/balance.png') center/contain no-repeat;
 }
@@ -91,7 +98,7 @@
 }
 
 .toolbar-container .wallet-icon {
-  height: 9vh;
+  height: 10vh;
   width: 9vh;
   min-width: 4vh;
   background: url('../images/wallet.png') center/contain no-repeat;
