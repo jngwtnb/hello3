@@ -127,7 +127,7 @@ export default class WalletPage extends React.Component {
               >
                 <div className="wallet-item-container">
                   <div className="wallet">
-                    <span className="wallet-icon"><span className="single-wallet-icon"/></span>
+                    <span className="icon single-wallet-icon"></span>
                     <span className="wallet-text">{data.label}</span>
                   </div>
 

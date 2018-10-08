@@ -26,6 +26,21 @@
   line-height: 12px;
 }
 
+.history-item-container > .status .icon {
+  width: 24px;
+  height: 24px;
+  padding: 4px;
+  margin: 0px;
+  box-sizing: border-box;
+  color: white;
+  border: 1px solid;
+  border-radius: 5px;
+}
+
+.history-item-container > .status .label {
+  white-space: nowrap;
+}
+
 .history-item-container > .datetime {
   flex: none;
   width: 60px;
@@ -44,15 +59,10 @@
 
 .history-item-container > .price > .icon {
   width: 30px;
+  height: 45px;
   display: table-cell;
   vertical-align: middle;
 }
-
-.coins-icon {
-  height: 45px;
-  background: url('../images/coins.png') center/cover no-repeat;
-}
-
 
 .history-item-container > .price > .text {
   padding: 0px 0px;
@@ -110,13 +120,15 @@
   table-layout: fixed;
 }
 
-.history-item-container .wallet-icon {
-  width: 18px;
+.history-item-container > .wallet > .icon {
+  width: 20px;
+  height: 20px;
+  background-size: 18px;
   display: table-cell;
   vertical-align: middle;
 }
 
-.history-item-container .wallet-text {
+.history-item-container .text {
   white-space: pre-line;
   word-break: break-all;
   display: table-cell;

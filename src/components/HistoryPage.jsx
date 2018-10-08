@@ -11,10 +11,11 @@ export default class HistoryPage extends React.Component {
       data: [],
     }
 
+//      '完了':   {color: "limegreen", name:{default: 'fa-check-square'}},
     this.icons = {
-      '完了':   {color: "limegreen", name:{default: 'fa-check-square'}},
+      '完了':   {color: "green", name:{default: 'fa-check'}},
       '未確認': {color: "red", name:{default: 'fa-exclamation'}},
-      '不明':   {color: "yellow", name:{default: 'fa-question'}},
+      '不明':   {color: "orange", name:{default: 'fa-question'}},
     };
 
     this.causes = {
@@ -25,7 +26,7 @@ export default class HistoryPage extends React.Component {
   }
 
   componentDidMount() {
-    this.handleLoad(() => {});
+//    this.handleLoad(() => {});
   }
 
   handleLoad(done) {
@@ -111,8 +112,8 @@ export default class HistoryPage extends React.Component {
               <ListItem key={`row-${idx}`} modifier="nodivider inset">
                 <div className="history-item-container">
                   <div className="status">
-                    <Icon size={{default: 24}} fixedWidth={true} style={{color: data.status.icon.color}} icon={data.status.icon.name}/>
-                    {data.status.label}
+                    <Icon size={{default: 20}} fixedWidth={true} style={{backgroundColor: data.status.icon.color}} className="icon" icon={data.status.icon.name}/>
+                    <span className="label">{data.status.label}</span>
                   </div>
                   <div className="datetime">
                     {data.datetime}
@@ -129,8 +130,8 @@ export default class HistoryPage extends React.Component {
                     <span>{data.cause}</span>
                   </div>
                   <div className="wallet">
-                    <span className="wallet-icon"><Icon size={{default: 16}} icon={{default: "fa-wallet"}}/></span>
-                    <span className="wallet-text">{data.wallet}</span>
+                    <span className="icon single-wallet-icon" />
+                    <span className="text">{data.wallet}</span>
                   </div>
                 </div>
               </ListItem>

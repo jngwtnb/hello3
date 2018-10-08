@@ -38,7 +38,7 @@
   display: table;
   text-align: left;
   height: auto;
-  width: 40%;
+  width: 40vw;
   font-weight: 100;
 }
 
@@ -47,15 +47,15 @@
   width: 1px;
   white-space: nowrap;
   font-size: 6.5vh;
-  line-height: 1em;
-  vertical-align: bottom;
+  line-height: 100%;
+  vertical-align: baseline;
 }
 
 .toolbar-container .balance-ticker {
   display: table-cell;
-  vertical-align: bottom;
+  vertical-align: baseline;
   font-size: 3vh;
-  line-height: 1em;
+  line-height: 100%;
 }
 
 .toolbar-container .partition {
@@ -67,9 +67,16 @@
   margin-right: 20px;
 }
 
-.toolbar-container .wallet-name {
+.toolbar-container .wallet {
+  position: relative;
+  width: 20vw;
+}
+
+.toolbar-container .wallet > .wallet-name {
+  position: absolute;
+  right: 5%;
+
   height: 100%;
-  width: 20%;
   font-size: 3vh;
   line-height: 3vh;
   text-align: left;
@@ -79,32 +86,14 @@
 }
 
 .toolbar-container .balance-button .tabbar__button {
-  height: 100%;
+  height: 10vh;
+  min-width: 9vh;
+  max-width: 9vh;
 }
 
 .toolbar-container .wallet-button .tabbar__button {
-  height: 100%;
-}
-
-.toolbar-container .balance-icon {
   height: 10vh;
-  width: 9vh;
-  background: url('../images/balance.png') center/contain no-repeat;
+  min-width: 9vh;
+  max-width: 9vh;
 }
 
-.toolbar-container .balance-icon input:checked + .tabbar__button {
-  height: 100%;
-  background: url('../images/balanceActive.png') center/contain no-repeat;
-}
-
-.toolbar-container .wallet-icon {
-  height: 10vh;
-  width: 9vh;
-  min-width: 4vh;
-  background: url('../images/wallet.png') center/contain no-repeat;
-}
-
-.toolbar-container .wallet-icon input:checked + .tabbar__button {
-  height: 100%;
-  background: url('../images/walletActive.png') center/contain no-repeat;
-}

@@ -60,7 +60,7 @@ class MainPage extends React.Component {
     return (
       <Page renderToolbar={() => 
         <Toolbar modifier="noshadow header">
-          <div className="center toolbar-container">
+          <div className="toolbar-container">
             <TabLikeButton
               className="balance-button balance-icon"
               active={this.state.activeBalanceTab}
@@ -74,7 +74,9 @@ class MainPage extends React.Component {
 
             <div className="partition" />
 
-            <div className="wallet-name">{wallet.label}</div>
+            <div className="wallet">
+              <div className="wallet-name">{wallet.label}</div>
+            </div>
 
             <TabLikeButton
               className="wallet-button wallet-icon"

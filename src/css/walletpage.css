@@ -37,17 +37,12 @@
   table-layout: fixed;
 }
 
-.wallet-item-container .wallet-icon {
+.wallet-item-container .icon {
   width: 22px;
+  height: 22px;
+  background-size: 22px;
   display: table-cell;
   vertical-align: middle;
-}
-
-.wallet-item-container .single-wallet-icon {
-  display: block;
-  height: 22px;
-  width: 22px;
-  background: url('../images/singleWallet.png') center/cover no-repeat;  
 }
 
 .wallet-item-container .wallet-text {
@@ -84,16 +79,9 @@
   height: 40px;
 }
 
-.wallet-item-container .delete .delete-icon {
+.wallet-item-container .delete .delete-button {
   height: 100%;
   width: 100%;
-  background: url('../images/delete.png') center/cover no-repeat;  
-}
-
-.wallet-item-container .button.delete-icon:active,
-.wallet-item-container .button.delete-icon[disabled] {
-  opacity: 1.0;
-  background: url('../images/deleteActive.png') center/cover no-repeat;
 }
 
 .wallet-dialog-content {
