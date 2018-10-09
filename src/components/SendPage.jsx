@@ -16,15 +16,17 @@ export default class SendPage extends React.Component {
   
   qr() {
     console.log(window.cordova);
-/*
   console.log(window);
   console.log(window.cordova);
   console.log(window.cordova.plugins);
-   */
 
     if (window.cordova) {
-      window.plugins.barcodeScanner.scan(
+      window.cordova.plugins.barcodeScanner.scan(
         function (result) {
+          if (!result.cancelled) {
+            this.setState();
+          }
+
             alert("We got a barcode\n" +
                   "Result: " + result.text + "\n" +
                   "Format: " + result.format + "\n" +
@@ -32,10 +34,17 @@ export default class SendPage extends React.Component {
         }, 
         function (error) {
             alert("Scanning failed: " + error);
-        }
+        },
+        {
+          formats: "QR_CODE",
+        },
       );  
     }
 
+
+  }
+
+  handleSend() {
 
   }
 
@@ -58,13 +67,14 @@ export default class SendPage extends React.Component {
               dialogMessage: "nfc",
             });
           }} />
-          <Button modifier="quiet" className="qr-icon" disabled={this.state.qrDisabled} onClick={() => {
+          <Button style={{display: "none"}} modifier="quiet" className="qr-icon" disabled={this.state.qrDisabled} onClick={() => {
             this.setState({
               qrDisabled: true,
               isOpen: true,
               dialogMessage: "ｑ！！",
             });
           }} />
+          <Button modifier="quiet" className="qr-icon" disabled={this.state.qrDisabled} onClick={this.qr.bind(this)} />
         </div>
 
         <div className="tab-like-bar__content">
@@ -75,7 +85,7 @@ export default class SendPage extends React.Component {
               <Input modifier="underbar" placeholder={'メールアドレス'} type={"text"} value="xxxx-xxxx"/>
               <Input modifier="underbar" placeholder={'パスワード'} type={"text"}  value="4646" />
               <Input modifier="underbar" placeholder={'メッセージ(請求IDなど)'} type={"text"} />
-              <Button modifier="send-button quiet" onClick={this.qr.bind(this)}>送信</Button>
+              <Button modifier="send-button quiet" onClick={this.handleSend.bind(this)}>送信</Button>
             </div>
           </div>
         </div>

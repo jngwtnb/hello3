@@ -11,7 +11,6 @@ export default class HistoryPage extends React.Component {
       data: [],
     }
 
-//      '完了':   {color: "limegreen", name:{default: 'fa-check-square'}},
     this.icons = {
       '完了':   {color: "green", name:{default: 'fa-check'}},
       '未確認': {color: "red", name:{default: 'fa-exclamation'}},
@@ -79,8 +78,8 @@ export default class HistoryPage extends React.Component {
   render() {
     return (
       <Page>
-        <div className="tab-like-bar">
-          <Button modifier="quiet" className="sort-icon"/>
+        <div className="tab-like-bar without-label">
+          <Button modifier="quiet" className="sort-button sort-icon"/>
         </div>
 
         <div className="tab-like-bar__content">
@@ -91,7 +90,7 @@ export default class HistoryPage extends React.Component {
           >
             {
               (this.state.pullHookState === 'initial') ?
-                <span >
+                <span>
                   <Icon size={35} spin={false} icon='ion-arrow-down-a' />
                   Pull down to refresh
                 </span>
