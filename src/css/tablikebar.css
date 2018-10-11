@@ -3,7 +3,9 @@
   width: 100%;
   z-index: 20003;
 
-  background: linear-gradient(white 4.5vh, #efeff4 0px);
+  background-color: transparent;
+  background-image: linear-gradient(top, white 4.5vh, #efeff4 0px, transparent);
+  background-image: linear-gradient(top, white 4.5vh, #efeff4 0px, rgba(239,239,244,0.8), transparent);
   background-size: calc(12vh + 1px);
   height: 12vh;
   display: flex;
@@ -31,6 +33,7 @@
 }
 
 .tab-like-bar.half {
+  background-size: calc(4.5vh + 1px);
   height: 4.5vh;
 }
 
@@ -40,13 +43,13 @@
 }
 
 .tab-like-bar.without-label {
-  background-size: calc(9vh + 1px);
-  height: 9vh;
+  background-size: calc(11vh + 1px);
+  height: 11vh;
 }
 
 .tab-like-bar.without-label + .tab-like-bar__content {
-  top: 9vh;
-  height: calc(100% - 9vh);
+  top: 4.5vh;
+  height: calc(100% - 4.5vh);
 }
 
 .tab-like-bar .button {

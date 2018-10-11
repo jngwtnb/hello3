@@ -7,6 +7,7 @@ import balancepage from './balancepage.css';
 import historypage from './historypage.css';
 import receivepage from './receivepage.css';
 import sendpage from './sendpage.css';
+import settingpage from './settingpage.css';
 import walletpage from './walletpage.css';
 
 export {
@@ -19,5 +20,6 @@ export {
   historypage,
   receivepage,
   sendpage,
+  settingpage,
   walletpage,
 }

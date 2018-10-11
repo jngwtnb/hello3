@@ -1,0 +1,16 @@
+.setting-container {
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  border: 0px solid green;
+}
+
+.setting-container ons-list {
+  border-width: 0px !important;
+}
+
+.setting-container > div {
+  box-sizing: border-box;
+  border: 0px solid green;
+}
+

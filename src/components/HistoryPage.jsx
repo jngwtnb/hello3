@@ -25,7 +25,7 @@ export default class HistoryPage extends React.Component {
   }
 
   componentDidMount() {
-//    this.handleLoad(() => {});
+    this.handleLoad(() => {});
   }
 
   handleLoad(done) {

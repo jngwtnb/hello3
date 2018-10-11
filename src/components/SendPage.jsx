@@ -18,7 +18,7 @@ export default class SendPage extends React.Component {
     console.log(window.cordova);
   console.log(window);
   console.log(window.cordova);
-  console.log(window.cordova.plugins);
+//  console.log(window.cordova.plugins);
 
     if (window.cordova) {
       window.cordova.plugins.barcodeScanner.scan(
