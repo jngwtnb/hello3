@@ -15,23 +15,24 @@ export default class SendPage extends React.Component {
 
   
   qr() {
-    console.log(window.cordova);
-  console.log(window);
-  console.log(window.cordova);
+//  console.log(window);
+//  console.log(window.cordova);
 //  console.log(window.cordova.plugins);
 
     if (window.cordova) {
       window.cordova.plugins.barcodeScanner.scan(
         function (result) {
+          console.log(window.cordova.plugins.barcodeScanner);
           if (!result.cancelled) {
-            this.setState();
+            console.log(result.text);
+//            sendpage.setState({uri: result.text});
           }
 
-            alert("We got a barcode\n" +
-                  "Result: " + result.text + "\n" +
-                  "Format: " + result.format + "\n" +
-                  "Cancelled: " + result.cancelled);
-        }, 
+//            alert("We got a barcode\n" +
+//                  "Result: " + result.text + "\n" +
+//                  "Format: " + result.format + "\n" +
+//                  "Cancelled: " + result.cancelled);
+        },
         function (error) {
             alert("Scanning failed: " + error);
         },

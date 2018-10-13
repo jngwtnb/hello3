@@ -2,17 +2,38 @@ import React from 'react';
 import QRCode from "qrcode.react";
 import ons from 'onsenui';
 import {Page, Button, AlertDialog, Input} from 'react-onsenui';
+import jsSHA from 'jssha';
 
 export default class ReceivePage extends React.Component {
   constructor(...args){
     super(...args);
 
+    console.log(window.device);
+
     this.state = {
+      walletAddress: "",
       nfcDisabled: false,
       isOpen: false,
       dialogMessage: "",
-      uri: "",
+      amount: "555",
     };
+
+    if (window.cordova && window.device) {
+      var shaObj = new jsSHA("SHA-256", "TEXT");
+      shaObj.update(window.device.uuid + "arcturus");
+      var sha256digest = shaObj.getHash("HEX");
+      this.state.walletAddress = sha256digest.substring(0, 20);
+    }
+
+    this.generateUri = this.generateUri.bind(this);
+
+    this.state.uri = this.generateUri(this.state.amount, this.state.walletAddress);
+    console.log(this.state.url);
+
+  }
+
+  generateUri(amount, address) {
+    return `hello3://iizk.jp/?amount=${amount}&recipientId=${address}`;
   }
 
   handleClick() {
@@ -42,7 +63,7 @@ export default class ReceivePage extends React.Component {
         <div className="tab-like-bar__content">
           <div className="receive-container">
             <div className="receive-form">
-              <Input modifier="underbar" placeholder="" type={"text"} value="aaaaaaaaaaaa"/>
+              <Input modifier="underbar" placeholder="" type={"text"} value={this.state.walletAddress}/>
             </div>
 
             <QRCode value={this.state.uri} renderAs="svg" className="receive-box" />
@@ -52,10 +73,12 @@ export default class ReceivePage extends React.Component {
               <Input
                 modifier="underbar"
                 placeholder=""
+                defaultValue={this.state.amount}
                 inputId="receive-amount"
-                onChange={() => {
+                onChange={ev => {
                   this.setState({
-                    uri: `money://atmk.jp/amount=${document.getElementById("receive-amount").value}`,
+                    amount: ev.srcElement.value,
+                    uri: this.generateUri(ev.srcElement.value, this.state.walletAddress),
                   });
                 }}
                 type={"number"}

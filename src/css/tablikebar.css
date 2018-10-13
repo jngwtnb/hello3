@@ -4,8 +4,8 @@
   z-index: 20003;
 
   background-color: transparent;
-  background-image: linear-gradient(top, white 4.5vh, #efeff4 0px, transparent);
-  background-image: linear-gradient(top, white 4.5vh, #efeff4 0px, rgba(239,239,244,0.8), transparent);
+  background-image: linear-gradient(to bottom, white 4.5vh, #efeff4 0px, transparent);
+  background-image: linear-gradient(to bottom, white 4.5vh, #efeff4 0px, rgba(239,239,244,0.8), transparent);
   background-size: calc(12vh + 1px);
   height: 12vh;
   display: flex;
