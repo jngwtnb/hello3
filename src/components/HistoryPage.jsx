@@ -25,7 +25,9 @@ export default class HistoryPage extends React.Component {
   }
 
   componentDidMount() {
-    this.handleLoad(() => {});
+    if (window.cordova) {
+      this.handleLoad(() => {});
+    }
   }
 
   handleLoad(done) {

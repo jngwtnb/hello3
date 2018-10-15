@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import ons from 'onsenui';
 import {Page, Button, Icon, PullHook, List, ListItem, Radio, AlertDialog, Row, Col} from 'react-onsenui';
+import jsSHA from 'jssha';
 
 export default class WalletPage extends React.Component {
   constructor(props) {
@@ -11,9 +12,9 @@ export default class WalletPage extends React.Component {
       pullHookState: 'initial',
       data: [
         {label: "suzuki",         ticker: "DNGR", address: this.generateAddress()},
-        {label: "Ichirooooooh's", ticker: "DNGR", address: this.generateAddress()},
-        {label: "鈴木一郎の財布",  ticker: "BTC" , address: this.generateAddress()},
-        {label: "suzuki",         ticker: "BTC",  address: this.generateAddress()},
+        {label: "Ichirooooooh's", ticker: "DNGR", address: this.generateRandomAddress()},
+        {label: "鈴木一郎の財布",  ticker: "BTC" , address: this.generateRandomAddress()},
+        {label: "suzuki",         ticker: "BTC",  address: this.generateRandomAddress()},
       ],
       selectedIndex: 0,
       deleteDialogOpened: false,
@@ -77,6 +78,21 @@ export default class WalletPage extends React.Component {
   }
 
   generateAddress() {
+    let addr;
+
+    if (window.cordova && window.device) {
+      var shaObj = new jsSHA("SHA-256", "TEXT");
+      shaObj.update(window.device.uuid + "a.r.c.t.u.r.u.s");
+      var sha256digest = shaObj.getHash("HEX");
+      addr = sha256digest.substring(0, 20);
+    } else {
+      addr = 'WchKpVqJAaA6FBfWy1dKpLVhy28XrbDJAt';
+    }
+
+    return addr;
+  }
+
+  generateRandomAddress() {
     let len = Math.floor(Math.random()*10) + 26;
     let chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-";
     let charsLen = chars.length;

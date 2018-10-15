@@ -9,7 +9,7 @@ const startApp = () => {
   registerServiceWorker(); //test2
 };
 
-console.log(window);
+//console.log(window);
 
 if(window.cordova) {
 //  window.Keyboard.shrinkView(true);

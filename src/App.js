@@ -30,11 +30,8 @@ class MainPage extends React.Component {
       activeBalanceTab: false,
       activeWalletTab: false,
       wallet: {},
+      walletAddress: "",
     }
-  }
-
-  popPage() {
-    this.props.navigator.popPage({ component: MainPage, title: "MainPage" });
   }
 
   handleClickBalanceTab() {
@@ -50,13 +47,12 @@ class MainPage extends React.Component {
   }
 
   handleSelect(data) {
-//    console.log(data);
-    this.setState({wallet: data});
+    this.setState({
+      wallet: data,
+    });
   }
 
   render() {
-    const wallet = this.state.wallet;
-
     return (
       <Page renderToolbar={() => 
         <Toolbar modifier="noshadow header">
@@ -69,13 +65,13 @@ class MainPage extends React.Component {
 
             <div className="balance">
               <span className="balance-amount">12,300</span>
-              <span className="balance-ticker">{wallet.ticker}</span>
+              <span className="balance-ticker">{this.state.wallet.ticker}</span>
             </div>
 
             <div className="partition" />
 
             <div className="wallet">
-              <div className="wallet-name">{wallet.label}</div>
+              <div className="wallet-name">{this.state.wallet.label}</div>
             </div>
 
             <TabLikeButton
@@ -98,13 +94,14 @@ class MainPage extends React.Component {
               activeWalletTab: ev.activeIndex === 5,
             });
           }}
+          wallet={this.state.wallet}
           renderTabs={(activeIndex, tabbar) => [
             {
               content: <BalancePage title="Balance" key="balance-page" active={activeIndex === 4} tabbar={tabbar} />,
               tab: <Tab label="残高" key="balance-tab" icon="fa-coins" className="hidden-tab" />
             },
             {
-              content: <SendPage title="Send" key="send-page" active={activeIndex === 0} tabbar={tabbar} />,
+              content: <SendPage title="Send" key="send-page" active={activeIndex === 0} tabbar={tabbar} wallet={this.state.wallet}/>,
               tab: <Tab key="send-tab" className="send-icon" />
             },
             {

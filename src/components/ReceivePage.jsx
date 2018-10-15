@@ -2,42 +2,24 @@ import React from 'react';
 import QRCode from "qrcode.react";
 import ons from 'onsenui';
 import {Page, Button, AlertDialog, Input} from 'react-onsenui';
-import jsSHA from 'jssha';
 
 export default class ReceivePage extends React.Component {
   constructor(...args){
     super(...args);
 
-    console.log(window.device);
-
     this.state = {
-      walletAddress: "",
       nfcDisabled: false,
       isOpen: false,
       dialogMessage: "",
       amount: "555",
+      uri: "",
     };
 
-    if (window.cordova && window.device) {
-      var shaObj = new jsSHA("SHA-256", "TEXT");
-      shaObj.update(window.device.uuid + "arcturus");
-      var sha256digest = shaObj.getHash("HEX");
-      this.state.walletAddress = sha256digest.substring(0, 20);
-    }
-
     this.generateUri = this.generateUri.bind(this);
-
-    this.state.uri = this.generateUri(this.state.amount, this.state.walletAddress);
-    console.log(this.state.url);
-
   }
 
   generateUri(amount, address) {
     return `hello3://iizk.jp/?amount=${amount}&recipientId=${address}`;
-  }
-
-  handleClick() {
-    ons.notification.alert('Hello, world!');
   }
 
   handleCancel() {
@@ -86,9 +68,6 @@ export default class ReceivePage extends React.Component {
               />
             </div>
           </div>
-
-
-
         </div>
 
         <AlertDialog isOpen={this.state.isOpen} onCancel={this.handleCancel.bind(this)} isCancelable={false}>
