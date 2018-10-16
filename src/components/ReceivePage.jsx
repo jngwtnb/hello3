@@ -3,6 +3,8 @@ import QRCode from "qrcode.react";
 import ons from 'onsenui';
 import {Page, Button, AlertDialog, Input} from 'react-onsenui';
 
+import WalletContext from '../contexts/wallet';
+
 export default class ReceivePage extends React.Component {
   constructor(...args){
     super(...args);
@@ -23,15 +25,21 @@ export default class ReceivePage extends React.Component {
   }
 
   handleCancel() {
+    console.log(this.props);
     this.setState({
       nfcDisabled: false,
       isOpen: false,
     });
   }
 
+  componentWillReceiveProps(nextProps) {
+    console.log("ReceivePage componentWillReceiveProps");
+    console.log(nextProps);
+  }
+
   render() {
     return (
-      <Page >
+      <Page>
         <div className="tab-like-bar">
           <Button modifier="quiet" className="nfc-icon" disabled={this.state.nfcDisabled} onClick={() => {
             this.setState({
@@ -48,7 +56,13 @@ export default class ReceivePage extends React.Component {
               <Input modifier="underbar" placeholder="" type={"text"} value={this.state.walletAddress}/>
             </div>
 
-            <QRCode value={this.state.uri} renderAs="svg" className="receive-box" />
+{
+//          <QRCode value={this.state.uri} renderAs="svg" className="receive-box" />
+}
+            <WalletContext.Consumer>
+              {wallet => <QRCode value={`hello3://iizk.jp/?amount=${this.state.amount}&recipientId=${wallet.address}`} renderAs="svg" className="receive-box" />}
+              
+            </WalletContext.Consumer>
 
             <div className="receive-label">入金予定金額を入力してください:</div>
             <div className="receive-form">

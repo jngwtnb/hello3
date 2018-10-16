@@ -2,7 +2,7 @@ import React from 'react';
 import {AlertDialog, Page, Button, Input} from 'react-onsenui';
 import ons from 'onsenui';
 
-const PROTOCOL = "hello3:";
+import WalletContext from '../contexts/wallet';
 
 export default class SendPage extends React.Component {
 
@@ -17,14 +17,14 @@ export default class SendPage extends React.Component {
     };
   }
 
-  scanQrCodeByCamera() {
-    let data = "";
-
+  handleQr() {
     if (window.cordova) {
       window.cordova.plugins.barcodeScanner.scan(
         function (result) {
-          data = result.cancelled ? "" : result.text;
-        },
+          let uri = result.cancelled ? "" : result.text;
+          if (uri === "") return;
+            this.setState({uri: uri});
+        }.bind(this),
         function (error) {
           alert("Scanning failed: " + error);
         },
@@ -33,56 +33,81 @@ export default class SendPage extends React.Component {
         },
       );  
     } else {
-      var amount = Math.floor(Math.random()*1000);
+      let amount = Math.floor(Math.random()*1000);
       console.log("RandomGeneratedAmount:", amount);
-      data = `hello3://iizk.jp/?amount=${amount}&recipientId=${this.props.wallet.address}`;
+      this.setState({uri: `hello3://iizk.jp/?amount=${amount}&recipientId=aaaaaaaaaaaaaaaaaaaa`});
+    }
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    if (nextState.uri !== this.state.uri) {
+      // QRコード　スキャン後
+
+      let [amount, recipientId] = this.parseSendUri(nextState.uri);
+
+      let messageHTML = `
+        <div class="send-dialog-content">
+          <table>
+            <tbody>
+              <tr><td class="name">amount</td><td>: </td><td>${amount}</td></tr>
+              <tr><td class="name">recipientId</td><td>: </td><td>${recipientId}</td></tr>
+            </tbody>
+          </table>
+        </div>
+        送信して構いませんか？
+        `;
+
+      ons.notification.confirm({
+        title: "",
+        messageHTML: messageHTML,
+        buttonLabels: ["いいえ", "はい"],
+      })
+      .then(index => {
+          if(index === 1) {
+            let parsedUrl = new URL("http://apps.cowry.co.jp/Monet2/api/wallet/send/");
+            let query = parsedUrl.searchParams;
+            query.append("deviceId", this.state.wallet.address);
+            query.append("toAddress", recipientId);
+            query.append("amount", amount);
+            query.append("requestId", "");
+
+            return fetch(parsedUrl.href);
+          } else {
+            throw new Error();
+          }
+      })
+      .then(response => {
+        console.log("fetched");
+        console.log(response);
+        response.text().then(text => ons.notification.alert({title: response.statusText, message: text}));
+      })
+      .catch(error => {});
+
+      return false;
     }
 
-    return data;
+    return true;
   }
 
   handleSend() {
 
   }
 
-  handleQr() {
-    console.log(this.props);
-
-    let uriString = this.scanQrCodeByCamera();
+  parseSendUri(uriString) {
+    if (uriString === "") {
+      let amount = Math.floor(Math.random()*1000);
+      console.log("RandomGeneratedAmount:", amount);
+      uriString = `hello3://iizk.jp/?amount=${amount}&recipientId=aaaaaaaaaaaaaaaaaaaa`;
+    }
     console.log(uriString);
+
     let uri = new URL(uriString);
 
-    if (uri.protocol === PROTOCOL) {
-      let amount = uri.searchParams.get("amount");
-      let recipientId = uri.searchParams.get("recipientId");
-      console.log(amount, recipientId);
+    let amount = uri.searchParams.get("amount");
+    let recipientId = uri.searchParams.get("recipientId");
+    console.log(amount, recipientId);
 
-      let messageHTML = `
-          <div class="send-dialog-content">
-            <table>
-              <tbody>
-                <tr><td class="name">amount</td><td>: </td><td>${amount}</td></tr>
-                <tr><td class="name">recipientId</td><td>: </td><td>${recipientId}</td></tr>
-              </tbody>
-            </table>
-          </div>
-          送信して構いませんか？
-          `;
-
-      ons.notification.confirm({
-        title: "",
-        messageHTML: messageHTML,
-        buttonLabels: ["いいえ", "はい"],
-        callback: index => {
-          if(index === 1) {
-            let deviceId = "";
-            let toAddress = recipientId;
-            let requestId = "";
-
-          }
-        },
-      })
-    }
+    return [amount, recipientId];
   }
 
   handleCancel() {
@@ -96,6 +121,13 @@ export default class SendPage extends React.Component {
   render() {
     return (
       <Page>
+        <WalletContext.Consumer>
+          {wallet => {
+            this.state.wallet = wallet;
+            null;
+          }}
+        </WalletContext.Consumer>
+
         <div className="tab-like-bar">
           <Button modifier="quiet" className="nfc-icon" disabled={this.state.nfcDisabled} onClick={() => {
             this.setState({
@@ -138,6 +170,7 @@ export default class SendPage extends React.Component {
             </Button>
           </div>
         </AlertDialog>
+
       </Page>
     )
   }

@@ -8,7 +8,7 @@ import './App.css';
 import './css/';
 
 import ons from 'onsenui';
-import {Navigator, Page, Button, Toolbar, Icon, Tab, Tabbar, Input, List, ListItem, PullHook} from 'react-onsenui';
+import {Tabbar, Navigator, Page, Button, Toolbar, Tab, Input} from 'react-onsenui';
 
 import BalancePage from './components/BalancePage';
 import SendPage from './components/SendPage';
@@ -20,6 +20,7 @@ import TabLikeButton from './components/TabLikeButton';
 
 import dngr from './images/dongri_logo.png';
 
+import WalletContext from './contexts/wallet';
 
 class MainPage extends React.Component {
   constructor(props) {
@@ -53,6 +54,50 @@ class MainPage extends React.Component {
   }
 
   render() {
+    const tabbar =
+      <WalletContext.Provider value={this.state.wallet}>
+        <Tabbar
+          ref="tabbar"
+          modifier="footer"
+          index={1}
+          swipeable={true}
+          onPreChange={ev => {
+            this.setState({
+              tabIndex: ev.activeIndex,
+              activeBalanceTab: ev.activeIndex === 0,
+              activeWalletTab: ev.activeIndex === 5,
+            });
+          }}
+//          wallet={this.state.wallet}
+          renderTabs={(activeIndex, tabbar) => [
+            {
+              content: <BalancePage title="Balance" key="balance-page" active={activeIndex === 4} tabbar={tabbar} />,
+              tab: <Tab label="残高" key="balance-tab" icon="fa-coins" className="hidden-tab" />
+            },
+            {
+              content: <SendPage title="Send" key="send-page" active={activeIndex === 0} tabbar={tabbar} />,
+              tab: <Tab key="send-tab" className="send-icon" />
+            },
+            {
+              content: <ReceivePage title="Receive" key="receive-page" active={activeIndex === 1} tabbar={tabbar} />,
+              tab: <Tab key="receive-tab" className="receive-icon" />
+            },
+            {
+              content: <HistoryPage title="History" key="history-page" active={activeIndex === 2} tabbar={tabbar} />,
+              tab: <Tab key="history-tab" className="history-icon" />
+            },
+            {
+              content: <SettingPage title="Setting" key="setting-page" active={activeIndex === 3} tabbar={tabbar} />,
+              tab: <Tab key="setting-tab" className="setting-icon" />
+            },
+            {
+              content: <WalletPage title="Wallet" key="wallet-page" active={activeIndex === 5} tabbar={tabbar} onSelect={this.handleSelect.bind(this)} />,
+              tab: <Tab key="wallet-tab" label="ウォレット" icon="fa-wallet" className="hidden-tab" />
+            },
+          ]}
+        />;
+      </WalletContext.Provider>
+
     return (
       <Page renderToolbar={() => 
         <Toolbar modifier="noshadow header">
@@ -82,46 +127,7 @@ class MainPage extends React.Component {
           </div>
         </Toolbar>
       }>
-        <Tabbar
-          ref="tabbar"
-          modifier="footer"
-          index={1}
-          swipeable={true}
-          onPreChange={ev => {
-            this.setState({
-              tabIndex: ev.activeIndex,
-              activeBalanceTab: ev.activeIndex === 0,
-              activeWalletTab: ev.activeIndex === 5,
-            });
-          }}
-          wallet={this.state.wallet}
-          renderTabs={(activeIndex, tabbar) => [
-            {
-              content: <BalancePage title="Balance" key="balance-page" active={activeIndex === 4} tabbar={tabbar} />,
-              tab: <Tab label="残高" key="balance-tab" icon="fa-coins" className="hidden-tab" />
-            },
-            {
-              content: <SendPage title="Send" key="send-page" active={activeIndex === 0} tabbar={tabbar} wallet={this.state.wallet}/>,
-              tab: <Tab key="send-tab" className="send-icon" />
-            },
-            {
-              content: <ReceivePage title="Receive" key="receive-page" active={activeIndex === 1} tabbar={tabbar} />,
-              tab: <Tab key="receive-tab" className="receive-icon" />
-            },
-            {
-              content: <HistoryPage title="History" key="history-page" active={activeIndex === 2} tabbar={tabbar} />,
-              tab: <Tab key="history-tab" className="history-icon" />
-            },
-            {
-              content: <SettingPage title="Setting" key="setting-page" active={activeIndex === 3} tabbar={tabbar} />,
-              tab: <Tab key="setting-tab" className="setting-icon" />
-            },
-            {
-              content: <WalletPage title="Wallet" key="wallet-page" active={activeIndex === 5} tabbar={tabbar} onSelect={this.handleSelect.bind(this)} />,
-              tab: <Tab key="wallet-tab" label="ウォレット" icon="fa-wallet" className="hidden-tab" />
-            },
-          ]}
-        />
+        {tabbar}
       </Page>
     );
   }
