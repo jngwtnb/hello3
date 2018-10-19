@@ -52,16 +52,23 @@ export default class ReceivePage extends React.Component {
 
         <div className="tab-like-bar__content">
           <div className="receive-container">
-            <div className="receive-form">
-              <Input modifier="underbar" placeholder="" type={"text"} value={this.state.walletAddress}/>
-            </div>
 
 {
 //          <QRCode value={this.state.uri} renderAs="svg" className="receive-box" />
 }
+
             <WalletContext.Consumer>
-              {wallet => <QRCode value={`hello3://iizk.jp/?amount=${this.state.amount}&recipientId=${wallet.address}`} renderAs="svg" className="receive-box" />}
-              
+              {wallet => 
+                <div className="receive-form">
+                  <Input modifier="underbar" placeholder="" readOnly={true} type={"text"} value={wallet.address}/>
+                </div>
+              }
+            </WalletContext.Consumer>
+
+            <WalletContext.Consumer>
+              {wallet => 
+               <QRCode value={`hello3://iizk.jp/?amount=${this.state.amount}&recipientId=${wallet.address}`} renderAs="svg" className="receive-box" />
+              }
             </WalletContext.Consumer>
 
             <div className="receive-label">入金予定金額を入力してください:</div>

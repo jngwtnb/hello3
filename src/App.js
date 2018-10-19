@@ -21,6 +21,7 @@ import TabLikeButton from './components/TabLikeButton';
 import dngr from './images/dongri_logo.png';
 
 import WalletContext from './contexts/wallet';
+import SettingContext from './contexts/setting';
 
 class MainPage extends React.Component {
   constructor(props) {
@@ -31,7 +32,9 @@ class MainPage extends React.Component {
       activeBalanceTab: false,
       activeWalletTab: false,
       wallet: {},
-      walletAddress: "",
+      setting: {
+        debug: false,
+      },
     }
   }
 
@@ -47,55 +50,58 @@ class MainPage extends React.Component {
     }
   }
 
-  handleSelect(data) {
-    this.setState({
-      wallet: data,
-    });
+  handleChangeWallet(data) {
+    this.setState({wallet: data});
+  }
+
+  handleChangeSetting(data) {
+    this.setState({setting: data});
   }
 
   render() {
     const tabbar =
       <WalletContext.Provider value={this.state.wallet}>
-        <Tabbar
-          ref="tabbar"
-          modifier="footer"
-          index={1}
-          swipeable={true}
-          onPreChange={ev => {
-            this.setState({
-              tabIndex: ev.activeIndex,
-              activeBalanceTab: ev.activeIndex === 0,
-              activeWalletTab: ev.activeIndex === 5,
-            });
-          }}
-//          wallet={this.state.wallet}
-          renderTabs={(activeIndex, tabbar) => [
-            {
-              content: <BalancePage title="Balance" key="balance-page" active={activeIndex === 4} tabbar={tabbar} />,
-              tab: <Tab label="残高" key="balance-tab" icon="fa-coins" className="hidden-tab" />
-            },
-            {
-              content: <SendPage title="Send" key="send-page" active={activeIndex === 0} tabbar={tabbar} />,
-              tab: <Tab key="send-tab" className="send-icon" />
-            },
-            {
-              content: <ReceivePage title="Receive" key="receive-page" active={activeIndex === 1} tabbar={tabbar} />,
-              tab: <Tab key="receive-tab" className="receive-icon" />
-            },
-            {
-              content: <HistoryPage title="History" key="history-page" active={activeIndex === 2} tabbar={tabbar} />,
-              tab: <Tab key="history-tab" className="history-icon" />
-            },
-            {
-              content: <SettingPage title="Setting" key="setting-page" active={activeIndex === 3} tabbar={tabbar} />,
-              tab: <Tab key="setting-tab" className="setting-icon" />
-            },
-            {
-              content: <WalletPage title="Wallet" key="wallet-page" active={activeIndex === 5} tabbar={tabbar} onSelect={this.handleSelect.bind(this)} />,
-              tab: <Tab key="wallet-tab" label="ウォレット" icon="fa-wallet" className="hidden-tab" />
-            },
-          ]}
-        />;
+        <SettingContext.Provider value={this.state.setting}>
+          <Tabbar
+            ref="tabbar"
+            modifier="footer"
+            index={1}
+            swipeable={true}
+            onPreChange={ev => {
+              this.setState({
+                tabIndex: ev.activeIndex,
+                activeBalanceTab: ev.activeIndex === 0,
+                activeWalletTab: ev.activeIndex === 5,
+              });
+            }}
+            renderTabs={(activeIndex, tabbar) => [
+              {
+                content: <BalancePage title="Balance" key="balance-page" active={activeIndex === 4} tabbar={tabbar} />,
+                tab: <Tab label="残高" key="balance-tab" icon="fa-coins" className="hidden-tab" />
+              },
+              {
+                content: <SendPage title="Send" key="send-page" active={activeIndex === 0} tabbar={tabbar} />,
+                tab: <Tab key="send-tab" className="send-icon" />
+              },
+              {
+                content: <ReceivePage title="Receive" key="receive-page" active={activeIndex === 1} tabbar={tabbar} />,
+                tab: <Tab key="receive-tab" className="receive-icon" />
+              },
+              {
+                content: <WalletContext.Consumer key="history-consumer">{wallet => <HistoryPage title="History" key="history-page" active={activeIndex === 2} tabbar={tabbar} wallet={wallet} />}</WalletContext.Consumer>,
+                tab: <Tab key="history-tab" className="history-icon" />
+              },
+              {
+                content: <SettingPage title="Setting" key="setting-page" active={activeIndex === 3} tabbar={tabbar} initialSetting={this.state.setting} onChange={this.handleChangeSetting.bind(this)} />,
+                tab: <Tab key="setting-tab" className="setting-icon" />
+              },
+              {
+                content: <WalletPage title="Wallet" key="wallet-page" active={activeIndex === 5} tabbar={tabbar} onSelect={this.handleChangeWallet.bind(this)} />,
+                tab: <Tab key="wallet-tab" label="ウォレット" icon="fa-wallet" className="hidden-tab" />
+              },
+            ]}
+          />;
+        </SettingContext.Provider>
       </WalletContext.Provider>
 
     return (

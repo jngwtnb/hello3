@@ -1,14 +1,17 @@
 import React from 'react';
 import ons from 'onsenui';
 import {Page, Button, PullHook, Icon, List, ListItem} from 'react-onsenui';
+import WalletContext from '../contexts/wallet';
 
 export default class HistoryPage extends React.Component {
   constructor(props) {
     super(props);
+    console.log(props);
 
     this.state = {
       pullHookState: 'initial',
       data: [],
+      wallet: props.wallet,
     }
 
     this.icons = {
@@ -24,14 +27,22 @@ export default class HistoryPage extends React.Component {
     };
   }
 
-  componentDidMount() {
-    if (window.cordova) {
+//  componentDidMount() {
+//    if (window.cordova) {
+//      this.handleLoad(() => {});
+//    }
+//  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.wallet !== this.props.wallet) {
+      console.log("changed wallet");
       this.handleLoad(() => {});
     }
   }
 
   handleLoad(done) {
-    fetch('http://apps.cowry.co.jp/Monet2/api/wallet/history/?deviceId=13CZLXCy6MD2L4iwEeeyXTB8pDAmdQyhD5&limit=100&offset=0')
+    console.log(this.props.wallet);
+    fetch(`http://apps.cowry.co.jp/Monet2/api/wallet/history/?deviceId=${this.props.wallet.address}&limit=100&offset=0`)
       .then((response) => {
         if(response.ok) {
           return response.json();
@@ -64,10 +75,10 @@ export default class HistoryPage extends React.Component {
         });
 
 
-        this.setState({data: []}); // 更新
+//        this.setState({data: []}); // 更新
         this.setState({data: data}, done);
       })
-      .catch((error) => console.log(error));
+      .catch((error) => ons.notification.alert(error));
 
   }
 
@@ -81,7 +92,7 @@ export default class HistoryPage extends React.Component {
     return (
       <Page>
         <div className="tab-like-bar without-label">
-          <Button modifier="quiet" className="sort-button sort-icon"/>
+          <Button modifier="quiet" className="sort-button sort-icon" />
         </div>
 
         <div className="tab-like-bar__content">

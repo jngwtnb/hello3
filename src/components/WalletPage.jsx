@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import ons from 'onsenui';
-import {Page, Button, Icon, PullHook, List, ListItem, Radio, AlertDialog, Row, Col} from 'react-onsenui';
+import {Page, Button, List, ListItem, AlertDialog} from 'react-onsenui';
 import jsSHA from 'jssha';
 
 export default class WalletPage extends React.Component {
@@ -10,12 +10,7 @@ export default class WalletPage extends React.Component {
 
     this.state = {
       pullHookState: 'initial',
-      data: [
-        {label: "suzuki",         ticker: "DNGR", address: this.generateAddress()},
-        {label: "Ichirooooooh's", ticker: "DNGR", address: this.generateRandomAddress()},
-        {label: "鈴木一郎の財布",  ticker: "BTC" , address: this.generateRandomAddress()},
-        {label: "suzuki",         ticker: "BTC",  address: this.generateRandomAddress()},
-      ],
+      data: [],
       selectedIndex: 0,
       deleteDialogOpened: false,
       clickedDeleteButton: null,
@@ -27,7 +22,23 @@ export default class WalletPage extends React.Component {
         return this.props.onSelect(event);
       }
     };
+  }
 
+  componentWillMount() {
+    let data = JSON.parse(localStorage.getItem("wallets"));
+
+    if (data === null) {
+      data = [
+        {label: "suzuki",         ticker: "DNGR", address: this.generateAddress()},
+        {label: "Ichirooooooh's", ticker: "DNGR", address: this.generateRandomAddress()},
+        {label: "鈴木一郎の財布",  ticker: "BTC" , address: this.generateRandomAddress()},
+        {label: "suzuki",         ticker: "BTC",  address: this.generateRandomAddress()},
+      ];
+
+      localStorage.setItem("wallets", JSON.stringify(data))
+    }
+
+    this.setState({data: data});
   }
 
   handleLoad(done) {
@@ -86,7 +97,7 @@ export default class WalletPage extends React.Component {
       var sha256digest = shaObj.getHash("HEX");
       addr = sha256digest.substring(0, 20);
     } else {
-      addr = 'WchKpVqJAaA6FBfWy1dKpLVhy28XrbDJAt';
+      addr = '13CZLXCy6MD2L4iwEeeyXTB8pDAmdQyhD5';
     }
 
     return addr;

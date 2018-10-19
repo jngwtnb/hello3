@@ -3,9 +3,29 @@ import ons from 'onsenui';
 import {Page, Button, Input, List, ListItem, ListHeader, Switch} from 'react-onsenui';
 
 export default class SettingPage extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = this;
+    if(props.initialSetting) {
+      this.state = props.initialSetting;
+    }
+
+    this._onChange = event => {
+      if (this.props.onChange) {
+        return this.props.onChange(event);
+      }
+    };
+  }
+
+  handleChangeDebug(event) {
+    this.state.debug = event.value;
+    this._onChange(this.state);
+  }
+
   render() {
     return (
-      <Page >
+      <Page>
         <div className="tab-like-bar half"></div>
         <div className="tab-like-bar__content">
           <div className="setting-container">
@@ -22,7 +42,7 @@ export default class SettingPage extends React.Component {
                 <ListItem key="debug-list-item">
                   <div className="center">デバッグモード</div>
                   <div className="right">
-                    <Switch />
+                    <Switch checked={this.state.debug} onChange={this.handleChangeDebug.bind(this)}/>
                   </div>
                 </ListItem>,
               ]}

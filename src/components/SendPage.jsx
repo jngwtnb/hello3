@@ -3,6 +3,7 @@ import {AlertDialog, Page, Button, Input} from 'react-onsenui';
 import ons from 'onsenui';
 
 import WalletContext from '../contexts/wallet';
+import SettingsContext from '../contexts/setting';
 
 export default class SendPage extends React.Component {
 
@@ -14,6 +15,7 @@ export default class SendPage extends React.Component {
       qrDisabled: false,
       isOpen: false,
       dialogMessage: "",
+      setting: null,
     };
   }
 
@@ -35,7 +37,7 @@ export default class SendPage extends React.Component {
     } else {
       let amount = Math.floor(Math.random()*1000);
       console.log("RandomGeneratedAmount:", amount);
-      this.setState({uri: `hello3://iizk.jp/?amount=${amount}&recipientId=aaaaaaaaaaaaaaaaaaaa`});
+      this.setState({uri: `hello3://iizk.jp/?amount=${amount}&recipientId=WmjedSdfqYUkNEkKBgsNSrCUEZCYqkqNXd`});
     }
   }
 
@@ -127,6 +129,13 @@ export default class SendPage extends React.Component {
             null;
           }}
         </WalletContext.Consumer>
+
+        <SettingsContext.Consumer>
+          {settings => {
+            this.state.settings = settings;
+            null;
+          }}
+        </SettingsContext.Consumer>
 
         <div className="tab-like-bar">
           <Button modifier="quiet" className="nfc-icon" disabled={this.state.nfcDisabled} onClick={() => {
