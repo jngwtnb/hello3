@@ -2,7 +2,7 @@ import React from 'react';
 import {AlertDialog, Page, Button, Input} from 'react-onsenui';
 import ons from 'onsenui';
 
-import WalletContext from '../contexts/wallet';
+import WalletsContext from '../contexts/wallets';
 import SettingContext from '../contexts/setting';
 
 export default class SendPage extends React.Component {
@@ -62,10 +62,10 @@ export default class SendPage extends React.Component {
       ons.notification.confirm({
         title: "",
         messageHTML: messageHTML,
-        buttonLabels: ["いいえ", "はい"],
+        buttonLabels: ["はい", "いいえ"],
       })
       .then(index => {
-          if(index === 1) {
+          if(index === 0) {
             let parsedUrl = new URL("http://apps.cowry.co.jp/Monet2/api/wallet/send/");
             let query = parsedUrl.searchParams;
             query.append("deviceId", this.state.wallet.address);
@@ -128,12 +128,12 @@ export default class SendPage extends React.Component {
   render() {
     return (
       <Page>
-        <WalletContext.Consumer>
-          {wallet => {
-            this.state.wallet = wallet;
+        <WalletsContext.Consumer>
+          {wallets => {
+            this.state.wallet = wallets;
             null;
           }}
-        </WalletContext.Consumer>
+        </WalletsContext.Consumer>
 
         <SettingContext.Consumer>
           {setting => {

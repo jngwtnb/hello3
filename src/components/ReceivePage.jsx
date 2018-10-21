@@ -3,7 +3,7 @@ import QRCode from "qrcode.react";
 import ons from 'onsenui';
 import {Page, Button, AlertDialog, Input} from 'react-onsenui';
 
-import WalletContext from '../contexts/wallet';
+import WalletsContext from '../contexts/wallets';
 
 export default class ReceivePage extends React.Component {
   constructor(...args){
@@ -47,19 +47,19 @@ export default class ReceivePage extends React.Component {
 
         <div className="tab-like-bar__content">
           <div className="receive-container">
-            <WalletContext.Consumer>
-              {wallet => 
+            <WalletsContext.Consumer>
+              {wallets => 
                 <div className="receive-form">
-                  <Input modifier="underbar" placeholder="" readOnly={true} type={"text"} value={wallet.address}/>
+                  <Input modifier="underbar" placeholder="" readOnly={true} type={"text"} value={wallets.address}/>
                 </div>
               }
-            </WalletContext.Consumer>
+            </WalletsContext.Consumer>
 
-            <WalletContext.Consumer>
-              {wallet => 
-               <QRCode value={`hello3://iizk.jp/?amount=${this.state.amount}&recipientId=${wallet.address}`} renderAs="svg" className="receive-box" />
+            <WalletsContext.Consumer>
+              {wallets => 
+               <QRCode value={`hello3://iizk.jp/?amount=${this.state.amount}&recipientId=${wallets.address}`} renderAs="svg" className="receive-box" />
               }
-            </WalletContext.Consumer>
+            </WalletsContext.Consumer>
 
             <div className="receive-label">入金予定金額を入力してください:</div>
             <div className="receive-form">

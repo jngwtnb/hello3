@@ -45,6 +45,9 @@ export default class SettingPage extends React.Component {
                     <Switch checked={this.state.debug} onChange={this.handleChangeDebug.bind(this)}/>
                   </div>
                 </ListItem>,
+                <ListItem key="general-list-item-clear">
+                  <div className="center"><Button onClick={() => localStorage.clear()}>localStorageを初期化する</Button></div>
+                </ListItem>,
                 <ListHeader key="history-list-header">履歴</ListHeader>,
                 <ListItem key="history-list-item">
                   <div className="center">桁毎に色分けする</div>

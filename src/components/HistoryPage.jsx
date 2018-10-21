@@ -1,7 +1,8 @@
 import React from 'react';
 import ons from 'onsenui';
 import {Page, Button, PullHook, Icon, List, ListItem} from 'react-onsenui';
-import WalletContext from '../contexts/wallet';
+
+import WalletsContext from '../contexts/wallets';
 
 export default class HistoryPage extends React.Component {
   constructor(props) {
@@ -10,7 +11,6 @@ export default class HistoryPage extends React.Component {
     this.state = {
       pullHookState: 'initial',
       data: [],
-      wallet: props.wallet,
     }
 
     this.icons = {
@@ -38,9 +38,8 @@ export default class HistoryPage extends React.Component {
     }
   }
 
-  handleLoad(done) {
-    console.log(this.props.wallet);
-    fetch(`http://apps.cowry.co.jp/Monet2/api/wallet/history/?deviceId=${this.props.wallet.address}&limit=100&offset=0`)
+  handleLoad(wallets, index, done) {
+    fetch(`http://apps.cowry.co.jp/Monet2/api/wallet/history/?deviceId=${wallets[index].address}&limit=100&offset=0`)
       .then((response) => {
         if(response.ok) {
           return response.json();
@@ -95,26 +94,28 @@ export default class HistoryPage extends React.Component {
 
         <div className="tab-like-bar__content">
         <Page>
-          <PullHook
-            fixedContent={true}
-            onChange={this.handleChange.bind(this)}
-            onLoad={this.handleLoad.bind(this)}
-          >
-            {
-              (this.state.pullHookState === 'initial') ?
-                <span>
-                  <Icon size={35} spin={false} icon='ion-arrow-down-a' />
-                  Pull down to refresh
-                </span>
-              : (this.state.pullHookState === 'preaction') ?
-                <span>
-                  <Icon size={35} spin={false} icon='ion-arrow-up-a' />
-                  Release to refresh
-                </span>
-              :
-                <span><Icon size={35} spin={true} icon='ion-load-d'></Icon> Loading data...</span>
-            }
-          </PullHook>
+          <WalletsContext.Consumer>{([wallets, index]) =>
+            <PullHook
+              fixedContent={true}
+              onChange={this.handleChange.bind(this)}
+              onLoad={this.handleLoad.bind(this, wallets, index)}
+            >
+              {
+                (this.state.pullHookState === 'initial') ?
+                  <span>
+                    <Icon size={35} spin={false} icon='ion-arrow-down-a' />
+                    Pull down to refresh
+                  </span>
+                : (this.state.pullHookState === 'preaction') ?
+                  <span>
+                    <Icon size={35} spin={false} icon='ion-arrow-up-a' />
+                    Release to refresh
+                  </span>
+                :
+                  <span><Icon size={35} spin={true} icon='ion-load-d'></Icon> Loading data...</span>
+              }
+            </PullHook>
+          }</WalletsContext.Consumer>
 
           <List
             modifier="noborder history-inset"

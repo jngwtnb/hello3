@@ -21,8 +21,11 @@ import Util from './components/Util';
 
 import dngr from './images/dongri_logo.png';
 
-import WalletContext from './contexts/wallet';
+import WalletsContext from './contexts/wallets';
 import SettingContext from './contexts/setting';
+
+const BALANCE_TAB_INDEX = 0;
+const WALLET_TAB_INDEX = 5;
 
 class MainPage extends React.Component {
   constructor(props) {
@@ -30,65 +33,72 @@ class MainPage extends React.Component {
 
     this.state = {
       tabIndex: 1,
-      wallet: {},
+      selectedWallet: {},
+      selectedWalletIndex: 0,
+      wallets: [],
       setting: {
         debug: false,
       },
     };
-
-    this.BALANCE_TAB_INDEX = 0;
-    this.WALLET_TAB_INDEX = 5;
   }
 
   componentWillMount() {
-localStorage.clear();
     let wallets = JSON.parse(localStorage.getItem("wallets"));
-
     if (wallets === null) {
-      wallets = {
-        index: 0,
-        data: [
-          {label: "suzuki",         ticker: "DNGR", address: Util.generateAddress()},
-          {label: "Ichirooooooh's", ticker: "DNGR", address: Util.generateRandomAddress()},
-          {label: "鈴木一郎の財布",  ticker: "BTC" , address: Util.generateRandomAddress()},
-          {label: "suzuki",         ticker: "BTC",  address: Util.generateRandomAddress()},
-        ],
-      };
+      wallets = [
+        {label: "suzuki",         ticker: "DNGR", address: Util.generateAddress()},
+        {label: "Ichirooooooh's", ticker: "DNGR", address: Util.generateRandomAddress()},
+        {label: "鈴木一郎の財布",  ticker: "BTC" , address: Util.generateRandomAddress()},
+        {label: "suzuki",         ticker: "BTC",  address: Util.generateRandomAddress()},
+      ];
 
       localStorage.setItem("wallets", JSON.stringify(wallets))
     }
 
-    this.setState({wallets: wallets});
+    let index = localStorage.getItem("wallet-index");
+    if (index === null) {
+      index = 0;
+      localStorage.setItem("wallet-index", index);
+    }
+console.log(wallets, index);
+    this.setState({
+      selectedWallet: wallets[index],
+      selectedWalletIndex: index,
+      wallets: wallets,
+    });
   }
-
-
-
 
   shouldComponentUpdate(nextProps, nextState) {
     if (nextState.tabIndex === this.state.tabIndex) {
-      return false;
+      if (nextState.selectedWalletIndex === this.state.selectedWalletIndex) {
+        return false;
+      }
     }
-
     return true;
   }
 
   handleClickBalanceTab() {
-    if (this.state.tabIndex !== this.BALANCE_TAB_INDEX) {
+    if (this.state.tabIndex !== BALANCE_TAB_INDEX) {
 //    this.refs.tabbar._tabbar.setActiveTab(0, { reject: false });
-      this.setState({tabIndex: this.BALANCE_TAB_INDEX});
+      this.setState({tabIndex: BALANCE_TAB_INDEX});
     }
   }
 
   handleClickWalletTab() {
-    if (this.state.tabIndex !== this.WALLET_TAB_INDEX) {
+    if (this.state.tabIndex !== WALLET_TAB_INDEX) {
 //    this.refs.tabbar._tabbar.setActiveTab(5, { reject: false });
-      this.setState({tabIndex: this.WALLET_TAB_INDEX});
+      this.setState({tabIndex: WALLET_TAB_INDEX});
     }
   }
 
-  handleChangeWallet(data) {
-    console.log("App handleChangeWallet");
-//    this.setState({wallet: data});
+  handleSelectWallet(index) {
+    if (index !== this.state.selectedWalletIndex) {
+      this.setState({
+        selectedWallet: this.state.wallets[index],
+        selectedWalletIndex: index,
+      });
+      localStorage.setItem("wallet-index", index);
+    }
   }
 
   handleChangeSetting(data) {
@@ -97,7 +107,7 @@ localStorage.clear();
 
   render() {
     const tabbar =
-      <WalletContext.Provider value={this.state.wallet}>
+      <WalletsContext.Provider value={[this.state.wallets, this.state.selectedWalletIndex]}>
         <SettingContext.Provider value={this.state.setting}>
           <Tabbar
             ref="tabbar"
@@ -119,10 +129,7 @@ localStorage.clear();
                 tab: <Tab key="receive-tab" className="receive-icon" />
               },
               {
-                content: 
-                  <WalletContext.Consumer key="history-consumer">
-                    {wallet => <HistoryPage title="History" key="history-page" active={activeIndex === 2} tabbar={tabbar} wallet={wallet} />}
-                  </WalletContext.Consumer>,
+                content: <HistoryPage title="History" key="history-page" active={activeIndex === 2} tabbar={tabbar} />,
                 tab: <Tab key="history-tab" className="history-icon" />
               },
               {
@@ -130,13 +137,13 @@ localStorage.clear();
                 tab: <Tab key="setting-tab" className="setting-icon" />
               },
               {
-                content: <WalletPage title="Wallet" key="wallet-page" active={activeIndex === 5} tabbar={tabbar} onSelect={this.handleChangeWallet.bind(this)} />,
+                content: <WalletPage title="Wallet" key="wallet-page" active={activeIndex === 5} tabbar={tabbar} initialIndex={this.state.selectedWalletIndex} onSelect={this.handleSelectWallet.bind(this)} />,
                 tab: <Tab key="wallet-tab" label="ウォレット" icon="fa-wallet" className="hidden-tab" />
               },
             ]}
           />;
         </SettingContext.Provider>
-      </WalletContext.Provider>
+      </WalletsContext.Provider>
 
     return (
       <Page renderToolbar={() => 
@@ -144,24 +151,24 @@ localStorage.clear();
           <div className="toolbar-container">
             <TabLikeButton
               className="balance-button balance-icon"
-              active={this.state.tabIndex === this.BALANCE_TAB_INDEX}
+              active={this.state.tabIndex === BALANCE_TAB_INDEX}
               onClick={this.handleClickBalanceTab.bind(this)}
             />
 
             <div className="balance">
               <span className="balance-amount">12,300</span>
-              <span className="balance-ticker">{this.state.wallet.ticker}</span>
+              <span className="balance-ticker">{this.state.selectedWallet.ticker}</span>
             </div>
 
             <div className="partition" />
 
             <div className="wallet">
-              <div className="wallet-name">{this.state.wallet.label}</div>
+              <div className="wallet-name">{this.state.selectedWallet.label}</div>
             </div>
 
             <TabLikeButton
               className="wallet-button wallet-icon"
-              active={this.state.tabIndex === this.WALLET_TAB_INDEX}
+              active={this.state.tabIndex === WALLET_TAB_INDEX}
               onClick={this.handleClickWalletTab.bind(this)}
             />
           </div>
