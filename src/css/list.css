@@ -1,10 +1,14 @@
-.list--myinset {
+.list--balance-inset,
+.list--history-inset,
+.list--wallet-inset {
   margin: 24px 16px 16px 16px;
   background-color: transparent;
   box-sizing: border-box;
 }
 
-.list-item--inset {
+.list-item--balance-inset,
+.list-item--history-inset,
+.list-item--wallet-inset {
   box-sizing: border-box;
   margin: 8px 0px;
   border: 1px solid #ccc;
@@ -12,3 +16,15 @@
   background-color: #fff;
   padding: 0px 4px;
 }
+
+.list--wallet-inset {
+  margin-top: 8px;
+}
+
+.list--setting-inset {
+  margin: 16px 16px 16px 16px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+}
+
+

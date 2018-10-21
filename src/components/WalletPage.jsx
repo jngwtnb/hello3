@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import ons from 'onsenui';
 import {Page, Button, List, ListItem, AlertDialog} from 'react-onsenui';
-import jsSHA from 'jssha';
 
 export default class WalletPage extends React.Component {
   constructor(props) {
@@ -10,7 +9,10 @@ export default class WalletPage extends React.Component {
 
     this.state = {
       pullHookState: 'initial',
-      data: [],
+      wallets: {
+        index: 0,
+        data: [],
+      },
       selectedIndex: 0,
       deleteDialogOpened: false,
       clickedDeleteButton: null,
@@ -41,77 +43,21 @@ export default class WalletPage extends React.Component {
     this.setState({data: data});
   }
 
-  handleLoad(done) {
-    fetch('http://apps.cowry.co.jp/Monet2/api/wallet/history/?deviceId=13CZLXCy6MD2L4iwEeeyXTB8pDAmdQyhD5&limit=100&offset=0')
-      .then((response) => {
-        if(response.ok) {
-          return response.json();
-        } else {
-          throw new Error();
-        }
-      })
-      .then((history) => {
-        const statuses = ["完了", "完了", "完了", "完了", "未確認", "不明"];
-        const wallets = ["suzuki", "ichirooooooh's", "鈴木一郎の財布"];
+  componentDidMount() {
+    console.log("componentDidMount");
+//    this.setState({selectedIndex: 0});
+//    this._onSelect(this.state.data[0]);
+  }
 
-        let data = history.histories.map(h => {
-          let priceLength = h.amount.length;
-          let amountColor
-              = priceLength >= 7 ? "red"
-              : priceLength >= 6 ? "green"
-              :                    "black"
-              ;
-
-          let status = statuses[Math.floor(Math.random() * statuses.length)];
-          let wallet = wallets[Math.floor(Math.random() * wallets.length)];
-
-          return {
-            status: {icon: this.icons[status], label: status},
-            datetime: new Date(h.createdAt).toLocaleString("ja-JP", {timeZone: "Asia/Tokyo"}),
-            price: {amount: h.amount, color: amountColor},
-            cause: this.causes[h.cause],
-            wallet: wallet,
-          };
-        });
-
-
-        this.setState({data: []}); // 更新
-        this.setState({data: data}, done);
-      })
-      .catch((error) => console.log(error));
-
+  componentWillUpdate(nextProps, nextState) {
+    console.log("componentWillUpdate");
+    this._onSelect(nextState.data[nextState.selectedIndex]);
   }
 
   handleChange(event) {
     this.setState({
       pullHookState: event.state
     });
-  }
-
-  generateAddress() {
-    let addr;
-
-    if (window.cordova && window.device) {
-      var shaObj = new jsSHA("SHA-256", "TEXT");
-      shaObj.update(window.device.uuid + "a.r.c.t.u.r.u.s");
-      var sha256digest = shaObj.getHash("HEX");
-      addr = sha256digest.substring(0, 20);
-    } else {
-      addr = '13CZLXCy6MD2L4iwEeeyXTB8pDAmdQyhD5';
-    }
-
-    return addr;
-  }
-
-  generateRandomAddress() {
-    let len = Math.floor(Math.random()*10) + 26;
-    let chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-";
-    let charsLen = chars.length;
-    let addr = "";
-    for (let i=0; i<len; i++) {
-      addr += chars[Math.floor(Math.random()*charsLen)];
-    }
-    return addr;
   }
 
   handleDeleteDialogCancel() {
@@ -123,16 +69,9 @@ export default class WalletPage extends React.Component {
     });
   }
 
-  componentDidMount() {
-    this.setState({selectedIndex: 0});
-    this._onSelect(this.state.data[0]);
-  }
-
-  componentWillUpdate(nextProps, nextState) {
-    this._onSelect(nextState.data[nextState.selectedIndex]);
-  }
-
   render() {
+    const wallet = this.state.wallets.data[this.state.clickedDeleteButtonIndex];
+
     return (
       <Page>
         <div className="tab-like-bar">
@@ -142,12 +81,12 @@ export default class WalletPage extends React.Component {
 
         <div className="tab-like-bar__content">
           <List
-            modifier="myinset noborder"
-            dataSource={this.state.data}
+            modifier="noborder wallet-inset"
+            dataSource={this.state.wallets.data}
             renderRow={(data, idx) =>
               <ListItem
                 key={`wallet-item-${idx}`}
-                modifier="nodivider inset selectable"
+                modifier="nodivider wallet-inset selectable"
                 tappable={true}
                 selected={idx === this.state.selectedIndex}
                 onClick={() => this.setState({selectedIndex: idx})}
@@ -183,9 +122,9 @@ export default class WalletPage extends React.Component {
             <div className="wallet-dialog-content">
               <table>
                 <tbody>
-                  <tr><td className="name">label</td><td>: </td><td>{this.state.data[this.state.clickedDeleteButtonIndex].label}</td></tr>
-                  <tr><td className="name">ticker</td><td>: </td><td>{this.state.data[this.state.clickedDeleteButtonIndex].ticker}</td></tr>
-                  <tr><td className="name">address</td><td>: </td><td>{this.state.data[this.state.clickedDeleteButtonIndex].address}</td></tr>
+                  <tr><td className="name">label</td><td>: </td><td>{wallet ? wallet.label : ""}</td></tr>
+                  <tr><td className="name">ticker</td><td>: </td><td>{wallet ? wallet.ticker : ""}</td></tr>
+                  <tr><td className="name">address</td><td>: </td><td>{wallet ? wallet.address : ""}</td></tr>
                 </tbody>
               </table>
             </div>

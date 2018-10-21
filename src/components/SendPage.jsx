@@ -3,7 +3,7 @@ import {AlertDialog, Page, Button, Input} from 'react-onsenui';
 import ons from 'onsenui';
 
 import WalletContext from '../contexts/wallet';
-import SettingsContext from '../contexts/setting';
+import SettingContext from '../contexts/setting';
 
 export default class SendPage extends React.Component {
 
@@ -15,7 +15,7 @@ export default class SendPage extends React.Component {
       qrDisabled: false,
       isOpen: false,
       dialogMessage: "",
-      setting: null,
+      setting: {},
     };
   }
 
@@ -81,7 +81,12 @@ export default class SendPage extends React.Component {
       .then(response => {
         console.log("fetched");
         console.log(response);
-        response.text().then(text => ons.notification.alert({title: response.statusText, message: text}));
+
+        if (this.state.setting.debug) {
+          response.text().then(text => ons.notification.alert({title: response.statusText, message: text}));
+        } else {
+
+        }
       })
       .catch(error => {});
 
@@ -130,12 +135,12 @@ export default class SendPage extends React.Component {
           }}
         </WalletContext.Consumer>
 
-        <SettingsContext.Consumer>
-          {settings => {
-            this.state.settings = settings;
+        <SettingContext.Consumer>
+          {setting => {
+            this.state.setting = setting;
             null;
           }}
-        </SettingsContext.Consumer>
+        </SettingContext.Consumer>
 
         <div className="tab-like-bar">
           <Button modifier="quiet" className="nfc-icon" disabled={this.state.nfcDisabled} onClick={() => {

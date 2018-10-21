@@ -32,11 +32,6 @@ export default class ReceivePage extends React.Component {
     });
   }
 
-  componentWillReceiveProps(nextProps) {
-    console.log("ReceivePage componentWillReceiveProps");
-    console.log(nextProps);
-  }
-
   render() {
     return (
       <Page>
@@ -52,11 +47,6 @@ export default class ReceivePage extends React.Component {
 
         <div className="tab-like-bar__content">
           <div className="receive-container">
-
-{
-//          <QRCode value={this.state.uri} renderAs="svg" className="receive-box" />
-}
-
             <WalletContext.Consumer>
               {wallet => 
                 <div className="receive-form">

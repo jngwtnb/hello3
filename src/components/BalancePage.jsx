@@ -21,12 +21,12 @@ export default class BalancePage extends React.Component {
 
         <div className="tab-like-bar__content">
           <List
-            modifier="myinset noborder"
+            modifier="noborder balance-inset"
             dataSource={this.state.data}
             renderRow={(data, idx) =>
               <ListItem
                 key={`balance-item-${idx}`}
-                modifier="nodivider inset"
+                modifier="nodivider balance-inset"
               >
                 <div className="balance-item-container">
                   <div className={"icon " + data.icon} />

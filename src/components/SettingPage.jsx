@@ -30,28 +30,22 @@ export default class SettingPage extends React.Component {
         <div className="tab-like-bar__content">
           <div className="setting-container">
             <List
-              modifier="noborder"
+              modifier="noborder setting-inset"
               className="general"
               dataSource={[
-                <ListItem key="nfc-list-item">
+                <ListItem key="general-list-item-nfc">
                   <div className="center">NFC決済時に確認する（未実装）</div>
                   <div className="right">
                     <Switch />
                   </div>
                 </ListItem>,
-                <ListItem key="debug-list-item">
+                <ListItem key="general-list-item-debug">
                   <div className="center">デバッグモード</div>
                   <div className="right">
                     <Switch checked={this.state.debug} onChange={this.handleChangeDebug.bind(this)}/>
                   </div>
                 </ListItem>,
-              ]}
-              renderRow={(row) => row}
-            />
-            <List
-              modifier="noborder"
-              className="history"
-              dataSource={[
+                <ListHeader key="history-list-header">履歴</ListHeader>,
                 <ListItem key="history-list-item">
                   <div className="center">桁毎に色分けする</div>
                   <div className="right">
@@ -59,7 +53,6 @@ export default class SettingPage extends React.Component {
                   </div>
                 </ListItem>,
               ]}
-              renderHeader={() => <ListHeader>履歴</ListHeader>}
               renderRow={(row) => row}
             />
           </div>

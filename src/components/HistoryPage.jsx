@@ -6,7 +6,6 @@ import WalletContext from '../contexts/wallet';
 export default class HistoryPage extends React.Component {
   constructor(props) {
     super(props);
-    console.log(props);
 
     this.state = {
       pullHookState: 'initial',
@@ -34,8 +33,7 @@ export default class HistoryPage extends React.Component {
 //  }
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevProps.wallet !== this.props.wallet) {
-      console.log("changed wallet");
+    if (prevProps.wallet !== this.props.wallet && window.cordova) {
       this.handleLoad(() => {});
     }
   }
@@ -75,8 +73,8 @@ export default class HistoryPage extends React.Component {
         });
 
 
-//        this.setState({data: []}); // 更新
         this.setState({data: data}, done);
+        this.forceUpdate();
       })
       .catch((error) => ons.notification.alert(error));
 
@@ -98,6 +96,7 @@ export default class HistoryPage extends React.Component {
         <div className="tab-like-bar__content">
         <Page>
           <PullHook
+            fixedContent={true}
             onChange={this.handleChange.bind(this)}
             onLoad={this.handleLoad.bind(this)}
           >
@@ -118,10 +117,10 @@ export default class HistoryPage extends React.Component {
           </PullHook>
 
           <List
-            modifier="myinset noborder"
+            modifier="noborder history-inset"
             dataSource={this.state.data}
             renderRow={(data, idx) =>
-              <ListItem key={`row-${idx}`} modifier="nodivider inset">
+              <ListItem key={`row-${idx}`} modifier="nodivider history-inset">
                 <div className="history-item-container">
                   <div className="status">
                     <Icon size={{default: 20}} fixedWidth={true} style={{backgroundColor: data.status.icon.color}} className="icon" icon={data.status.icon.name}/>
