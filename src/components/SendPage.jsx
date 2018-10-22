@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOMServer from 'react-dom/server';
 import {AlertDialog, Page, Button, Input} from 'react-onsenui';
 import ons from 'onsenui';
 
@@ -19,103 +20,200 @@ export default class SendPage extends React.Component {
     };
   }
 
-  handleQr() {
-    if (window.cordova) {
-      window.cordova.plugins.barcodeScanner.scan(
-        function (result) {
-          let uri = result.cancelled ? "" : result.text;
-          if (uri === "") return;
-            this.setState({uri: uri});
-        }.bind(this),
-        function (error) {
-          alert("Scanning failed: " + error);
-        },
-        {
-          formats: "QR_CODE",
-        },
-      );  
-    } else {
-      let amount = Math.floor(Math.random()*1000);
-      console.log("RandomGeneratedAmount:", amount);
-      this.setState({uri: `hello3://iizk.jp/?amount=${amount}&recipientId=WmjedSdfqYUkNEkKBgsNSrCUEZCYqkqNXd`});
-    }
-  }
+  handleQr(wallet, setting) {
+    console.log(wallet, setting);
+    this.scanQrCode(uri => {
+      Promise.resolve(uri)
+        .then(this.parseUri)
+        .then(this.confirmSending)
+        .then(params => {
+          console.log(params);
+          return params;
+        })
+        .then(this.createSendingUrl.bind(null, wallet))
+//        .then((url) => {
+//          console.log(url);
+//          throw new Error();
+//        })
+        .then(this.sendRequest)
+        .then(response => {
+          console.log("fetched");
+          console.log(response);
 
-  shouldComponentUpdate(nextProps, nextState) {
-    if (nextState.uri !== this.state.uri) {
-      // QRコード　スキャン後
-
-      let [amount, recipientId] = this.parseSendUri(nextState.uri);
-
-      let messageHTML = `
-        <div class="send-dialog-content">
-          <table>
-            <tbody>
-              <tr><td class="name">amount</td><td>: </td><td>${amount}</td></tr>
-              <tr><td class="name">recipientId</td><td>: </td><td>${recipientId}</td></tr>
-            </tbody>
-          </table>
-        </div>
-        送信して構いませんか？
-        `;
-
-      ons.notification.confirm({
-        title: "",
-        messageHTML: messageHTML,
-        buttonLabels: ["はい", "いいえ"],
-      })
-      .then(index => {
-          if(index === 0) {
-            let parsedUrl = new URL("http://apps.cowry.co.jp/Monet2/api/wallet/send/");
-            let query = parsedUrl.searchParams;
-            query.append("deviceId", this.state.wallet.address);
-            query.append("toAddress", recipientId);
-            query.append("amount", amount);
-            query.append("requestId", "");
-
-            return fetch(parsedUrl.href);
+          if (setting.debug) {
+            response.text().then(text => ons.notification.alert({title: response.statusText, message: text}));
           } else {
-            throw new Error();
+            this.props.tabbar._tabbar.setActiveTab(3, { reject: false });
+  //        this.refs.tabbar._tabbar.setActiveTab(5, { reject: false });
           }
-      })
+        })
+        .then(() => {
+  console.log("end");
+        })
+        .catch(error => console.log(error));
+    })
+return;
+    Promise.resolve(this.scanQrCode())
+  //    .then(this.scanQrCode)
+//      .then(() => "monet://iizk.jp/?amount=1234123&invoiceId=cc8bd1c1-9ae6-4c60-9f5e-94569c714ff4")
+      .then(this.parseUri.bind(this))
+      .then(this.confirmSending)
+      .then(this.createSendingUrl.bind(null, wallet))
+      .then(this.sendRequest)
       .then(response => {
         console.log("fetched");
         console.log(response);
 
-        if (this.state.setting.debug) {
+        if (setting.debug) {
           response.text().then(text => ons.notification.alert({title: response.statusText, message: text}));
         } else {
-
+          this.props.tabbar._tabbar.setActiveTab(3, { reject: false });
+//        this.refs.tabbar._tabbar.setActiveTab(5, { reject: false });
         }
       })
-      .catch(error => {});
+      .then(() => {
+console.log("end");
+      })
+      .catch(error => console.log(error));
+/*
+      .then(uri => {
+      //  const params = this.parseUri(uri);
+        const params = this.parseUri("monet://iizk.jp/?amount=1234123&invoiceId=cc8bd1c1-9ae6-4c60-9f5e-94569c714ff4");
+        console.log("amount", params.amount, "recipientId", params.recipientId, "invoiceId", params.invoiceId);
 
-      return false;
-    }
+        this.confirmSending(params)
+          .then(index => {
+            if (index == 0 && params.amount !== null) {
+              const url = this.getSendingUrlBy(params, wallet);
+              console.log(url);
+              return //fetch(url);
+            }
+          })
+          .then(response => {
+            console.log("fetched");
+            console.log(response);
 
-    return true;
+            if (this.state.setting.debug) {
+              response.text().then(text => ons.notification.alert({title: response.statusText, message: text}));
+            } else {
+
+            }
+          })
+
+      })
+      ;
+*/
   }
 
-  handleSend() {
-
-  }
-
-  parseSendUri(uriString) {
-    if (uriString === "") {
+  scanQrCode(callback) {
+    if (window.cordova) {
+      window.cordova.plugins.barcodeScanner.scan(
+        result => {
+          let uri = result.cancelled ? "" : result.text;
+          if (uri === "") return new Error();
+        //  this.setState({uri: uri});
+          return callback(uri);
+        },
+        error => {
+          alert("Scanning failed: " + error);
+          return new Error();
+        },
+        {formats: "QR_CODE"},
+      );  
+    } else {
       let amount = Math.floor(Math.random()*1000);
       console.log("RandomGeneratedAmount:", amount);
-      uriString = `hello3://iizk.jp/?amount=${amount}&recipientId=aaaaaaaaaaaaaaaaaaaa`;
+    //  this.setState({uri: `hello3://iizk.jp/?amount=${amount}&recipientId=WmjedSdfqYUkNEkKBgsNSrCUEZCYqkqNXd`});
+//      return `hello3://iizk.jp/?amount=${amount}&recipientId=WmjedSdfqYUkNEkKBgsNSrCUEZCYqkqNXd`;
+      //  return Promise.resolve(`hello3://iizk.jp/?amount=${amount}&recipientId=WmjedSdfqYUkNEkKBgsNSrCUEZCYqkqNXd`)
+      callback(`hello3://iizk.jp/?amount=${amount}&recipientId=WmjedSdfqYUkNEkKBgsNSrCUEZCYqkqNXd`);
     }
+  }
+
+  parseUri(uriString) {
     console.log(uriString);
 
     let uri = new URL(uriString);
 
     let amount = uri.searchParams.get("amount");
     let recipientId = uri.searchParams.get("recipientId");
-    console.log(amount, recipientId);
+    let invoiceId = uri.searchParams.get("invoiceId");
 
-    return [amount, recipientId];
+    return {
+      amount: amount,
+      recipientId: recipientId,
+      invoiceId: invoiceId,
+    };
   }
+
+  confirmSending(params) {
+    let messageHTML = ReactDOMServer.renderToString(
+      <div>
+        <div className="send-dialog-content">
+          <table>
+            <tbody>
+              {params.amount ? <tr><td className="name">amount</td><td>: </td><td>{params.amount}</td></tr> : ""}
+              {params.recipientId ? <tr><td className="name">recipientId</td><td>: </td><td>{params.recipientId}</td></tr> : ""}
+              {params.invoiceId ? <tr><td className="name">invoiceId</td><td>: </td><td>{params.invoiceId}</td></tr> : ""}
+            </tbody>
+          </table>
+        </div>
+        送信して構いませんか？
+      </div>
+    );
+
+    return ons.notification.confirm({
+      title: "",
+      messageHTML: messageHTML,
+      buttonLabels: ["はい", "いいえ"],
+    }).then(index => {
+      if (index === 0) {
+        return params;
+      } else { throw new Error() }
+    });
+  }
+
+  createSendingUrl(wallet, params) {
+console.log(params, wallet);
+
+    let url;
+    let endpoint;
+    let parsedUrl;
+    let query;
+
+    if (params.recipientId !== null) {
+      endpoint = "http://apps.cowry.co.jp/Monet2/api/wallet/send/";
+      parsedUrl = new URL(endpoint);
+      query = parsedUrl.searchParams;
+      query.append("deviceId", wallet.address);
+      query.append("toAddress", params.recipientId);
+      query.append("amount", params.amount);
+      query.append("requestId", "");
+      url = parsedUrl.href;
+    } else if (params.invoiceId !== null) {
+      endpoint = "http://apps.cowry.co.jp/Monet2/api/bill/pay/";
+      parsedUrl = new URL(endpoint);
+      query = parsedUrl.searchParams;
+      query.append("deviceId", wallet.address);
+      query.append("id", params.invoiceId);
+      url = parsedUrl.href;
+    } else { return }
+
+    return url;
+  }
+
+  sendRequest(url) {
+    return fetch(url);
+  }
+
+  handleSend() {
+
+  }
+
+
+
+
+
 
   handleCancel() {
     this.setState({
@@ -150,14 +248,17 @@ export default class SendPage extends React.Component {
               dialogMessage: "nfc",
             });
           }} />
-          <Button style={{display: "none"}} modifier="quiet" className="qr-icon" disabled={this.state.qrDisabled} onClick={() => {
-            this.setState({
-              qrDisabled: true,
-              isOpen: true,
-              dialogMessage: "ｑ！！",
-            });
-          }} />
-          <Button modifier="quiet" className="qr-icon" disabled={this.state.qrDisabled} onClick={this.handleQr.bind(this)} />
+
+        <SettingContext.Consumer>{ setting =>
+          <WalletsContext.Consumer>{ ([wallets, index]) => 
+            <Button
+              modifier="quiet"
+              className="qr-icon"
+              disabled={this.state.qrDisabled}
+              onClick={this.handleQr.bind(this, wallets[index], setting)}
+            />
+          }</WalletsContext.Consumer>
+        }</SettingContext.Consumer>
         </div>
 
         <div className="tab-like-bar__content">
@@ -187,5 +288,4 @@ export default class SendPage extends React.Component {
 
       </Page>
     )
-  }
-}
+  }}

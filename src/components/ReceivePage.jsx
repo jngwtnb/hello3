@@ -48,16 +48,16 @@ export default class ReceivePage extends React.Component {
         <div className="tab-like-bar__content">
           <div className="receive-container">
             <WalletsContext.Consumer>
-              {wallets => 
+              {([wallets, index]) => 
                 <div className="receive-form">
-                  <Input modifier="underbar" placeholder="" readOnly={true} type={"text"} value={wallets.address}/>
+                  <Input modifier="underbar" placeholder="" readOnly={true} type={"text"} value={wallets[index].address}/>
                 </div>
               }
             </WalletsContext.Consumer>
 
             <WalletsContext.Consumer>
-              {wallets => 
-               <QRCode value={`hello3://iizk.jp/?amount=${this.state.amount}&recipientId=${wallets.address}`} renderAs="svg" className="receive-box" />
+              {([wallets, index]) => 
+               <QRCode value={`hello3://iizk.jp/?amount=${this.state.amount}&recipientId=${wallets[index].address}`} renderAs="svg" className="receive-box" />
               }
             </WalletsContext.Consumer>
 
