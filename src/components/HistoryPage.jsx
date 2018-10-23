@@ -32,14 +32,14 @@ export default class HistoryPage extends React.Component {
 //    }
 //  }
 
-  componentDidUpdate(prevProps, prevState) {
-    if (prevProps.wallet !== this.props.wallet && window.cordova) {
-      this.handleLoad(() => {});
-    }
-  }
+//  componentDidUpdate(prevProps, prevState) {
+//    if (prevProps.wallet !== this.props.wallet && window.cordova) {
+//      this.handleLoad(() => {});
+//    }
+//  }
 
   handleLoad(wallets, index, done) {
-    fetch(`http://apps.cowry.co.jp/Monet2/api/wallet/history/?deviceId=${wallets[index].address}&limit=100&offset=0`)
+    fetch(`http://apps.cowry.co.jp/Monet2/api/wallet/history/?deviceId=${wallets[index].deviceId}&limit=100&offset=0`)
       .then((response) => {
         if(response.ok) {
           return response.json();

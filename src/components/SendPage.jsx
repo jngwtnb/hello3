@@ -185,7 +185,7 @@ console.log(params, wallet);
       endpoint = "http://apps.cowry.co.jp/Monet2/api/wallet/send/";
       parsedUrl = new URL(endpoint);
       query = parsedUrl.searchParams;
-      query.append("deviceId", wallet.address);
+      query.append("deviceId", wallet.deviceId);
       query.append("toAddress", params.recipientId);
       query.append("amount", params.amount);
       query.append("requestId", "");
@@ -194,7 +194,7 @@ console.log(params, wallet);
       endpoint = "http://apps.cowry.co.jp/Monet2/api/bill/pay/";
       parsedUrl = new URL(endpoint);
       query = parsedUrl.searchParams;
-      query.append("deviceId", wallet.address);
+      query.append("deviceId", wallet.deviceId);
       query.append("id", params.invoiceId);
       url = parsedUrl.href;
     } else { return }

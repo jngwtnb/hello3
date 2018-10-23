@@ -2,7 +2,7 @@ import React from 'react';
 import jsSHA from 'jssha';
 
 export default {
-  generateAddress() {
+  generateDeviceId() {
     let addr;
 
     if (window.cordova && window.device) {
@@ -17,7 +17,7 @@ export default {
     return addr;
   },
 
-  generateRandomAddress() {
+  generateRandomDeviceId() {
     let len = Math.floor(Math.random()*10) + 26;
     let chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-";
     let charsLen = chars.length;

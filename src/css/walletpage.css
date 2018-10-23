@@ -62,7 +62,7 @@
   font-weight: 600;
 }
 
-.wallet-item-container .address {
+.wallet-item-container .device-id {
   flex: none;
   width: 80px;
   white-space: pre-line;

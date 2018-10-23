@@ -46,21 +46,22 @@ class MainPage extends React.Component {
     let wallets = JSON.parse(localStorage.getItem("wallets"));
     if (wallets === null) {
       wallets = [
-        {label: "suzuki",         ticker: "DNGR", address: Util.generateAddress()},
-        {label: "Ichirooooooh's", ticker: "DNGR", address: Util.generateRandomAddress()},
-        {label: "鈴木一郎の財布",  ticker: "BTC" , address: Util.generateRandomAddress()},
-        {label: "suzuki",         ticker: "BTC",  address: Util.generateRandomAddress()},
+        {label: "suzuki",         ticker: "DNGR", deviceId: Util.generateDeviceId()},
+        {label: "Ichirooooooh's", ticker: "DNGR", deviceId: Util.generateRandomDeviceId()},
+        {label: "鈴木一郎の財布",  ticker: "BTC" , deviceId: Util.generateRandomDeviceId()},
+        {label: "suzuki",         ticker: "BTC",  deviceId: Util.generateRandomDeviceId()},
       ];
 
       localStorage.setItem("wallets", JSON.stringify(wallets))
     }
 
-    let index = localStorage.getItem("wallet-index");
+    let index = Number(localStorage.getItem("wallet-index"));
     if (index === null) {
       index = 0;
       localStorage.setItem("wallet-index", index);
     }
 console.log(wallets, index);
+
     this.setState({
       selectedWallet: wallets[index],
       selectedWalletIndex: index,
@@ -97,13 +98,50 @@ console.log(wallets, index);
         selectedWallet: this.state.wallets[index],
         selectedWalletIndex: index,
       });
-      localStorage.setItem("wallet-index", index);
+//      localStorage.setItem("wallet-index", index);
     }
   }
 
   handleChangeSetting(data) {
     this.setState({setting: data});
   }
+
+  handleCreateWallet(label, ticker) {
+    console.log("handleCreateWallet", label, ticker);
+    let wallets = this.state.wallets;
+
+    let newIndex = wallets.length === 0 ? 0 : this.state.selectedWalletIndex;
+    wallets.push({label: label, ticker: ticker.toUpperCase(), deviceId: Util.generateRandomDeviceId()});
+
+    this.setState({
+      selectedWallet: wallets[newIndex],
+      selectedWalletIndex: newIndex,
+      wallets: wallets,
+    });
+  }
+
+  handleDeleteWallet(index) {
+    console.log("handleDeleteWallet", index);
+    let newWallets = this.state.wallets;
+    if(newWallets.length !== 0) {
+      newWallets.splice(index, 1);
+    }
+
+    let newIndex = this.state.selectedWalletIndex === index ? -1
+                 : this.state.selectedWalletIndex > index   ? this.state.selectedWalletIndex - 1
+                 : this.state.selectedWalletIndex;
+
+    if (!newWallets[newIndex]) newIndex = -1;
+
+    this.setState({
+      selectedWallet: newWallets[newIndex] || {},
+      selectedWalletIndex: newIndex,
+      wallets: newWallets,
+    }, () => {
+      this.forceUpdate();
+    });
+  }
+
 
   render() {
     const tabbar =
@@ -137,7 +175,7 @@ console.log(wallets, index);
                 tab: <Tab key="setting-tab" className="setting-icon" />
               },
               {
-                content: <WalletPage title="Wallet" key="wallet-page" active={activeIndex === 5} tabbar={tabbar} initialIndex={this.state.selectedWalletIndex} onSelect={this.handleSelectWallet.bind(this)} />,
+                content: <WalletPage title="Wallet" key="wallet-page" active={activeIndex === 5} tabbar={tabbar} initialIndex={this.state.selectedWalletIndex} onSelect={this.handleSelectWallet.bind(this)} onCreate={this.handleCreateWallet.bind(this)} onDelete={this.handleDeleteWallet.bind(this)} />,
                 tab: <Tab key="wallet-tab" label="ウォレット" icon="fa-wallet" className="hidden-tab" />
               },
             ]}
@@ -155,16 +193,24 @@ console.log(wallets, index);
               onClick={this.handleClickBalanceTab.bind(this)}
             />
 
-            <div className="balance">
-              <span className="balance-amount">12,300</span>
-              <span className="balance-ticker">{this.state.selectedWallet.ticker}</span>
-            </div>
+            {
+              Object.keys(this.state.selectedWallet).length ?
+              <div className="balance">
+                <span className="balance-amount">12,300</span>
+                <span className="balance-ticker">{this.state.selectedWallet.ticker}</span>
+              </div>
+              : null
+            }
 
             <div className="partition" />
 
-            <div className="wallet">
-              <div className="wallet-name">{this.state.selectedWallet.label}</div>
-            </div>
+            {
+              Object.keys(this.state.selectedWallet).length ?
+                <div className="wallet">
+                  <div className="wallet-name">{this.state.selectedWallet.label}</div>
+                </div>
+                : null
+            }
 
             <TabLikeButton
               className="wallet-button wallet-icon"

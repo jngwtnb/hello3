@@ -20,8 +20,8 @@ export default class ReceivePage extends React.Component {
     this.generateUri = this.generateUri.bind(this);
   }
 
-  generateUri(amount, address) {
-    return `hello3://iizk.jp/?amount=${amount}&recipientId=${address}`;
+  generateUri(amount, deviceId) {
+    return `hello3://iizk.jp/?amount=${amount}&recipientId=${deviceId}`;
   }
 
   handleCancel() {
@@ -50,14 +50,14 @@ export default class ReceivePage extends React.Component {
             <WalletsContext.Consumer>
               {([wallets, index]) => 
                 <div className="receive-form">
-                  <Input modifier="underbar" placeholder="" readOnly={true} type={"text"} value={wallets[index].address}/>
+                  {wallets[index] && <Input modifier="underbar" placeholder="" readOnly={true} type={"text"} value={wallets[index].deviceId}/>}
                 </div>
               }
             </WalletsContext.Consumer>
 
             <WalletsContext.Consumer>
               {([wallets, index]) => 
-               <QRCode value={`hello3://iizk.jp/?amount=${this.state.amount}&recipientId=${wallets[index].address}`} renderAs="svg" className="receive-box" />
+               {wallets[index] && <QRCode value={`hello3://iizk.jp/?amount=${this.state.amount}&recipientId=${wallets[index].deviceId}`} renderAs="svg" className="receive-box" />}
               }
             </WalletsContext.Consumer>
 
@@ -71,7 +71,7 @@ export default class ReceivePage extends React.Component {
                 onChange={ev => {
                   this.setState({
                     amount: ev.srcElement.value,
-                    uri: this.generateUri(ev.srcElement.value, this.state.walletAddress),
+                    uri: this.generateUri(ev.srcElement.value, this.state.wallet.deviceId),
                   });
                 }}
                 type={"number"}
