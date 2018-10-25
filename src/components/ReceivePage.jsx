@@ -49,15 +49,15 @@ export default class ReceivePage extends React.Component {
           <div className="receive-container">
             <WalletsContext.Consumer>
               {([wallets, index]) => 
-                <div className="receive-form">
-                  {wallets[index] && <Input modifier="underbar" placeholder="" readOnly={true} type={"text"} value={wallets[index].deviceId}/>}
+                wallets[index] && <div className="receive-form">
+                   <Input modifier="underbar" placeholder="" readOnly={true} type={"text"} value={wallets[index].deviceId}/>
                 </div>
               }
             </WalletsContext.Consumer>
 
             <WalletsContext.Consumer>
               {([wallets, index]) => 
-               {wallets[index] && <QRCode value={`hello3://iizk.jp/?amount=${this.state.amount}&recipientId=${wallets[index].deviceId}`} renderAs="svg" className="receive-box" />}
+                wallets[index] && <QRCode value={`hello3://iizk.jp/?amount=${this.state.amount}&recipientId=${wallets[index].deviceId}`} renderAs="svg" className="receive-box" />
               }
             </WalletsContext.Consumer>
 

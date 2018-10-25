@@ -45,25 +45,18 @@ class MainPage extends React.Component {
   componentWillMount() {
     let wallets = JSON.parse(localStorage.getItem("wallets"));
     if (wallets === null) {
-      wallets = [
-        {label: "suzuki",         ticker: "DNGR", deviceId: Util.generateDeviceId()},
-        {label: "Ichirooooooh's", ticker: "DNGR", deviceId: Util.generateRandomDeviceId()},
-        {label: "鈴木一郎の財布",  ticker: "BTC" , deviceId: Util.generateRandomDeviceId()},
-        {label: "suzuki",         ticker: "BTC",  deviceId: Util.generateRandomDeviceId()},
-      ];
-
+      wallets = [];
       localStorage.setItem("wallets", JSON.stringify(wallets))
     }
 
     let index = Number(localStorage.getItem("wallet-index"));
     if (index === null) {
-      index = 0;
+      index = wallets.length > 0 ? 0 : -1;
       localStorage.setItem("wallet-index", index);
     }
-console.log(wallets, index);
 
     this.setState({
-      selectedWallet: wallets[index],
+      selectedWallet: wallets[index] || {},
       selectedWalletIndex: index,
       wallets: wallets,
     });
@@ -97,8 +90,7 @@ console.log(wallets, index);
       this.setState({
         selectedWallet: this.state.wallets[index],
         selectedWalletIndex: index,
-      });
-//      localStorage.setItem("wallet-index", index);
+      }, () => { localStorage.setItem("wallet-index", index) });
     }
   }
 
@@ -106,22 +98,46 @@ console.log(wallets, index);
     this.setState({setting: data});
   }
 
-  handleCreateWallet(label, ticker) {
-    console.log("handleCreateWallet", label, ticker);
-    let wallets = this.state.wallets;
+  handleCreateWallet(label, ticker, deviceIdRandomizes) {
+    let deviceId = deviceIdRandomizes
+                 ? Util.generateRandomDeviceId()
+                 : Util.generateDeviceId();
 
-    let newIndex = wallets.length === 0 ? 0 : this.state.selectedWalletIndex;
-    wallets.push({label: label, ticker: ticker.toUpperCase(), deviceId: Util.generateRandomDeviceId()});
+    fetch(`http://apps.cowry.co.jp/Monet2/api/wallet/?deviceId=${deviceId}`)
+      .then(response => {
+        if (response.ok) {
+         return response.json();
+        } else {
+          throw new Error();
+        }
+      })
+      .then(json => {
+        let wallets = this.state.wallets;
+        wallets.push({
+          label: label,
+          ticker: ticker.toUpperCase(),
+          deviceId: deviceId,
+          address: json.id,
+          amount: parseFloat(json.amount),
+        });
 
-    this.setState({
-      selectedWallet: wallets[newIndex],
-      selectedWalletIndex: newIndex,
-      wallets: wallets,
-    });
+        let newIndex = wallets.length === 1 ? 0 : this.state.selectedWalletIndex;
+
+        this.setState({
+          selectedWallet: wallets[newIndex],
+          selectedWalletIndex: newIndex,
+          wallets: wallets,
+        }, () => {
+          localStorage.setItem("wallet-index", newIndex);
+          localStorage.setItem("wallets", JSON.stringify(wallets))
+        });
+      })
+      .catch(
+        error => console.log(error)
+      );
   }
 
   handleDeleteWallet(index) {
-    console.log("handleDeleteWallet", index);
     let newWallets = this.state.wallets;
     if(newWallets.length !== 0) {
       newWallets.splice(index, 1);
@@ -138,6 +154,8 @@ console.log(wallets, index);
       selectedWalletIndex: newIndex,
       wallets: newWallets,
     }, () => {
+      localStorage.setItem("wallet-index", newIndex);
+      localStorage.setItem("wallets", JSON.stringify(newWallets))
       this.forceUpdate();
     });
   }
@@ -196,7 +214,7 @@ console.log(wallets, index);
             {
               Object.keys(this.state.selectedWallet).length ?
               <div className="balance">
-                <span className="balance-amount">12,300</span>
+                <span className="balance-amount">{this.state.selectedWallet.amount}</span>
                 <span className="balance-ticker">{this.state.selectedWallet.ticker}</span>
               </div>
               : null

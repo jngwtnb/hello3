@@ -15,6 +15,8 @@ export default class WalletPage extends React.Component {
       newWalletLabel: "",
       newWalletTicker: "dngr",
       openedCreateDialog: false,
+      deviceIdRandomizes: false,
+      setting: {},
     }
 
     this._onSelect = (event, index) => {
@@ -34,6 +36,13 @@ export default class WalletPage extends React.Component {
   render() {
     return (
       <Page>
+        <SettingContext.Consumer>
+          {setting => {
+            this.state.setting = setting;
+            null;
+          }}
+        </SettingContext.Consumer>
+
         <div className="tab-like-bar">
           <Button modifier="quiet" className="create-icon" onClick={this.handleClickCreateButton.bind(this)} />
           <Button modifier="quiet" className="manage-icon" />
@@ -106,62 +115,75 @@ export default class WalletPage extends React.Component {
           }</WalletsContext.Consumer>
         </div>
 
-            <AlertDialog isOpen={this.state.openedCreateDialog} isCancelable={false}>
-              <div className="alert-dialog-title"></div>
-              <div className="alert-dialog-content">
-                <div className="wallet-dialog-content">
-                  <table>
-                    <tbody>
-                      <tr><td className="name">label</td><td>: </td><td>
-                        <Input
-                          modifier="underbar"
-                          value={this.state.newWalletLabel} float
-                          onChange={(event) => { this.setState({newWalletLabel: event.target.value})} }
-                        />
-                      </td></tr>
-                      <tr><td className="name">ticker</td><td>: </td><td>
-                        <Select
-                          modifier="underber"
-                          value={this.state.newWalletTicker}
-                          onChange={(event) => this.setState({newWalletTicker: event.target.value})}
-                        >
-                          <option value="dngr">DNGR</option>
-                          <option value="btc">BTC</option>
-                        </Select></td></tr>
-                        {
-                          <tr><td className="name">deviceId</td><td>: </td><td>
-                            <Checkbox
-                              modifier="underbar"
-                              value={this.state.newWalletLabel} float
-                              onChange={(event) => { this.setState({newWalletLabel: event.target.value})} }
-                            />
-                          </td></tr>
-                        }
-                      </tbody>
-                  </table>
-                </div>
-              </div>
-              <div className="alert-dialog-footer">
-                <Button
-                  className="alert-dialog-button"
-                  onClick={() => {
-                    this._onCreate(this.state.newWalletLabel, this.state.newWalletTicker);
-                    this.setState({
-                      newWalletLabel: "",
-                      newWalletTicker: "dngr",
-                      openedCreateDialog: false,
-                    });
-                  }}
-                >作成</Button>
-              </div>
-              <div className="alert-dialog-footer alert-dialog-button--rowfooter">
-                <Button
-                  className="alert-dialog-button alert-dialog-button--rowfooter"
-                  onClick={() => {this.setState({openedCreateDialog: false})}}
-                >キャンセル</Button>
-              </div>
-            </AlertDialog>
+        <AlertDialog
+          isOpen={this.state.openedCreateDialog}
+          isCancelable={false}
+          onPreShow={() => {
+            if (this.state.setting.debug) {
+              const wallets = ["suzuki", "ichirooooooh's", "鈴木一郎の財布"];
+              this.setState({
+                newWalletLabel: wallets[Math.floor(Math.random() * wallets.length)],
+              });
+            }
           }}
+        >
+          <div className="alert-dialog-title"></div>
+          <div className="alert-dialog-content">
+            <div className="wallet-dialog-content">
+              <table>
+                <tbody>
+                  <tr><td className="name">label</td><td>: </td><td>
+                    <Input
+                      modifier="underbar"
+                      value={this.state.newWalletLabel} float
+                      onChange={(event) => { this.setState({newWalletLabel: event.target.value})} }
+                    />
+                  </td></tr>
+                  <tr><td className="name">ticker</td><td>: </td><td>
+                    <Select
+                      modifier="underber"
+                      value={this.state.newWalletTicker}
+                      onChange={(event) => this.setState({newWalletTicker: event.target.value})}
+                    >
+                      <option value="dngr">DNGR</option>
+                      <option value="btc">BTC</option>
+                    </Select></td></tr>
+                    {
+                      this.state.setting.debug &&
+                        <tr><td className="name" colSpan="3">
+                          <Checkbox
+                            inputId="device-id-randomizes"
+                            checked={this.state.deviceIdRandomizes}
+                            onChange={(event) => { this.setState({deviceIdRandomizes: event.target.checked})} }
+                          />
+                          <label htmlFor="device-id-randomizes">DeviceIdをランダム生成する</label>
+                        </td></tr>
+                    }
+                  </tbody>
+              </table>
+            </div>
+          </div>
+          <div className="alert-dialog-footer alert-dialog-footer--rowfooter">
+            <Button
+              className="alert-dialog-button alert-dialog-button--rowfooter"
+              onClick={() => {
+                this._onCreate(this.state.newWalletLabel, this.state.newWalletTicker, this.state.deviceIdRandomizes);
+                this.setState({
+                  newWalletLabel: "",
+                  newWalletTicker: "dngr",
+                  deviceIdRandomizes: false,
+                  openedCreateDialog: false,
+                });
+              }}
+            >作成</Button>
+            <Button
+              className="alert-dialog-button alert-dialog-button--rowfooter"
+              onClick={() => {this.setState({openedCreateDialog: false})}}
+            >キャンセル</Button>
+          </div>
+        </AlertDialog>
+
+
       </Page>
     )
   }
