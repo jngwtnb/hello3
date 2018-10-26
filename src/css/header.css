@@ -49,6 +49,11 @@
   font-size: 6.5vh;
   line-height: 100%;
   vertical-align: baseline;
+
+  table-layout: fixed;
+  max-width: 38vw;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .toolbar-container .balance-ticker {

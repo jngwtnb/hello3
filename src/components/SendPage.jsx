@@ -18,23 +18,16 @@ export default class SendPage extends React.Component {
       dialogMessage: "",
       setting: {},
     };
+
+    this.onReload = this.props.onReload;
   }
 
   handleQr(wallet, setting) {
-    console.log(wallet, setting);
     this.scanQrCode(uri => {
       Promise.resolve(uri)
         .then(this.parseUri)
         .then(this.confirmSending)
-        .then(params => {
-          console.log(params);
-          return params;
-        })
         .then(this.createSendingUrl.bind(null, wallet))
-//        .then((url) => {
-//          console.log(url);
-//          throw new Error();
-//        })
         .then(this.sendRequest)
         .then(response => {
           console.log("fetched");
@@ -43,66 +36,14 @@ export default class SendPage extends React.Component {
           if (setting.debug) {
             response.text().then(text => ons.notification.alert({title: response.statusText, message: text}));
           } else {
-            this.props.tabbar._tabbar.setActiveTab(3, { reject: false });
-  //        this.refs.tabbar._tabbar.setActiveTab(5, { reject: false });
+//            this.props.tabbar._tabbar.setActiveTab(3, { reject: false });
+            this.onReload();
           }
-        })
-        .then(() => {
-  console.log("end");
         })
         .catch(error => console.log(error));
     })
-return;
-    Promise.resolve(this.scanQrCode())
-  //    .then(this.scanQrCode)
-//      .then(() => "monet://iizk.jp/?amount=1234123&invoiceId=cc8bd1c1-9ae6-4c60-9f5e-94569c714ff4")
-      .then(this.parseUri.bind(this))
-      .then(this.confirmSending)
-      .then(this.createSendingUrl.bind(null, wallet))
-      .then(this.sendRequest)
-      .then(response => {
-        console.log("fetched");
-        console.log(response);
 
-        if (setting.debug) {
-          response.text().then(text => ons.notification.alert({title: response.statusText, message: text}));
-        } else {
-          this.props.tabbar._tabbar.setActiveTab(3, { reject: false });
-//        this.refs.tabbar._tabbar.setActiveTab(5, { reject: false });
-        }
-      })
-      .then(() => {
-console.log("end");
-      })
-      .catch(error => console.log(error));
-/*
-      .then(uri => {
-      //  const params = this.parseUri(uri);
-        const params = this.parseUri("monet://iizk.jp/?amount=1234123&invoiceId=cc8bd1c1-9ae6-4c60-9f5e-94569c714ff4");
-        console.log("amount", params.amount, "recipientId", params.recipientId, "invoiceId", params.invoiceId);
-
-        this.confirmSending(params)
-          .then(index => {
-            if (index == 0 && params.amount !== null) {
-              const url = this.getSendingUrlBy(params, wallet);
-              console.log(url);
-              return //fetch(url);
-            }
-          })
-          .then(response => {
-            console.log("fetched");
-            console.log(response);
-
-            if (this.state.setting.debug) {
-              response.text().then(text => ons.notification.alert({title: response.statusText, message: text}));
-            } else {
-
-            }
-          })
-
-      })
-      ;
-*/
+    return;
   }
 
   scanQrCode(callback) {
@@ -125,8 +66,8 @@ console.log("end");
       console.log("RandomGeneratedAmount:", amount);
     //  this.setState({uri: `hello3://iizk.jp/?amount=${amount}&recipientId=WmjedSdfqYUkNEkKBgsNSrCUEZCYqkqNXd`});
 //      return `hello3://iizk.jp/?amount=${amount}&recipientId=WmjedSdfqYUkNEkKBgsNSrCUEZCYqkqNXd`;
-      //  return Promise.resolve(`hello3://iizk.jp/?amount=${amount}&recipientId=WmjedSdfqYUkNEkKBgsNSrCUEZCYqkqNXd`)
-      callback(`hello3://iizk.jp/?amount=${amount}&recipientId=WmjedSdfqYUkNEkKBgsNSrCUEZCYqkqNXd`);
+      amount = 1300;
+      callback(`hello3://iizk.jp/?amount=${amount}&recipientId=WStgkM9KDV81vzZ43GA2GueN8SAG2TVj2C`);
     }
   }
 
@@ -174,8 +115,6 @@ console.log("end");
   }
 
   createSendingUrl(wallet, params) {
-console.log(params, wallet);
-
     let url;
     let endpoint;
     let parsedUrl;
@@ -266,8 +205,8 @@ console.log(params, wallet);
             <div className="send-form-box" />
             <div className="send-form-label">送金に必要な項目を入力してください:</div>
             <div className="send-form">
-              <Input modifier="underbar" placeholder={'メールアドレス'} type={"text"} value="xxxx-xxxx"/>
-              <Input modifier="underbar" placeholder={'パスワード'} type={"text"}  value="4646" />
+              <Input modifier="underbar" placeholder={'アドレス'} type={"text"} value=""/>
+              <Input modifier="underbar" placeholder={'金額'} type={"number"} inputmode={"numeric"} value="" />
               <Input modifier="underbar" placeholder={'メッセージ(請求IDなど)'} type={"text"} />
               <Button modifier="send-button quiet" onClick={this.handleSend.bind(this)}>送信</Button>
             </div>

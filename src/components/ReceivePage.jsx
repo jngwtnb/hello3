@@ -1,7 +1,7 @@
 import React from 'react';
 import QRCode from "qrcode.react";
 import ons from 'onsenui';
-import {Page, Button, AlertDialog, Input} from 'react-onsenui';
+import {Page, Button, Icon, AlertDialog, Input} from 'react-onsenui';
 
 import WalletsContext from '../contexts/wallets';
 
@@ -49,15 +49,23 @@ export default class ReceivePage extends React.Component {
           <div className="receive-container">
             <WalletsContext.Consumer>
               {([wallets, index]) => 
-                wallets[index] && <div className="receive-form">
-                   <Input modifier="underbar" placeholder="" readOnly={true} type={"text"} value={wallets[index].deviceId}/>
-                </div>
+                wallets[index] &&
+                <span className="receive-form">
+                  <Input modifier="underbar" placeholder="" readOnly={true} type={"text"} inputId="input-address" value={wallets[index].address}/>
+                  <Button modifier="" onClick={() => {
+                    document.getElementById("input-address").select();
+                    document.execCommand("copy");
+                    ons.notification.toast('クリップボードにコピーしました', { timeout: 1000, animation: 'fall' });
+                  }}>
+                    <Icon icon="fa-clipboard"/>
+                  </Button>
+                </span>
               }
             </WalletsContext.Consumer>
 
             <WalletsContext.Consumer>
               {([wallets, index]) => 
-                wallets[index] && <QRCode value={`hello3://iizk.jp/?amount=${this.state.amount}&recipientId=${wallets[index].deviceId}`} renderAs="svg" className="receive-box" />
+                wallets[index] && <QRCode value={`hello3://iizk.jp/?amount=${this.state.amount}&recipientId=${wallets[index].address}`} renderAs="svg" className="receive-box" />
               }
             </WalletsContext.Consumer>
 

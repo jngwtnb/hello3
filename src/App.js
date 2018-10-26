@@ -8,7 +8,7 @@ import './App.css';
 import './css/';
 
 import ons from 'onsenui';
-import {Tabbar, Navigator, Page, Button, Toolbar, Tab, Input} from 'react-onsenui';
+import {Tabbar, Navigator, Page, Button, Toolbar, Tab, Input, SpeedDial, SpeedDialItem, Fab, Icon} from 'react-onsenui';
 
 import BalancePage from './components/BalancePage';
 import SendPage from './components/SendPage';
@@ -40,6 +40,8 @@ class MainPage extends React.Component {
         debug: false,
       },
     };
+
+    this.historyRef = React.createRef();
   }
 
   componentWillMount() {
@@ -49,10 +51,13 @@ class MainPage extends React.Component {
       localStorage.setItem("wallets", JSON.stringify(wallets))
     }
 
-    let index = Number(localStorage.getItem("wallet-index"));
-    if (index === null) {
+    let indexString = localStorage.getItem("wallet-index");
+    let index;
+    if (indexString === null) {
       index = wallets.length > 0 ? 0 : -1;
       localStorage.setItem("wallet-index", index);
+    } else {
+      index = Number(indexString);
     }
 
     this.setState({
@@ -73,7 +78,6 @@ class MainPage extends React.Component {
 
   handleClickBalanceTab() {
     if (this.state.tabIndex !== BALANCE_TAB_INDEX) {
-//    this.refs.tabbar._tabbar.setActiveTab(0, { reject: false });
       this.setState({tabIndex: BALANCE_TAB_INDEX});
     }
   }
@@ -160,13 +164,17 @@ class MainPage extends React.Component {
     });
   }
 
+  handleReloadHistory() {
+    this.setState({tabIndex: 3}, () => {
+      this.historyRef.current.handleLoad(this.state.selectedWallet);
+    });
+  }
 
   render() {
     const tabbar =
       <WalletsContext.Provider value={[this.state.wallets, this.state.selectedWalletIndex]}>
         <SettingContext.Provider value={this.state.setting}>
           <Tabbar
-            ref="tabbar"
             modifier="footer"
             index={this.state.tabIndex}
             swipeable={true}
@@ -177,7 +185,7 @@ class MainPage extends React.Component {
                 tab: <Tab label="残高" key="balance-tab" icon="fa-coins" className="hidden-tab" />
               },
               {
-                content: <SendPage title="Send" key="send-page" active={activeIndex === 0} tabbar={tabbar} />,
+                content: <SendPage title="Send" key="send-page" active={activeIndex === 0} tabbar={tabbar} onReload={this.handleReloadHistory.bind(this)} />,
                 tab: <Tab key="send-tab" className="send-icon" />
               },
               {
@@ -185,7 +193,7 @@ class MainPage extends React.Component {
                 tab: <Tab key="receive-tab" className="receive-icon" />
               },
               {
-                content: <HistoryPage title="History" key="history-page" active={activeIndex === 2} tabbar={tabbar} />,
+                content: <HistoryPage title="History" key="history-page" active={activeIndex === 2} tabbar={tabbar} ref={this.historyRef}/>,
                 tab: <Tab key="history-tab" className="history-icon" />
               },
               {
@@ -260,6 +268,31 @@ class LoginPage extends React.Component {
             <Button modifier="login-button-bottom" onClick={this.resetPage.bind(this)}>ログイン</Button>
           </div>
         </div>
+
+        <SpeedDial position="right bottom" direction="up">
+          <Fab>
+            <Icon icon="fa-cog"></Icon>
+          </Fab>
+          <SpeedDialItem onClick={() => {
+            ons.notification.confirm({
+              title: "データを初期化します",
+              message: "よろしいですか？",
+              buttonLabels: ["はい", "いいえ"],
+            }).then(index => {
+              if (index === 0) {
+                ons.notification.confirm({
+                  title: "",
+                  message: "本当に？",
+                  buttonLabels: ["はい", "いいえ"],
+                }).then(index => {
+                  if (index === 0) {
+                    localStorage.clear();
+                  }
+                });
+              }
+            });
+          }}><Icon icon="fa-trash"></Icon></SpeedDialItem>
+        </SpeedDial>
       </Page>
     );
   }

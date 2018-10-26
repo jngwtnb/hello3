@@ -38,8 +38,13 @@ export default class HistoryPage extends React.Component {
 //    }
 //  }
 
-  handleLoad(wallets, index, done) {
-    fetch(`http://apps.cowry.co.jp/Monet2/api/wallet/history/?deviceId=${wallets[index].deviceId}&limit=100&offset=0`)
+  handleLoad(wallet, done) {
+    if (!wallet) {
+      console.log("wallet was undefined.");
+      return;
+    }
+
+    fetch(`http://apps.cowry.co.jp/Monet2/api/wallet/history/?deviceId=${wallet.deviceId}&limit=100&offset=0`)
       .then((response) => {
         if(response.ok) {
           return response.json();
@@ -49,7 +54,7 @@ export default class HistoryPage extends React.Component {
       })
       .then((history) => {
         const statuses = ["完了", "完了", "完了", "完了", "未確認", "不明"];
-        const wallets = ["suzuki", "ichirooooooh's", "鈴木一郎の財布"];
+        const walletLabels = ["suzuki", "ichirooooooh's", "鈴木一郎の財布"];
 
         let data = history.histories.map(h => {
           let priceLength = h.amount.length;
@@ -60,14 +65,14 @@ export default class HistoryPage extends React.Component {
               ;
 
           let status = statuses[Math.floor(Math.random() * statuses.length)];
-          let wallet = wallets[Math.floor(Math.random() * wallets.length)];
+          let walletLabel = walletLabels[Math.floor(Math.random() * walletLabels.length)];
 
           return {
             status: {icon: this.icons[status], label: status},
             datetime: new Date(h.createdAt).toLocaleString("ja-JP", {timeZone: "Asia/Tokyo"}),
             price: {amount: h.amount, color: amountColor},
             cause: this.causes[h.cause],
-            wallet: wallet,
+            wallet: walletLabel,
           };
         });
 
@@ -98,7 +103,7 @@ export default class HistoryPage extends React.Component {
             <PullHook
               fixedContent={true}
               onChange={this.handleChange.bind(this)}
-              onLoad={this.handleLoad.bind(this, wallets, index)}
+              onLoad={this.handleLoad.bind(this, wallets[index])}
             >
               {
                 (this.state.pullHookState === 'initial') ?
