@@ -1,4 +1,3 @@
-import React from 'react';
 import jsSHA from 'jssha';
 
 export default {

@@ -1,6 +1,5 @@
 import React from 'react';
-import ons from 'onsenui';
-import {Page, Button, Input, List, ListItem, ListHeader, Switch} from 'react-onsenui';
+import {Page, Button, List, ListItem, ListHeader, Switch} from 'react-onsenui';
 
 export default class SettingPage extends React.Component {
   constructor(props) {

@@ -45,18 +45,18 @@ export default class HistoryPage extends React.Component {
     }
 
     fetch(`http://apps.cowry.co.jp/Monet2/api/wallet/history/?deviceId=${wallet.deviceId}&limit=100&offset=0`)
-      .then((response) => {
+      .then(response => {
         if(response.ok) {
           return response.json();
         } else {
           throw new Error();
         }
       })
-      .then((history) => {
+      .then(json => {
         const statuses = ["完了", "完了", "完了", "完了", "未確認", "不明"];
         const walletLabels = ["suzuki", "ichirooooooh's", "鈴木一郎の財布"];
 
-        let data = history.histories.map(h => {
+        let data = json.histories.map(h => {
           let priceLength = h.amount.length;
           let amountColor
               = priceLength >= 7 ? "red"

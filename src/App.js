@@ -25,6 +25,7 @@ import WalletsContext from './contexts/wallets';
 import SettingContext from './contexts/setting';
 
 const BALANCE_TAB_INDEX = 0;
+const HISTORY_TAB_INDEX = 3;
 const WALLET_TAB_INDEX = 5;
 
 class MainPage extends React.Component {
@@ -68,6 +69,7 @@ class MainPage extends React.Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
+    console.log("App shouldComponentUpdate");
     if (nextState.tabIndex === this.state.tabIndex) {
       if (nextState.selectedWalletIndex === this.state.selectedWalletIndex) {
         return false;
@@ -164,10 +166,44 @@ class MainPage extends React.Component {
     });
   }
 
-  handleReloadHistory() {
-    this.setState({tabIndex: 3}, () => {
+  handleSend(status, text) {
+    if (this.state.setting.debug) {
+      ons.notification.alert({title: status, message: text});
+    } else {
+      this.setState({tabIndex: HISTORY_TAB_INDEX});
       this.historyRef.current.handleLoad(this.state.selectedWallet);
-    });
+    }
+
+    const deviceId = this.state.selectedWallet.deviceId;
+    if (deviceId === null) return;
+
+    fetch(`http://apps.cowry.co.jp/Monet2/api/wallet/?deviceId=${this.state.selectedWallet.deviceId}`)
+      .then(response => {
+        if (response.ok) {
+         return response.json();
+        } else {
+          throw new Error();
+        }
+      })
+      .then(json => {
+        let wallet = this.state.selectedWallet;
+        wallet.amount = parseFloat(json.amount);
+
+        let wallets = this.state.wallets;
+        wallets[this.state.selectedWalletIndex] = wallet;
+
+        this.setState({
+          selectedWallet: wallet,
+          wallets: wallets,
+          tabIndex: HISTORY_TAB_INDEX,
+        }, () => {
+          localStorage.setItem("wallets", JSON.stringify(wallets))
+          this.historyRef.current.handleLoad(this.state.selectedWallet);
+        });
+      })
+      .catch(
+        error => console.log(error)
+      );
   }
 
   render() {
@@ -178,14 +214,14 @@ class MainPage extends React.Component {
             modifier="footer"
             index={this.state.tabIndex}
             swipeable={true}
-            onPreChange={ev => this.setState({tabIndex: ev.activeIndex})}
+            onPostChange={ev => this.setState({tabIndex: ev.activeIndex})}
             renderTabs={(activeIndex, tabbar) => [
               {
                 content: <BalancePage title="Balance" key="balance-page" active={activeIndex === 4} tabbar={tabbar} />,
                 tab: <Tab label="残高" key="balance-tab" icon="fa-coins" className="hidden-tab" />
               },
               {
-                content: <SendPage title="Send" key="send-page" active={activeIndex === 0} tabbar={tabbar} onReload={this.handleReloadHistory.bind(this)} />,
+                content: <SendPage title="Send" key="send-page" active={activeIndex === 0} tabbar={tabbar} onSend={this.handleSend.bind(this)} />,
                 tab: <Tab key="send-tab" className="send-icon" />
               },
               {

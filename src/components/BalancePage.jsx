@@ -1,6 +1,5 @@
 import React from 'react';
-import ons from 'onsenui';
-import {Page, Button, List, ListItem} from 'react-onsenui';
+import {Page, List, ListItem} from 'react-onsenui';
 
 export default class BalancePage extends React.Component {
   constructor(props) {

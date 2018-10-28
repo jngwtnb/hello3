@@ -17,12 +17,18 @@ export default class SendPage extends React.Component {
       isOpen: false,
       dialogMessage: "",
       setting: {},
+      userInputedAddress: "",
+      userInputedAmount: -1,
     };
 
-    this.onReload = this.props.onReload;
+    this._onSend = this.props.onSend;
   }
 
-  handleQr(wallet, setting) {
+  handleQr(wallet) {
+    if (!wallet) {
+      return;
+    }
+
     this.scanQrCode(uri => {
       Promise.resolve(uri)
         .then(this.parseUri)
@@ -33,12 +39,23 @@ export default class SendPage extends React.Component {
           console.log("fetched");
           console.log(response);
 
-          if (setting.debug) {
-            response.text().then(text => ons.notification.alert({title: response.statusText, message: text}));
+          if (response.ok) {
+            response.text().then(text => this._onSend(response.statusText, text));
           } else {
-//            this.props.tabbar._tabbar.setActiveTab(3, { reject: false });
-            this.onReload();
+            throw new Error();
           }
+
+/*
+          if (response.ok) {
+            if (setting.debug) {
+              response.text().then(text => ons.notification.alert({title: response.statusText, message: text}));
+            } else {
+              this.onReload();
+            }
+          } else {
+            throw new Error();
+          }
+*/
         })
         .catch(error => console.log(error));
     })
@@ -145,14 +162,31 @@ export default class SendPage extends React.Component {
     return fetch(url);
   }
 
-  handleSend() {
+  handleSend(wallet, setting) {
+    if (!wallet) {
+      return;
+    }
 
+    const params = {
+      amount: this.state.userInputedAmount,
+      recipientId: this.state.userInputedAddress,
+    };
+
+    Promise.resolve(params)
+      .then(this.confirmSending)
+      .then(this.createSendingUrl.bind(null, wallet))
+      .then(this.sendRequest)
+      .then(response => {
+        console.log("fetched");
+        console.log(response);
+          if (response.ok) {
+            response.text().then(text => this._onSend(response.statusText, text));
+          } else {
+            throw new Error();
+          }
+      })
+      .catch(error => console.log(error));
   }
-
-
-
-
-
 
   handleCancel() {
     this.setState({
@@ -168,14 +202,12 @@ export default class SendPage extends React.Component {
         <WalletsContext.Consumer>
           {wallets => {
             this.state.wallet = wallets;
-            null;
           }}
         </WalletsContext.Consumer>
 
         <SettingContext.Consumer>
           {setting => {
             this.state.setting = setting;
-            null;
           }}
         </SettingContext.Consumer>
 
@@ -188,16 +220,14 @@ export default class SendPage extends React.Component {
             });
           }} />
 
-        <SettingContext.Consumer>{ setting =>
           <WalletsContext.Consumer>{ ([wallets, index]) => 
             <Button
               modifier="quiet"
               className="qr-icon"
               disabled={this.state.qrDisabled}
-              onClick={this.handleQr.bind(this, wallets[index], setting)}
+              onClick={this.handleQr.bind(this, wallets[index])}
             />
           }</WalletsContext.Consumer>
-        }</SettingContext.Consumer>
         </div>
 
         <div className="tab-like-bar__content">
@@ -205,10 +235,12 @@ export default class SendPage extends React.Component {
             <div className="send-form-box" />
             <div className="send-form-label">送金に必要な項目を入力してください:</div>
             <div className="send-form">
-              <Input modifier="underbar" placeholder={'アドレス'} type={"text"} value=""/>
-              <Input modifier="underbar" placeholder={'金額'} type={"number"} inputmode={"numeric"} value="" />
+              <Input modifier="underbar" placeholder={'アドレス'} type={"text"} onChange={ev => this.setState({userInputedAddress: ev.target.value})} />
+              <Input modifier="underbar" placeholder={'金額'} type={"number"} inputmode={"numeric"} onChange={ev => this.setState({userInputedAmount: ev.target.value})} />
               <Input modifier="underbar" placeholder={'メッセージ(請求IDなど)'} type={"text"} />
-              <Button modifier="send-button quiet" onClick={this.handleSend.bind(this)}>送信</Button>
+              <WalletsContext.Consumer>{ ([wallets, index]) => 
+                <Button modifier="send-button quiet" onClick={this.handleSend.bind(this, wallets[index])}>送信</Button>
+              }</WalletsContext.Consumer>
             </div>
           </div>
         </div>

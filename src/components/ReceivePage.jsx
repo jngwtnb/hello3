@@ -50,16 +50,17 @@ export default class ReceivePage extends React.Component {
             <WalletsContext.Consumer>
               {([wallets, index]) => 
                 wallets[index] &&
-                <span className="receive-form">
+                <div className="receive-address">
                   <Input modifier="underbar" placeholder="" readOnly={true} type={"text"} inputId="input-address" value={wallets[index].address}/>
-                  <Button modifier="" onClick={() => {
+                  <Button modifier="quiet" onClick={() => {
                     document.getElementById("input-address").select();
                     document.execCommand("copy");
+                    window.getSelection().removeAllRanges();
                     ons.notification.toast('クリップボードにコピーしました', { timeout: 1000, animation: 'fall' });
                   }}>
-                    <Icon icon="fa-clipboard"/>
+                    <Icon icon="fa-clipboard" size={20} style={{color: "black"}}/>
                   </Button>
-                </span>
+                </div>
               }
             </WalletsContext.Consumer>
 

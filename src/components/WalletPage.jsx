@@ -39,7 +39,6 @@ export default class WalletPage extends React.Component {
         <SettingContext.Consumer>
           {setting => {
             this.state.setting = setting;
-            null;
           }}
         </SettingContext.Consumer>
 
@@ -58,7 +57,7 @@ export default class WalletPage extends React.Component {
                   key={`wallet-item-${idx}`}
                   modifier="nodivider wallet-inset selectable"
                   tappable={true}
-                  selected={idx == index}
+                  selected={idx === index}
                   onClick={() => {
                     this.setState({selectedIndex: idx});
                     this._onSelect(idx);

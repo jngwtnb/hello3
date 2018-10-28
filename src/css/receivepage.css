@@ -25,6 +25,26 @@
   margin-bottom: 1vh;
 }
 
+.receive-container .receive-address {
+  width: 47vmin;
+  display: flex;
+  flex-direction: row !important;
+  justify-content: space-between;
+  align-items: center;
+  flex-flow: nowrap;
+  box-sizing: border-box;
+}
+
+.receive-container .receive-address ons-input {
+  margin-right: 0px;
+  width: 100%;
+}
+
+.receive-container .receive-address ons-button {
+  margin: 0px;
+  padding: 0px 4px 0px 4px;
+}
+
 .receive-container .receive-label {
   font-size: 1.8vh;
   color: gray;
