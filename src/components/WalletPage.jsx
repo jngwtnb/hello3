@@ -14,17 +14,13 @@ export default class WalletPage extends React.Component {
       selectedIndex: props.initialIndex,
       newWalletLabel: "",
       newWalletTicker: "dngr",
+      newWalletDeviceId: "",
       openedCreateDialog: false,
       deviceIdRandomizes: false,
       setting: {},
     }
 
-    this._onSelect = (event, index) => {
-      if (this.props.onSelect) {
-        return this.props.onSelect(event, index);
-      }
-    };
-
+    this._onSelect = props.onSelect;
     this._onCreate = props.onCreate;
     this._onDelete = props.onDelete;
   }
@@ -149,6 +145,16 @@ export default class WalletPage extends React.Component {
                     </Select></td></tr>
                     {
                       this.state.setting.debug &&
+                      <tr><td className="name">deviceId</td><td>: </td><td>
+                        <Input
+                          modifier="underbar"
+                          value={this.state.newWalletDeviceId} float
+                          onChange={(event) => { this.setState({newWalletDeviceId: event.target.value})} }
+                        />
+                      </td></tr>
+                    }
+                    {
+                      this.state.setting.debug &&
                         <tr><td className="name" colSpan="3">
                           <Checkbox
                             inputId="device-id-randomizes"
@@ -166,10 +172,11 @@ export default class WalletPage extends React.Component {
             <Button
               className="alert-dialog-button alert-dialog-button--rowfooter"
               onClick={() => {
-                this._onCreate(this.state.newWalletLabel, this.state.newWalletTicker, this.state.deviceIdRandomizes);
+                this._onCreate(this.state.newWalletLabel, this.state.newWalletTicker, this.state.newWalletDeviceId, this.state.deviceIdRandomizes);
                 this.setState({
                   newWalletLabel: "",
                   newWalletTicker: "dngr",
+                  newWalletDeviceId: "",
                   deviceIdRandomizes: false,
                   openedCreateDialog: false,
                 });

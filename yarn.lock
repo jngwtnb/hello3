@@ -1826,6 +1826,10 @@ cordova-ios@^4.5.5:
     xml-escape "1.1.0"
     xmlbuilder "8.2.2"
 
+"cordova-plugin-customurlscheme@git+https://github.com/EddyVerbruggen/Custom-URL-scheme.git":
+  version "4.3.0"
+  resolved "git+https://github.com/EddyVerbruggen/Custom-URL-scheme.git#9f1cc218d0a535269082d249d1a8406da0ff13c9"
+
 cordova-plugin-device@^2.0.2:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/cordova-plugin-device/-/cordova-plugin-device-2.0.2.tgz#fc08f3722e67eef7b6c67bfc99a83df6add0baba"
@@ -5512,6 +5516,10 @@ pegjs@^0.10.0:
 performance-now@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/performance-now/-/performance-now-2.1.0.tgz#6309f4e0e5fa913ec1c69307ae364b4b377c9e7b"
+
+phonegap-nfc@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/phonegap-nfc/-/phonegap-nfc-1.0.3.tgz#6fe1baeba2e075b6352e1080601cf5f2db7de8f8"
 
 phonegap-plugin-barcodescanner@^8.0.0:
   version "8.0.0"

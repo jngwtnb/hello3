@@ -34,8 +34,8 @@ class MainPage extends React.Component {
 
     this.state = {
       tabIndex: 1,
-      selectedWallet: {},
-      selectedWalletIndex: 0,
+      currentWallet: {},
+      currentWalletIndex: 0,
       wallets: [],
       setting: {
         debug: false,
@@ -62,20 +62,10 @@ class MainPage extends React.Component {
     }
 
     this.setState({
-      selectedWallet: wallets[index] || {},
-      selectedWalletIndex: index,
+      currentWallet: wallets[index] || {},
+      currentWalletIndex: index,
       wallets: wallets,
     });
-  }
-
-  shouldComponentUpdate(nextProps, nextState) {
-    console.log("App shouldComponentUpdate");
-    if (nextState.tabIndex === this.state.tabIndex) {
-      if (nextState.selectedWalletIndex === this.state.selectedWalletIndex) {
-        return false;
-      }
-    }
-    return true;
   }
 
   handleClickBalanceTab() {
@@ -92,11 +82,14 @@ class MainPage extends React.Component {
   }
 
   handleSelectWallet(index) {
-    if (index !== this.state.selectedWalletIndex) {
+    if (index !== this.state.currentWalletIndex) {
       this.setState({
-        selectedWallet: this.state.wallets[index],
-        selectedWalletIndex: index,
-      }, () => { localStorage.setItem("wallet-index", index) });
+        currentWallet: this.state.wallets[index],
+        currentWalletIndex: index,
+      }, () => {
+        localStorage.setItem("wallet-index", index);
+        this.historyRef.current.handleLoad(this.state.currentWallet);
+      });
     }
   }
 
@@ -104,10 +97,13 @@ class MainPage extends React.Component {
     this.setState({setting: data});
   }
 
-  handleCreateWallet(label, ticker, deviceIdRandomizes) {
-    let deviceId = deviceIdRandomizes
-                 ? Util.generateRandomDeviceId()
-                 : Util.generateDeviceId();
+  handleCreateWallet(label, ticker, deviceId, deviceIdRandomizes) {
+
+    if (deviceId === "") {
+      deviceId = deviceIdRandomizes
+               ? Util.generateRandomDeviceId()
+               : Util.generateDeviceId();
+    }
 
     fetch(`http://apps.cowry.co.jp/Monet2/api/wallet/?deviceId=${deviceId}`)
       .then(response => {
@@ -127,11 +123,11 @@ class MainPage extends React.Component {
           amount: parseFloat(json.amount),
         });
 
-        let newIndex = wallets.length === 1 ? 0 : this.state.selectedWalletIndex;
+        let newIndex = wallets.length === 1 ? 0 : this.state.currentWalletIndex;
 
         this.setState({
-          selectedWallet: wallets[newIndex],
-          selectedWalletIndex: newIndex,
+          currentWallet: wallets[newIndex] || {},
+          currentWalletIndex: newIndex,
           wallets: wallets,
         }, () => {
           localStorage.setItem("wallet-index", newIndex);
@@ -149,15 +145,15 @@ class MainPage extends React.Component {
       newWallets.splice(index, 1);
     }
 
-    let newIndex = this.state.selectedWalletIndex === index ? -1
-                 : this.state.selectedWalletIndex > index   ? this.state.selectedWalletIndex - 1
-                 : this.state.selectedWalletIndex;
+    let newIndex = this.state.currentWalletIndex === index ? -1
+                 : this.state.currentWalletIndex > index   ? this.state.currentWalletIndex - 1
+                 : this.state.currentWalletIndex;
 
     if (!newWallets[newIndex]) newIndex = -1;
 
     this.setState({
-      selectedWallet: newWallets[newIndex] || {},
-      selectedWalletIndex: newIndex,
+      currentWallet: newWallets[newIndex] || {},
+      currentWalletIndex: newIndex,
       wallets: newWallets,
     }, () => {
       localStorage.setItem("wallet-index", newIndex);
@@ -166,18 +162,11 @@ class MainPage extends React.Component {
     });
   }
 
-  handleSend(status, text) {
-    if (this.state.setting.debug) {
-      ons.notification.alert({title: status, message: text});
-    } else {
-      this.setState({tabIndex: HISTORY_TAB_INDEX});
-      this.historyRef.current.handleLoad(this.state.selectedWallet);
-    }
-
-    const deviceId = this.state.selectedWallet.deviceId;
+  updateCurrentWallet() {
+    const deviceId = this.state.currentWallet.deviceId;
     if (deviceId === null) return;
 
-    fetch(`http://apps.cowry.co.jp/Monet2/api/wallet/?deviceId=${this.state.selectedWallet.deviceId}`)
+    fetch(`http://apps.cowry.co.jp/Monet2/api/wallet/?deviceId=${this.state.currentWallet.deviceId}`)
       .then(response => {
         if (response.ok) {
          return response.json();
@@ -186,19 +175,17 @@ class MainPage extends React.Component {
         }
       })
       .then(json => {
-        let wallet = this.state.selectedWallet;
+        let wallet = this.state.currentWallet;
         wallet.amount = parseFloat(json.amount);
 
         let wallets = this.state.wallets;
-        wallets[this.state.selectedWalletIndex] = wallet;
+        wallets[this.state.currentWalletIndex] = wallet;
 
         this.setState({
-          selectedWallet: wallet,
+          currentWallet: wallet,
           wallets: wallets,
-          tabIndex: HISTORY_TAB_INDEX,
         }, () => {
           localStorage.setItem("wallets", JSON.stringify(wallets))
-          this.historyRef.current.handleLoad(this.state.selectedWallet);
         });
       })
       .catch(
@@ -206,9 +193,23 @@ class MainPage extends React.Component {
       );
   }
 
+  handleSend(status, text) {
+    if (this.state.setting.debug) {
+      this.updateCurrentWallet();
+      ons.notification.alert({title: status, message: text});
+    } else {
+      this.setState({tabIndex: HISTORY_TAB_INDEX});
+      this.historyRef.current.handleLoad(this.state.currentWallet);
+    }
+  }
+
+  handleHistoryLoad() {
+    this.updateCurrentWallet();
+  }
+
   render() {
     const tabbar =
-      <WalletsContext.Provider value={[this.state.wallets, this.state.selectedWalletIndex]}>
+      <WalletsContext.Provider value={[this.state.wallets, this.state.currentWalletIndex]}>
         <SettingContext.Provider value={this.state.setting}>
           <Tabbar
             modifier="footer"
@@ -229,7 +230,7 @@ class MainPage extends React.Component {
                 tab: <Tab key="receive-tab" className="receive-icon" />
               },
               {
-                content: <HistoryPage title="History" key="history-page" active={activeIndex === 2} tabbar={tabbar} ref={this.historyRef}/>,
+                content: <HistoryPage title="History" key="history-page" active={activeIndex === 2} tabbar={tabbar} ref={this.historyRef} onLoad={this.handleHistoryLoad.bind(this)} />,
                 tab: <Tab key="history-tab" className="history-icon" />
               },
               {
@@ -237,7 +238,7 @@ class MainPage extends React.Component {
                 tab: <Tab key="setting-tab" className="setting-icon" />
               },
               {
-                content: <WalletPage title="Wallet" key="wallet-page" active={activeIndex === 5} tabbar={tabbar} initialIndex={this.state.selectedWalletIndex} onSelect={this.handleSelectWallet.bind(this)} onCreate={this.handleCreateWallet.bind(this)} onDelete={this.handleDeleteWallet.bind(this)} />,
+                content: <WalletPage title="Wallet" key="wallet-page" active={activeIndex === 5} tabbar={tabbar} initialIndex={this.state.currentWalletIndex} onSelect={this.handleSelectWallet.bind(this)} onCreate={this.handleCreateWallet.bind(this)} onDelete={this.handleDeleteWallet.bind(this)} />,
                 tab: <Tab key="wallet-tab" label="ウォレット" icon="fa-wallet" className="hidden-tab" />
               },
             ]}
@@ -256,10 +257,10 @@ class MainPage extends React.Component {
             />
 
             {
-              Object.keys(this.state.selectedWallet).length ?
+              Object.keys(this.state.currentWallet).length ?
               <div className="balance">
-                <span className="balance-amount">{this.state.selectedWallet.amount}</span>
-                <span className="balance-ticker">{this.state.selectedWallet.ticker}</span>
+                <span className="balance-amount">{this.state.currentWallet.amount}</span>
+                <span className="balance-ticker">{this.state.currentWallet.ticker}</span>
               </div>
               : null
             }
@@ -267,9 +268,9 @@ class MainPage extends React.Component {
             <div className="partition" />
 
             {
-              Object.keys(this.state.selectedWallet).length ?
+              Object.keys(this.state.currentWallet).length ?
                 <div className="wallet">
-                  <div className="wallet-name">{this.state.selectedWallet.label}</div>
+                  <div className="wallet-name">{this.state.currentWallet.label}</div>
                 </div>
                 : null
             }

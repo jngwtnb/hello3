@@ -162,10 +162,8 @@ export default class SendPage extends React.Component {
     return fetch(url);
   }
 
-  handleSend(wallet, setting) {
-    if (!wallet) {
-      return;
-    }
+  handleSend(wallet) {
+    if (!wallet) return;
 
     const params = {
       amount: this.state.userInputedAmount,

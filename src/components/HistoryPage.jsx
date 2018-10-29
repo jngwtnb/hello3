@@ -24,6 +24,8 @@ export default class HistoryPage extends React.Component {
       'Send': '送金',
       'Payment': 'チャージ',
     };
+
+    this._onLoad = this.props.onLoad;
   }
 
 //  componentDidMount() {
@@ -57,11 +59,12 @@ export default class HistoryPage extends React.Component {
         const walletLabels = ["suzuki", "ichirooooooh's", "鈴木一郎の財布"];
 
         let data = json.histories.map(h => {
-          let priceLength = h.amount.length;
+          let amount = Number(h.amount);
+          let amountLength = String(amount).length;
           let amountColor
-              = priceLength >= 7 ? "red"
-              : priceLength >= 6 ? "green"
-              :                    "black"
+              = amountLength >= 5 ? "red"
+              : amountLength >= 4 ? "green"
+              :                     "black"
               ;
 
           let status = statuses[Math.floor(Math.random() * statuses.length)];
@@ -70,15 +73,18 @@ export default class HistoryPage extends React.Component {
           return {
             status: {icon: this.icons[status], label: status},
             datetime: new Date(h.createdAt).toLocaleString("ja-JP", {timeZone: "Asia/Tokyo"}),
-            price: {amount: h.amount, color: amountColor},
+            price: {amount: amount, color: amountColor},
             cause: this.causes[h.cause],
             wallet: walletLabel,
           };
         });
 
-
-        this.setState({data: data}, done);
-        this.forceUpdate();
+        this.setState({data: []}, () => {
+          this.setState({data: data}, done);
+        });
+      })
+      .then(() => {
+        this._onLoad();
       })
       .catch((error) => ons.notification.alert(error));
 
@@ -101,6 +107,8 @@ export default class HistoryPage extends React.Component {
         <Page>
           <WalletsContext.Consumer>{([wallets, index]) =>
             <PullHook
+              height={96}
+              thresholdHeight={128}
               fixedContent={true}
               onChange={this.handleChange.bind(this)}
               onLoad={this.handleLoad.bind(this, wallets[index])}
@@ -108,16 +116,15 @@ export default class HistoryPage extends React.Component {
               {
                 (this.state.pullHookState === 'initial') ?
                   <span>
-                    <Icon size={35} spin={false} icon='ion-arrow-down-a' />
-                    Pull down to refresh
+                    <Icon size={35} spin={false} icon='ion-load-d' />
                   </span>
                 : (this.state.pullHookState === 'preaction') ?
                   <span>
-                    <Icon size={35} spin={false} icon='ion-arrow-up-a' />
-                    Release to refresh
+                    <Icon size={35} spin={false} icon='ion-load-d' />
                   </span>
                 :
-                  <span><Icon size={35} spin={true} icon='ion-load-d'></Icon> Loading data...</span>
+                  <span><Icon size={35} spin={true} icon='ion-load-d'></Icon>
+                  </span>
               }
             </PullHook>
           }</WalletsContext.Consumer>
