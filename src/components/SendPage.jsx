@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
-import {AlertDialog, Page, Button, Input} from 'react-onsenui';
+import {AlertDialog, Page, Button, Input, Modal} from 'react-onsenui';
 import ons from 'onsenui';
 
 import WalletsContext from '../contexts/wallets';
@@ -19,12 +19,33 @@ export default class SendPage extends React.Component {
       setting: {},
       userInputedAddress: "",
       userInputedAmount: -1,
+      openedModal: false,
     };
 
     this._onSend = this.props.onSend;
   }
 
-  handleQr(wallet) {
+  handleScanNfc(wallet) {
+    if (!wallet) {
+      return;
+    }
+
+    this.setState({openedModal: true}, () => {
+      this.scanNfc(uri => {
+        this.setState({openedModal: false}, () => {
+          Promise.resolve(uri)
+            .then(this.parseUri)
+            .then(this.confirmSending)
+            .then(this.createSendingUrl.bind(null, wallet))
+            .then(this.sendRequest)
+            .then(this.sendResponseToParent.bind(this))
+            .catch(error => console.log(error));
+          })
+      })
+    });
+  }
+
+  handleScanQrCode(wallet) {
     if (!wallet) {
       return;
     }
@@ -35,41 +56,48 @@ export default class SendPage extends React.Component {
         .then(this.confirmSending)
         .then(this.createSendingUrl.bind(null, wallet))
         .then(this.sendRequest)
-        .then(response => {
-          console.log("fetched");
-          console.log(response);
-
-          if (response.ok) {
-            response.text().then(text => this._onSend(response.statusText, text));
-          } else {
-            throw new Error();
-          }
-
-/*
-          if (response.ok) {
-            if (setting.debug) {
-              response.text().then(text => ons.notification.alert({title: response.statusText, message: text}));
-            } else {
-              this.onReload();
-            }
-          } else {
-            throw new Error();
-          }
-*/
-        })
+        .then(this.sendResponseToParent.bind(this))
         .catch(error => console.log(error));
     })
 
     return;
   }
 
+  scanNfc(callback) {
+    if (window.cordova && window.nfc) {
+      window.nfc.addNdefListener(
+        function (nfcEvent) {
+            window.nfc.removeNdefListener();
+            let tag = nfcEvent.tag,
+                ndefMessage = tag.ndefMessage;
+
+          //  alert(JSON.stringify(ndefMessage));
+
+            let type = window.nfc.bytesToString(ndefMessage[0].type); 
+            let payload = window.nfc.bytesToString(ndefMessage[0].payload);
+            let uri = type === "U" ? payload.substring(1) : "";
+
+            return callback(uri);
+        },
+        function () { // success callback
+          //  alert("Waiting for NDEF tag");
+        },
+        function (error) { // error callback
+            alert("Error adding NDEF listener " + JSON.stringify(error));
+        }
+      );
+
+    } else {
+      callback("");
+    }
+  }
+
   scanQrCode(callback) {
-    if (window.cordova) {
+    if (window.cordova && window.cordova.plugins.barcodeScanner) {
       window.cordova.plugins.barcodeScanner.scan(
         result => {
           let uri = result.cancelled ? "" : result.text;
           if (uri === "") return new Error();
-        //  this.setState({uri: uri});
           return callback(uri);
         },
         error => {
@@ -90,6 +118,9 @@ export default class SendPage extends React.Component {
 
   parseUri(uriString) {
     console.log(uriString);
+    if (uriString === "") {
+      throw new Error();
+    }
 
     let uri = new URL(uriString);
 
@@ -162,6 +193,17 @@ export default class SendPage extends React.Component {
     return fetch(url);
   }
 
+  sendResponseToParent(response) {
+    console.log("fetched");
+    console.log(response);
+
+    if (response.ok) {
+      response.text().then(text => this._onSend(response.statusText, text));
+    } else {
+      throw new Error();
+    }
+  }
+
   handleSend(wallet) {
     if (!wallet) return;
 
@@ -209,24 +251,22 @@ export default class SendPage extends React.Component {
           }}
         </SettingContext.Consumer>
 
-        <div className="tab-like-bar">
-          <Button modifier="quiet" className="nfc-icon" disabled={this.state.nfcDisabled} onClick={() => {
-            this.setState({
-              nfcDisabled: true,
-              isOpen: true,
-              dialogMessage: "nfc",
-            });
-          }} />
-
           <WalletsContext.Consumer>{ ([wallets, index]) => 
-            <Button
-              modifier="quiet"
-              className="qr-icon"
-              disabled={this.state.qrDisabled}
-              onClick={this.handleQr.bind(this, wallets[index])}
-            />
+            <div className="tab-like-bar">
+              <Button
+                modifier="quiet"
+                className="nfc-icon"
+                disabled={this.state.nfcDisabled}
+                onClick={this.handleScanNfc.bind(this, wallets[index])}
+              />
+              <Button
+                modifier="quiet"
+                className="qr-icon"
+                disabled={this.state.qrDisabled}
+                onClick={this.handleScanQrCode.bind(this, wallets[index])}
+              />
+            </div>
           }</WalletsContext.Consumer>
-        </div>
 
         <div className="tab-like-bar__content">
           <div className="send-form-container">
@@ -255,6 +295,9 @@ export default class SendPage extends React.Component {
           </div>
         </AlertDialog>
 
+        <Modal isOpen={this.state.openedModal}>
+          NFC 待機中...
+        </Modal>
       </Page>
     )
   }}

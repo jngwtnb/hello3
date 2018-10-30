@@ -116,14 +116,14 @@ export default class HistoryPage extends React.Component {
               {
                 (this.state.pullHookState === 'initial') ?
                   <span>
-                    <Icon size={35} spin={false} icon='ion-load-d' />
+                    <Icon size={35} spin={false} icon='md-spinner' />
                   </span>
                 : (this.state.pullHookState === 'preaction') ?
                   <span>
-                    <Icon size={35} spin={false} icon='ion-load-d' />
+                    <Icon size={35} spin={false} icon='md-spinner' />
                   </span>
                 :
-                  <span><Icon size={35} spin={true} icon='ion-load-d'></Icon>
+                  <span><Icon size={35} spin={true} icon='md-spinner'></Icon>
                   </span>
               }
             </PullHook>
