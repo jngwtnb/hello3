@@ -15,6 +15,7 @@ export default class SettingPage extends React.Component {
         return this.props.onChange(event);
       }
     };
+    this._onCharge = this.props.onCharge;
   }
 
   handleChangeDebug(event) {
@@ -38,21 +39,25 @@ export default class SettingPage extends React.Component {
                     <Switch />
                   </div>
                 </ListItem>,
-                <ListItem key="general-list-item-debug">
-                  <div className="center">デバッグモード</div>
-                  <div className="right">
-                    <Switch checked={this.state.debug} onChange={this.handleChangeDebug.bind(this)}/>
-                  </div>
-                </ListItem>,
-                <ListItem key="general-list-item-clear">
-                  <div className="center"><Button onClick={() => localStorage.clear()}>localStorageを初期化する</Button></div>
-                </ListItem>,
                 <ListHeader key="history-list-header">履歴</ListHeader>,
                 <ListItem key="history-list-item">
                   <div className="center">桁毎に色分けする</div>
                   <div className="right">
                     <Switch checked={true} />
                   </div>
+                </ListItem>,
+                <ListHeader key="debug-list-header">デバッグ</ListHeader>,
+                <ListItem key="debug-list-item-debug">
+                  <div className="center">デバッグモード</div>
+                  <div className="right">
+                    <Switch checked={this.state.debug} onChange={this.handleChangeDebug.bind(this)}/>
+                  </div>
+                </ListItem>,
+                <ListItem key="debug-list-item-clear">
+                  <div className="center"><Button modifier="large light" onClick={() => localStorage.clear()}>localStorageを初期化する</Button></div>
+                </ListItem>,
+                <ListItem key="debug-list-item-charge">
+                  <div className="center"><Button modifier="large light" onClick={this._onCharge.bind(this)}>チャージ</Button></div>
                 </ListItem>,
               ]}
               renderRow={(row) => row}

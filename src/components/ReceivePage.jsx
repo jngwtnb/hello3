@@ -72,20 +72,24 @@ export default class ReceivePage extends React.Component {
 
             <div className="receive-label">入金予定金額を入力してください:</div>
             <div className="receive-form">
-              <Input
-                modifier="underbar"
-                placeholder=""
-                defaultValue={this.state.amount}
-                inputId="receive-amount"
-                onChange={ev => {
-                  this.setState({
-                    amount: ev.srcElement.value,
-                    uri: this.generateUri(ev.srcElement.value, this.state.wallet.deviceId),
-                  });
-                }}
-                type={"number"}
-                inputmode={"numeric"}
-              />
+              <WalletsContext.Consumer>{([wallets, index]) => 
+                <Input
+                  modifier="underbar"
+                  placeholder=""
+                  defaultValue={this.state.amount}
+                  inputId="receive-amount"
+                  onChange={ev => {
+                    if (wallets[index]) {
+                      this.setState({
+                        amount: ev.srcElement.value,
+                        uri: this.generateUri(ev.srcElement.value, wallets[index].deviceId),
+                      });
+                    }
+                  }}
+                  type={"number"}
+                  inputmode={"numeric"}
+                />
+              }</WalletsContext.Consumer>
             </div>
           </div>
         </div>

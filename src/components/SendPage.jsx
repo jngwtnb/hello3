@@ -204,13 +204,15 @@ export default class SendPage extends React.Component {
     }
   }
 
-  handleSend(wallet) {
+  handleSend(wallet, params) {
     if (!wallet) return;
 
-    const params = {
-      amount: this.state.userInputedAmount,
-      recipientId: this.state.userInputedAddress,
-    };
+    if(!params) {
+      params = {
+        amount: this.state.userInputedAmount,
+        recipientId: this.state.userInputedAddress,
+      };
+    }
 
     Promise.resolve(params)
       .then(this.confirmSending)
@@ -295,8 +297,20 @@ export default class SendPage extends React.Component {
           </div>
         </AlertDialog>
 
-        <Modal isOpen={this.state.openedModal}>
-          NFC 待機中...
+        <Modal
+          isOpen={this.state.openedModal}
+          onDeviceBackButton={() => {
+            this.setState({openedModal: false});
+          }}
+          onPreHide={() => {
+            if (window.cordova && window.nfc) {
+              window.nfc.removeNdefListener();
+            }
+          }}
+        >
+          <div>NFC 待機中...</div>
+          <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+          <Button modifier="quiet outline" style={{color: "white"}} onClick={() => this.setState({openedModal: false})}>キャンセル</Button>
         </Modal>
       </Page>
     )

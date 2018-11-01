@@ -38,10 +38,12 @@ export default class WalletPage extends React.Component {
           }}
         </SettingContext.Consumer>
 
+          <WalletsContext.Consumer>{([wallets, index]) =>
         <div className="tab-like-bar">
           <Button modifier="quiet" className="create-icon" onClick={this.handleClickCreateButton.bind(this)} />
-          <Button modifier="quiet" className="manage-icon" />
+          <Button modifier="quiet" className="manage-icon" onClick={console.log(wallets)} />
         </div>
+        }</WalletsContext.Consumer>
 
         <div className="tab-like-bar__content">
           <WalletsContext.Consumer>{([wallets, index]) =>

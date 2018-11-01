@@ -48,6 +48,7 @@ export default class HistoryPage extends React.Component {
 
     fetch(`http://apps.cowry.co.jp/Monet2/api/wallet/history/?deviceId=${wallet.deviceId}&limit=100&offset=0`)
       .then(response => {
+        console.log(response)
         if(response.ok) {
           return response.json();
         } else {
@@ -55,8 +56,9 @@ export default class HistoryPage extends React.Component {
         }
       })
       .then(json => {
+        console.log(json);
         const statuses = ["完了", "完了", "完了", "完了", "未確認", "不明"];
-        const walletLabels = ["suzuki", "ichirooooooh's", "鈴木一郎の財布"];
+        const walletLabels = ["sato", "jirooooooh's", "佐藤二郎の財布"];
 
         let data = json.histories.map(h => {
           let amount = Number(h.amount);

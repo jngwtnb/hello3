@@ -43,6 +43,7 @@ class MainPage extends React.Component {
     };
 
     this.historyRef = React.createRef();
+    this.sendRef = React.createRef();
   }
 
   componentWillMount() {
@@ -114,6 +115,7 @@ class MainPage extends React.Component {
         }
       })
       .then(json => {
+        console.log(json);
         let wallets = this.state.wallets;
         wallets.push({
           label: label,
@@ -166,8 +168,10 @@ class MainPage extends React.Component {
     const deviceId = this.state.currentWallet.deviceId;
     if (deviceId === null) return;
 
+console.log("before FETCH");
     fetch(`http://apps.cowry.co.jp/Monet2/api/wallet/?deviceId=${this.state.currentWallet.deviceId}`)
       .then(response => {
+        console.log(response);
         if (response.ok) {
          return response.json();
         } else {
@@ -175,6 +179,7 @@ class MainPage extends React.Component {
         }
       })
       .then(json => {
+        console.log(json);
         let wallet = this.state.currentWallet;
         wallet.amount = parseFloat(json.amount);
 
@@ -191,6 +196,7 @@ class MainPage extends React.Component {
       .catch(
         error => console.log(error)
       );
+console.log("after FETCH");
   }
 
   handleSend(status, text) {
@@ -205,6 +211,21 @@ class MainPage extends React.Component {
 
   handleHistoryLoad() {
     this.updateCurrentWallet();
+  }
+
+  handleDebugCharge() {
+      const wallet = {
+        address: "WmjedSdfqYUkNEkKBgsNSrCUEZCYqkqNXd",
+        deviceId: "13CZLXCy6MD2L4iwEeeyXTB8pDAmdQyhD5",
+        ticker: "DNGR",
+      };
+
+      const params = {
+        amount: 1000,
+        recipientId: this.state.currentWallet.address,
+      };
+
+      this.sendRef.current.handleSend(wallet, params);
   }
 
   render() {
@@ -222,7 +243,7 @@ class MainPage extends React.Component {
                 tab: <Tab label="残高" key="balance-tab" icon="fa-coins" className="hidden-tab" />
               },
               {
-                content: <SendPage title="Send" key="send-page" active={activeIndex === 0} tabbar={tabbar} onSend={this.handleSend.bind(this)} />,
+                content: <SendPage title="Send" key="send-page" active={activeIndex === 0} tabbar={tabbar} ref={this.sendRef} onSend={this.handleSend.bind(this)} />,
                 tab: <Tab key="send-tab" className="send-icon" />
               },
               {
@@ -234,7 +255,7 @@ class MainPage extends React.Component {
                 tab: <Tab key="history-tab" className="history-icon" />
               },
               {
-                content: <SettingPage title="Setting" key="setting-page" active={activeIndex === 3} tabbar={tabbar} initialSetting={this.state.setting} onChange={this.handleChangeSetting.bind(this)} />,
+                content: <SettingPage title="Setting" key="setting-page" active={activeIndex === 3} tabbar={tabbar} initialSetting={this.state.setting} onChange={this.handleChangeSetting.bind(this)} onCharge={this.handleDebugCharge.bind(this)} />,
                 tab: <Tab key="setting-tab" className="setting-icon" />
               },
               {
