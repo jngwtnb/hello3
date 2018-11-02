@@ -38,11 +38,11 @@ export default class WalletPage extends React.Component {
           }}
         </SettingContext.Consumer>
 
-          <WalletsContext.Consumer>{([wallets, index]) =>
-        <div className="tab-like-bar">
-          <Button modifier="quiet" className="create-icon" onClick={this.handleClickCreateButton.bind(this)} />
-          <Button modifier="quiet" className="manage-icon" onClick={console.log(wallets)} />
-        </div>
+        <WalletsContext.Consumer>{([wallets, index]) =>
+          <div className="tab-like-bar">
+            <Button modifier="quiet" className="create-icon" onClick={this.handleClickCreateButton.bind(this)} />
+            <Button modifier="quiet" className="manage-icon" onClick={() => console.log(wallets)} />
+          </div>
         }</WalletsContext.Consumer>
 
         <div className="tab-like-bar__content">
@@ -116,7 +116,7 @@ export default class WalletPage extends React.Component {
           isOpen={this.state.openedCreateDialog}
           isCancelable={false}
           onPreShow={() => {
-            if (this.state.setting.debug) {
+            if (this.state.setting.debugModeEnabled) {
               const wallets = ["suzuki", "ichirooooooh's", "鈴木一郎の財布"];
               this.setState({
                 newWalletLabel: wallets[Math.floor(Math.random() * wallets.length)],
@@ -146,7 +146,7 @@ export default class WalletPage extends React.Component {
                       <option value="btc">BTC</option>
                     </Select></td></tr>
                     {
-                      this.state.setting.debug &&
+                      this.state.setting.debugModeEnabled &&
                       <tr><td className="name">deviceId</td><td>: </td><td>
                         <Input
                           modifier="underbar"
@@ -156,7 +156,7 @@ export default class WalletPage extends React.Component {
                       </td></tr>
                     }
                     {
-                      this.state.setting.debug &&
+                      this.state.setting.debugModeEnabled &&
                         <tr><td className="name" colSpan="3">
                           <Checkbox
                             inputId="device-id-randomizes"

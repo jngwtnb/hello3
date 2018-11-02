@@ -32,17 +32,36 @@ export default class ReceivePage extends React.Component {
     });
   }
 
+  handleNfc() {
+    /*
+    if (window.cordova && window.nfc) {
+      var message = [
+          window.ndef.textRecord("hello, world")
+      ];
+
+      window.nfc.share(
+        message,
+        function () { // success callback
+            alert("Waiting for NDEF tag");
+        },
+        function (error) { // error callback
+            alert("Error adding NDEF listener " + JSON.stringify(error));
+        }
+      );
+    }
+*/
+    this.setState({
+      nfcDisabled: true,
+      isOpen: true,
+      dialogMessage: "nfc",
+    });
+  }
+
   render() {
     return (
       <Page>
         <div className="tab-like-bar">
-          <Button modifier="quiet" className="nfc-icon" disabled={this.state.nfcDisabled} onClick={() => {
-            this.setState({
-              nfcDisabled: true,
-              isOpen: true,
-              dialogMessage: "nfc",
-            });
-          }} />
+          <Button modifier="quiet" className="nfc-icon" disabled={this.state.nfcDisabled} onClick={this.handleNfc.bind(this)} />
         </div>
 
         <div className="tab-like-bar__content">

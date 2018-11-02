@@ -38,7 +38,7 @@ class MainPage extends React.Component {
       currentWalletIndex: 0,
       wallets: [],
       setting: {
-        debug: false,
+        debugModeEnabled: false,
       },
     };
 
@@ -200,7 +200,7 @@ console.log("after FETCH");
   }
 
   handleSend(status, text) {
-    if (this.state.setting.debug) {
+    if (this.state.setting.debugModeEnabled) {
       this.updateCurrentWallet();
       ons.notification.alert({title: status, message: text});
     } else {
@@ -280,7 +280,7 @@ console.log("after FETCH");
             {
               Object.keys(this.state.currentWallet).length ?
               <div className="balance">
-                <span className="balance-amount">{this.state.currentWallet.amount}</span>
+                <span className="balance-amount">{this.state.currentWallet.amount}.00000001</span>
                 <span className="balance-ticker">{this.state.currentWallet.ticker}</span>
               </div>
               : null

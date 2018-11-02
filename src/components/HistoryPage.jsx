@@ -101,7 +101,7 @@ export default class HistoryPage extends React.Component {
   render() {
     return (
       <Page>
-        <div className="tab-like-bar without-label">
+        <div className="tab-like-bar without-label gradient">
           <Button modifier="quiet" className="sort-button sort-icon" />
         </div>
 

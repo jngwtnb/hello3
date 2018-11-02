@@ -3,10 +3,7 @@
   width: 100%;
   z-index: 20003;
 
-  background-color: transparent;
-  background-image: linear-gradient(to bottom, white 4.5vh, #efeff4 0px, transparent);
-  background-image: linear-gradient(to bottom, white 4.5vh, #efeff4 0px, rgba(239,239,244,0.8), transparent);
-  background-size: calc(12vh + 1px);
+  background-image: linear-gradient(to bottom, white 4.5vh, #efeff4 0px, transparent 1px);
   height: 12vh;
   display: flex;
   flex-flow: row nowrap;
@@ -33,7 +30,6 @@
 }
 
 .tab-like-bar.half {
-  background-size: calc(4.5vh + 1px);
   height: 4.5vh;
 }
 
@@ -43,13 +39,16 @@
 }
 
 .tab-like-bar.without-label {
-  background-size: calc(11vh + 1px);
   height: 11vh;
 }
 
 .tab-like-bar.without-label + .tab-like-bar__content {
   top: 4.5vh;
   height: calc(100% - 4.5vh);
+}
+
+.tab-like-bar.gradient {
+  background-image: linear-gradient(to bottom, white 4.5vh, #efeff4 0px, rgba(239,239,244,0.8) 7.5vh, transparent);
 }
 
 .tab-like-bar .button {
