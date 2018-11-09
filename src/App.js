@@ -38,6 +38,7 @@ class MainPage extends React.Component {
       currentWalletIndex: 0,
       wallets: [],
       setting: {
+        amountColorCodingEnabled: true,
         debugModeEnabled: false,
       },
     };

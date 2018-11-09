@@ -7,7 +7,6 @@ import WalletsContext from '../contexts/wallets';
 import SettingContext from '../contexts/setting';
 
 export default class SendPage extends React.Component {
-
   constructor(...args){
     super(...args);
 
@@ -68,6 +67,8 @@ export default class SendPage extends React.Component {
       window.nfc.addNdefListener(
         function (nfcEvent) {
             window.nfc.removeNdefListener();
+            console.log(JSON.stringify(nfcEvent));
+
             let tag = nfcEvent.tag,
                 ndefMessage = tag.ndefMessage;
 

@@ -33,6 +33,9 @@
     <plugin name="phonegap-nfc" spec="^1.0.3">
         <variable name="NFC_USAGE_DESCRIPTION" value="Read NFC Tags" />
     </plugin>
+    <plugin name="cordova-plugin-hce" spec="^1.0.0">
+        <variable name="AID_FILTER" value="F222222222" />
+    </plugin>
     <engine name="android" spec="^7.0.0" />
     <engine name="ios" spec="^4.5.5" />
 </widget>

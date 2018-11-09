@@ -50,11 +50,33 @@ export default class ReceivePage extends React.Component {
       );
     }
 */
+//console.log(window);
+console.log(window.hce);
+    window.hce.registerCommandCallback(command => {
+      console.log(command);
+      var commandAsBytes = new Uint8Array(command);
+      var commandAsString = window.hce.util.byteArrayToHexString(commandAsBytes);
+      console.log(commandAsString);
+    },
+    command => {
+      console.log(command);
+    });
+    window.hce.registerDeactivatedCallback(reason => {
+      console.log('Deactivated ' + reason);
+    }, reqson => {console.log(reqson)});
+
+/*
+window.nfc.readerMode(
+    window.nfc.FLAG_READER_NFC_A | window.nfc.FLAG_READER_NO_PLATFORM_SOUNDS, 
+    nfcTag => console.log(JSON.stringify(nfcTag)),
+    error => console.log('NFC reader mode failed', error)
+);
     this.setState({
       nfcDisabled: true,
       isOpen: true,
       dialogMessage: "nfc",
     });
+*/
   }
 
   render() {
