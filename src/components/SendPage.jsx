@@ -78,13 +78,14 @@ export default class SendPage extends React.Component {
             let payload = window.nfc.bytesToString(ndefMessage[0].payload);
             let uri = type === "U" ? payload.substring(1) : "";
 
-            return callback(uri);
+            callback(uri);
         },
         function () { // success callback
           //  alert("Waiting for NDEF tag");
         },
         function (error) { // error callback
-            alert("Error adding NDEF listener " + JSON.stringify(error));
+          alert("Error adding NDEF listener " + JSON.stringify(error));
+          callback("");
         }
       );
 

@@ -52,6 +52,7 @@ export default class SettingPage extends React.Component {
         var commandAsBytes = new Uint8Array(command);
         var commandAsString = window.hce.util.byteArrayToHexString(commandAsBytes);
         console.log(command, commandAsString);
+        alert(JSON.stringify(command, commandAsString));
 
         // do something with the command
 
@@ -61,6 +62,7 @@ export default class SettingPage extends React.Component {
 
       window.hce.registerDeactivatedCallback(reason => {
         console.log('Deactivated ' + reason);
+        alert('Deactivated ' + reason);
       });
 
       ons.notification.toast('Registered NFC HCE', { timeout: 1000, animation: 'fall' });
@@ -103,6 +105,8 @@ return callback("");
         function (nfcEvent) {
           window.nfc.removeTagDiscoveredListener();
           console.log(JSON.stringify(nfcEvent));
+
+          alert(JSON.stringify(nfcEvent));
 
           const tagId = window.nfc.bytesToHexString(nfcEvent.tag.id);
           console.log('Processing', tagId);
@@ -154,19 +158,35 @@ return callback("");
             return callback(uri);
         },
         function () { // success callback
-            alert("Waiting for NDEF tag");
+//            alert("Waiting for NDEF tag");
         },
         function (error) { // error callback
             alert("Error adding NDEF listener " + JSON.stringify(error));
+            callback("");
         }
       );
 
     } else {
-      callback("");
+      return callback("");
     }
   }
 
+  handleGetSimInfo() {
+    if (!window.plugins || !window.plugins.sim) {
+      ons.notification.toast('Could not get sim info', { timeout: 1000, animation: 'fall' });
+      return;
+    }
 
+    window.plugins.sim.getSimInfo(
+      result => {
+        console.log(result);
+        alert(JSON.stringify(result));
+      },
+      error => {
+        console.log(error);
+        alert(JSON.stringify(error));
+      });
+  }
 
 
 
@@ -213,6 +233,9 @@ return callback("");
                 </ListItem>,
                 this.state.debugModeEnabled && <ListItem key="debug-list-item-scan-iso-dep" tappable={true} onClick={this.handleScanIsoDep.bind(this)}>
                   <div className="center">Scan IsoDep</div>
+                </ListItem>,
+                this.state.debugModeEnabled && <ListItem key="debug-list-item-get-sim-info" tappable={true} onClick={this.handleGetSimInfo.bind(this)}>
+                  <div className="center">Get sim info</div>
                 </ListItem>,
               ]}
               renderRow={(row) => row}
