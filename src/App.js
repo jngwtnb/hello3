@@ -107,16 +107,28 @@ class MainPage extends React.Component {
                : Util.generateDeviceId();
     }
 
+console.log(`http://apps.cowry.co.jp/Monet2/api/wallet/?deviceId=${deviceId}`);
     fetch(`http://apps.cowry.co.jp/Monet2/api/wallet/?deviceId=${deviceId}`)
       .then(response => {
-        if (response.ok) {
-         return response.json();
-        } else {
-          throw new Error();
-        }
+        return response.text();
+//        if (response.ok) {
+//         return response.json();
+//        } else {
+//          response.text().then(text => {
+//            throw new Error(text);
+//          });
+//        }
       })
-      .then(json => {
-        console.log(json);
+      .then(text => {
+        console.log(text);
+
+        let json;
+        try {
+          json = JSON.parse(text);
+        } catch (e) {
+          throw new Error(text);
+        }
+
         let wallets = this.state.wallets;
         wallets.push({
           label: label,
@@ -137,9 +149,10 @@ class MainPage extends React.Component {
           localStorage.setItem("wallets", JSON.stringify(wallets))
         });
       })
-      .catch(
-        error => console.log(error)
-      );
+      .catch(error => {
+        console.log(error);
+        alert(error.message);
+      });
   }
 
   handleDeleteWallet(index) {

@@ -33,50 +33,22 @@ export default class ReceivePage extends React.Component {
   }
 
   handleNfc() {
-    /*
-    if (window.cordova && window.nfc) {
-      var message = [
-          window.ndef.textRecord("hello, world")
-      ];
-
-      window.nfc.share(
-        message,
-        function () { // success callback
-            alert("Waiting for NDEF tag");
-        },
-        function (error) { // error callback
-            alert("Error adding NDEF listener " + JSON.stringify(error));
-        }
-      );
+    if (!window.cordova || !window.hce || !window.ndef) {
+      ons.notification.toast('Could not enable HCE', { timeout: 1000, animation: 'fall' });
+      return;
     }
-*/
-//console.log(window);
-console.log(window.hce);
-    window.hce.registerCommandCallback(command => {
-      console.log(command);
-      var commandAsBytes = new Uint8Array(command);
-      var commandAsString = window.hce.util.byteArrayToHexString(commandAsBytes);
-      console.log(commandAsString);
-    },
-    command => {
-      console.log(command);
-    });
+
+    const records = [
+        window.ndef.uriRecord(this.state.uri),
+    ];
+    const message = window.ndef.encodeMessage(records);
+    window.hce.setNdefMessage(message);
+
     window.hce.registerDeactivatedCallback(reason => {
       console.log('Deactivated ' + reason);
     }, reqson => {console.log(reqson)});
 
-/*
-window.nfc.readerMode(
-    window.nfc.FLAG_READER_NFC_A | window.nfc.FLAG_READER_NO_PLATFORM_SOUNDS, 
-    nfcTag => console.log(JSON.stringify(nfcTag)),
-    error => console.log('NFC reader mode failed', error)
-);
-    this.setState({
-      nfcDisabled: true,
-      isOpen: true,
-      dialogMessage: "nfc",
-    });
-*/
+    ons.notification.toast('Enable HCE', { timeout: 1000, animation: 'fall' });
   }
 
   render() {

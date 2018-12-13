@@ -2,6 +2,19 @@ import React from 'react';
 import ons from 'onsenui';
 import {Page, Button, List, ListItem, ListHeader, Switch, Modal} from 'react-onsenui';
 
+const SAMPLE_LOYALTY_CARD_AID = 'F222222222';
+const SELECT_APDU_HEADER = '00A40400';
+const SELECT_OK_SW = '9000';
+const UNKNOWN_CMD_SW = '0000';
+const SELECT_APDU = buildSelectApdu(SAMPLE_LOYALTY_CARD_AID);
+
+function buildSelectApdu(aid) {
+    // Format: [CLASS | INSTRUCTION | PARAMETER 1 | PARAMETER 2 | LENGTH | DATA]
+    var aidByteLength = ("00" + (aid.length / 2).toString(16)).substr(-2);
+    var data = SELECT_APDU_HEADER + aidByteLength + aid;
+    return data.toLowerCase();
+}
+
 export default class SettingPage extends React.Component {
   constructor(props) {
     super(props);
@@ -34,50 +47,56 @@ export default class SettingPage extends React.Component {
   handleRegisterNfcHce(event) {
     event.stopPropagation();
 
-/*
-    window.hce.registerCommandCallback(command => {
-      console.log(command);
-      var commandAsBytes = new Uint8Array(command);
-      var commandAsString = window.hce.util.byteArrayToHexString(commandAsBytes);
-      console.log(commandAsString);
-    },
-    error => {
-      console.log(error);
-    });
-
-*/
-    if (window.hce) {
-      window.hce.registerCommandCallback(onCommand);
-      const onCommand = function(command) {
-        var commandAsBytes = new Uint8Array(command);
-        var commandAsString = window.hce.util.byteArrayToHexString(commandAsBytes);
-        console.log(command, commandAsString);
-        alert(JSON.stringify(command, commandAsString));
-
-        // do something with the command
-
-        // send the response
-  //      window.hce.sendReponse(commandResponse);
-      }
-
-      window.hce.registerDeactivatedCallback(reason => {
-        console.log('Deactivated ' + reason);
-        alert('Deactivated ' + reason);
-      });
-
-      ons.notification.toast('Registered NFC HCE', { timeout: 1000, animation: 'fall' });
-    } else {
+    if (!window.cordova || !window.hce || !window.ndef) {
       ons.notification.toast('Could not register NFC HCE', { timeout: 1000, animation: 'fall' });
+      return;
     }
 
+    const records = [
+        window.ndef.textRecord("Register NFC HCE"),
+    ];
+    const message = window.ndef.encodeMessage(records);
+    window.hce.setNdefMessage(message);
+
+    window.hce.registerDeactivatedCallback(reason => {
+      console.log('Deactivated ' + reason);
+    }, reqson => {console.log(reqson)});
+
+    ons.notification.toast('Registered NFC HCE', { timeout: 1000, animation: 'fall' });
   }
 
-    handleScanIsoDep() {
+  handleUnregisterNfcHce(event) {
+    event.stopPropagation();
+
+    if (!window.cordova || !window.hce || !window.ndef) {
+      ons.notification.toast('Could not unregister NFC HCE', { timeout: 1000, animation: 'fall' });
+      return;
+    }
+
+    window.hce.registerCommandCallback(null);
+    window.hce.registerDeactivatedCallback(null);
+
+    ons.notification.toast('Unregistered NFC HCE', { timeout: 1000, animation: 'fall' });
+  }
+
+  handleScanNdef() {
+    if (window.cordova && window.nfc) {
+      window.nfc.addNdefListener(
+        nfcEvent => {
+          window.nfc.removeNdefListener();
+          console.log(JSON.stringify(nfcEvent));
+          alert(JSON.stringify(nfcEvent));
+        },
+        () => {console.log()},
+        (error) => {console.log(error)}
+        );
+    }
+  }
+
+  handleScanIsoDep() {
 //    window.nfc.showSettings(ev => {
 //      console.log(ev);
 //    });
-
-    console.log(window);
 
     this.setState({modalOpened: true}, () => {
       this.scanIsoDep(uri => {
@@ -87,110 +106,86 @@ export default class SettingPage extends React.Component {
   }
 
   scanIsoDep(callback) {
-    if (window.cordova && window.nfc) {
-      console.log("start NFC listener");
-      /*
-      window.nfc.addNdefListener(
-        nfcEvent => {
-          window.nfc.removeNdefListener();
-          console.log(JSON.stringify(nfcEvent));
-return callback("");
-        },
-        success => console.log(success),
-        error => console.log(error)
-      );
-      */
+    if (!window.cordova || !window.nfc) {
+      ons.notification.toast('Could not scan IsoDep', { timeout: 1000, animation: 'fall' });
+    }
 
       window.nfc.addTagDiscoveredListener(
-        function (nfcEvent) {
-          window.nfc.removeTagDiscoveredListener();
+        async function (nfcEvent) {
           console.log(JSON.stringify(nfcEvent));
 
           alert(JSON.stringify(nfcEvent));
 
           const tagId = window.nfc.bytesToHexString(nfcEvent.tag.id);
           console.log('Processing', tagId);
-return callback("");
-/*
+
           try {
-              await nfc.connect('android.nfc.tech.IsoDep', 500);
-              console.log('connected to', tagId);
-              
-              let response = await nfc.transceive(DESFIRE_SELECT_PICC);
-              ensureResponseIs('9000', response);
-              
-              response = await nfc.transceive(DESFIRE_SELECT_AID);
-              ensureResponseIs('9100', response);
-              // 91a0 means the requested application not found
-
-              alert('Selected application AA AA AA');
-
-              // more transcieve commands go here
-              
+            await window.nfc.connect('android.nfc.tech.IsoDep', 500);
+            console.log('connected to', tagId);
+            
+            alert(JSON.stringify(nfcEvent) + tagId);
           } catch (error) {
-              alert(error);
+            alert(error);
           } finally {
-              await nfc.close();
-              console.log('closed');
+            await window.nfc.close();
+            console.log('closed');
+            window.nfc.removeTagDiscoveredListener();
           }
-*/
+      }
+    );
 
-
-
-
-
-
-
-
-
-
-
-
-            let tag = nfcEvent.tag,
-                ndefMessage = tag.ndefMessage;
-
-          //  alert(JSON.stringify(ndefMessage));
-
-            let type = window.nfc.bytesToString(ndefMessage[0].type); 
-            let payload = window.nfc.bytesToString(ndefMessage[0].payload);
-            let uri = type === "U" ? payload.substring(1) : "";
-
-            return callback(uri);
-        },
-        function () { // success callback
-//            alert("Waiting for NDEF tag");
-        },
-        function (error) { // error callback
-            alert("Error adding NDEF listener " + JSON.stringify(error));
-            callback("");
-        }
-      );
-
-    } else {
-      return callback("");
-    }
+    ons.notification.toast('Scan IsoDep', { timeout: 1000, animation: 'fall' });
   }
 
-  handleGetSimInfo() {
-    if (!window.plugins || !window.plugins.sim) {
-      ons.notification.toast('Could not get sim info', { timeout: 1000, animation: 'fall' });
+  handleEnableReaderMode() {
+    if (!window.cordova || !window.nfc || window.ndef) {
+      ons.notification.toast('Could not enable ReaderMode', { timeout: 1000, animation: 'fall' });
       return;
     }
 
-    window.plugins.sim.getSimInfo(
-      result => {
-        console.log(result);
-        alert(JSON.stringify(result));
+    window.nfc.readerMode(
+      window.nfc.FLAG_READER_NFC_A, 
+      nfcTag => {
+        console.log("ReaderMode:\n" + JSON.stringify(nfcTag));
+        alert("ReaderMode:\n" + JSON.stringify(nfcTag));
+        if (nfcTag.techTypes.includes("android.nfc.tech.Ndef")) {
+          const payload = nfcTag.ndefMessage[0].payload;
+          console.log(window.ndef.textHelper.decodePayload(payload));
+          alert(window.ndef.textHelper.decodePayload(payload));
+        }
       },
-      error => {
-        console.log(error);
-        alert(JSON.stringify(error));
-      });
+      error => console.log('NFC reader mode failed', error)
+    );
+
+    ons.notification.toast('Enabled ReaderMode', { timeout: 1000, animation: 'fall' });
   }
 
+  handleDisableReaderMode() {
+    if (!window.cordova || !window.nfc) {
+      ons.notification.toast('Could not disable ReaderMode', { timeout: 1000, animation: 'fall' });
+      return;
+    }
 
+    window.nfc.disableReaderMode(
+        () => {
+          console.log('NFC reader mode disabled');
+          ons.notification.toast('Disabled ReaderMode', { timeout: 1000, animation: 'fall' });
+        },
+        error => {
+          console.log('Error disabling NFC reader mode', error);
+          alert('Error disabling NFC reader mode', error);
+        }
+    )
+  }
 
+  handleShowNfcSettings() {
+    if (!window.cordova || !window.nfc) {
+      ons.notification.toast('Could not Show NFC settings', { timeout: 1000, animation: 'fall' });
+      return;
+    }
 
+    window.nfc.showSettings();
+  }
 
   render() {
     return (
@@ -222,8 +217,8 @@ return callback("");
                     <Switch checked={this.state.debugModeEnabled} onChange={this.handleChangeDebugMode.bind(this)} onClick={ev => ev.stopPropagation()} />
                   </div>
                 </ListItem>,
-                this.state.debugModeEnabled && <ListItem key="debug-list-item-clear" tappable={true} onClick={() => localStorage.clear()}>
-                  <div className="center">localStorageを初期化する</div>
+                this.state.debugModeEnabled && <ListItem key="debug-list-item-clear-local-storage" tappable={true} onClick={() => localStorage.clear()}>
+                  <div className="center">Clear localStorage</div>
                 </ListItem>,
                 this.state.debugModeEnabled && <ListItem key="debug-list-item-charge" tappable={true} onClick={this._onCharge.bind(this)}>
                   <div className="center">チャージ</div>
@@ -231,11 +226,23 @@ return callback("");
                 this.state.debugModeEnabled && <ListItem key="debug-list-item-register-nfc-hce" tappable={true} onClick={this.handleRegisterNfcHce.bind(this)}>
                   <div className="center">Register NFC HCE</div>
                 </ListItem>,
+                this.state.debugModeEnabled && <ListItem key="debug-list-item-unregister-nfc-hce" tappable={true} onClick={this.handleUnregisterNfcHce.bind(this)}>
+                  <div className="center">Unregister NFC HCE</div>
+                </ListItem>,
                 this.state.debugModeEnabled && <ListItem key="debug-list-item-scan-iso-dep" tappable={true} onClick={this.handleScanIsoDep.bind(this)}>
                   <div className="center">Scan IsoDep</div>
                 </ListItem>,
-                this.state.debugModeEnabled && <ListItem key="debug-list-item-get-sim-info" tappable={true} onClick={this.handleGetSimInfo.bind(this)}>
-                  <div className="center">Get sim info</div>
+                this.state.debugModeEnabled && <ListItem key="debug-list-item-scan-ndef" tappable={true} onClick={this.handleScanNdef.bind(this)}>
+                  <div className="center">Scan NDEF</div>
+                </ListItem>,
+                this.state.debugModeEnabled && <ListItem key="debug-list-item-enable-reader-mode" tappable={true} onClick={this.handleEnableReaderMode.bind(this)}>
+                  <div className="center">Enable ReaderMode</div>
+                </ListItem>,
+                this.state.debugModeEnabled && <ListItem key="debug-list-item-disable-reader-mode" tappable={true} onClick={this.handleDisableReaderMode.bind(this)}>
+                  <div className="center">Disable ReaderMode</div>
+                </ListItem>,
+                this.state.debugModeEnabled && <ListItem key="debug-list-item-show-nfc-settings" tappable={true} onClick={this.handleShowNfcSettings.bind(this)}>
+                  <div className="center">Show NFC settings</div>
                 </ListItem>,
               ]}
               renderRow={(row) => row}
@@ -243,7 +250,7 @@ return callback("");
 
           </div>
         </div>
-
+{/*
         <Modal
           isOpen={this.state.modalOpened}
           onDeviceBackButton={() => {
@@ -260,7 +267,7 @@ return callback("");
           <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
           <Button modifier="quiet outline" style={{color: "white"}} onClick={() => this.setState({modalOpened: false})}>キャンセル</Button>
         </Modal>
-
+*/}
       </Page>
     )
   }

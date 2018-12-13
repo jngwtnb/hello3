@@ -63,35 +63,34 @@ export default class SendPage extends React.Component {
   }
 
   scanNfc(callback) {
-    if (window.cordova && window.nfc) {
-      window.nfc.addNdefListener(
-        function (nfcEvent) {
-            window.nfc.removeNdefListener();
-            console.log(JSON.stringify(nfcEvent));
-
-            let tag = nfcEvent.tag,
-                ndefMessage = tag.ndefMessage;
-
-          //  alert(JSON.stringify(ndefMessage));
-
-            let type = window.nfc.bytesToString(ndefMessage[0].type); 
-            let payload = window.nfc.bytesToString(ndefMessage[0].payload);
-            let uri = type === "U" ? payload.substring(1) : "";
-
-            callback(uri);
-        },
-        function () { // success callback
-          //  alert("Waiting for NDEF tag");
-        },
-        function (error) { // error callback
-          alert("Error adding NDEF listener " + JSON.stringify(error));
-          callback("");
-        }
-      );
-
-    } else {
+    if (!window.cordova || !window.nfc) {
       callback("");
     }
+
+    window.nfc.addNdefListener(
+      function (nfcEvent) {
+          window.nfc.removeNdefListener();
+          console.log(JSON.stringify(nfcEvent));
+
+          let tag = nfcEvent.tag,
+              ndefMessage = tag.ndefMessage;
+
+        //  alert(JSON.stringify(ndefMessage));
+
+          let type = window.nfc.bytesToString(ndefMessage[0].type); 
+          let payload = window.nfc.bytesToString(ndefMessage[0].payload);
+          let uri = type === "U" ? payload.substring(1) : "";
+
+          callback(uri);
+      },
+      function () { // success callback
+        //  alert("Waiting for NDEF tag");
+      },
+      function (error) { // error callback
+        alert("Error adding NDEF listener " + JSON.stringify(error));
+        callback("");
+      }
+    );
   }
 
   scanQrCode(callback) {
