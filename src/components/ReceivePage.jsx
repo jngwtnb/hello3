@@ -1,7 +1,7 @@
 import React from 'react';
 import QRCode from "qrcode.react";
 import ons from 'onsenui';
-import {Page, Button, Icon, AlertDialog, Input} from 'react-onsenui';
+import {Page, Button, Icon, AlertDialog, Input, Modal} from 'react-onsenui';
 
 import WalletsContext from '../contexts/wallets';
 
@@ -15,6 +15,7 @@ export default class ReceivePage extends React.Component {
       dialogMessage: "",
       amount: "555",
       uri: "",
+      modalOpened: false,
     };
 
     this.generateUri = this.generateUri.bind(this);
@@ -48,7 +49,8 @@ export default class ReceivePage extends React.Component {
       console.log('Deactivated ' + reason);
     }, reqson => {console.log(reqson)});
 
-    ons.notification.toast('Enable HCE', { timeout: 1000, animation: 'fall' });
+//    ons.notification.toast('Enable HCE', { timeout: 1000, animation: 'fall' });
+    this.setState({modalOpened: true});
   }
 
   render() {
@@ -118,6 +120,23 @@ export default class ReceivePage extends React.Component {
             </Button>
           </div>
         </AlertDialog>
+
+        <Modal
+          isOpen={this.state.modalOpened}
+          onDeviceBackButton={() => {
+            this.setState({modalOpened: false});
+          }}
+          onPreHide={() => {
+            if (window.cordova && window.ndef && window.hce) {
+              window.hce.registerCommandCallback(null);
+              window.hce.registerDeactivatedCallback(null);
+            }
+          }}
+        >
+          <div>NFC 待機中...</div>
+          <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+          <Button modifier="quiet outline" style={{color: "white"}} onClick={() => this.setState({modalOpened: false})}>キャンセル</Button>
+        </Modal>
 
       </Page>
     )

@@ -144,7 +144,7 @@ export default class SettingPage extends React.Component {
     }
 
     window.nfc.readerMode(
-      window.nfc.FLAG_READER_NFC_A, 
+      window.nfc.FLAG_READER_NFC_A,
       nfcTag => {
         console.log("ReaderMode:\n" + JSON.stringify(nfcTag));
         alert("ReaderMode:\n" + JSON.stringify(nfcTag));
