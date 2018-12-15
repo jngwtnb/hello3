@@ -261,7 +261,9 @@ console.log("after FETCH");
                 tab: <Tab key="send-tab" className="send-icon" />
               },
               {
-                content: <ReceivePage title="Receive" key="receive-page" active={activeIndex === 1} tabbar={tabbar} />,
+                content: <WalletsContext.Consumer key="receive-page">{
+                  ([wallets, index]) =><ReceivePage title="Receive" active={activeIndex === 1} tabbar={tabbar} wallet={wallets[index]} />
+                }</WalletsContext.Consumer>,
                 tab: <Tab key="receive-tab" className="receive-icon" />
               },
               {

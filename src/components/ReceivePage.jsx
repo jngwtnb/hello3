@@ -1,7 +1,7 @@
 import React from 'react';
 import QRCode from "qrcode.react";
 import ons from 'onsenui';
-import {Page, Button, Icon, AlertDialog, Input, Modal} from 'react-onsenui';
+import {Page, Button, Icon, Input, Modal} from 'react-onsenui';
 
 import WalletsContext from '../contexts/wallets';
 
@@ -14,11 +14,17 @@ export default class ReceivePage extends React.Component {
       isOpen: false,
       dialogMessage: "",
       amount: "555",
-      uri: "",
+//      uri: "",
       modalOpened: false,
+      wallet: this.props.wallet,
     };
 
     this.generateUri = this.generateUri.bind(this);
+
+//    this.state.uri  = this.props.wallet
+//                    ? this.generateUri(this.state.amount, this.props.wallet.deviceId)
+//                    : "";
+//console.log(this.state.uri);
   }
 
   generateUri(amount, deviceId) {
@@ -40,14 +46,17 @@ export default class ReceivePage extends React.Component {
     }
 
     const records = [
-        window.ndef.uriRecord(this.state.uri),
+        window.ndef.textRecord(this.state.wallet.deviceId),
+        window.ndef.textRecord(this.state.amount),
     ];
     const message = window.ndef.encodeMessage(records);
     window.hce.setNdefMessage(message);
 
     window.hce.registerDeactivatedCallback(reason => {
       console.log('Deactivated ' + reason);
-    }, reqson => {console.log(reqson)});
+//      window.hce.registerCommandCallback(null);
+      this.setState({modalOpened: false});
+    });
 
 //    ons.notification.toast('Enable HCE', { timeout: 1000, animation: 'fall' });
     this.setState({modalOpened: true});
@@ -78,12 +87,15 @@ export default class ReceivePage extends React.Component {
                 </div>
               }
             </WalletsContext.Consumer>
-
+{/*
             <WalletsContext.Consumer>
               {([wallets, index]) => 
                 wallets[index] && <QRCode value={`hello3://iizk.jp/?amount=${this.state.amount}&recipientId=${wallets[index].address}`} renderAs="svg" className="receive-box" />
               }
             </WalletsContext.Consumer>
+            <QRCode value={this.state.uri} renderAs="svg" className="receive-box" />
+*/}
+            <QRCode value={`hello3://iizk.jp/?amount=${this.state.amount}&recipientId=${this.state.wallet.address}`} renderAs="svg" className="receive-box" />
 
             <div className="receive-label">入金予定金額を入力してください:</div>
             <div className="receive-form">
@@ -109,29 +121,12 @@ export default class ReceivePage extends React.Component {
           </div>
         </div>
 
-        <AlertDialog isOpen={this.state.isOpen} onCancel={this.handleCancel.bind(this)} isCancelable={false}>
-          <div className="alert-dialog-title"></div>
-          <div className="alert-dialog-content">
-            {this.state.dialogMessage}
-          </div>
-          <div className="alert-dialog-footer">
-            <Button onClick={this.handleCancel.bind(this)} className="alert-dialog-button">
-              Ok
-            </Button>
-          </div>
-        </AlertDialog>
-
         <Modal
           isOpen={this.state.modalOpened}
           onDeviceBackButton={() => {
             this.setState({modalOpened: false});
           }}
-          onPreHide={() => {
-            if (window.cordova && window.ndef && window.hce) {
-              window.hce.registerCommandCallback(null);
-              window.hce.registerDeactivatedCallback(null);
-            }
-          }}
+          onPreHide={() => {}}
         >
           <div>NFC 待機中...</div>
           <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>

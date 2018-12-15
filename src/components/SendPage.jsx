@@ -67,6 +67,30 @@ export default class SendPage extends React.Component {
       callback("");
     }
 
+    window.nfc.readerMode(
+      window.nfc.FLAG_READER_NFC_A,
+      nfcTag => {
+        console.log("ReaderMode:\n" + JSON.stringify(nfcTag));
+        if (nfcTag.techTypes.includes("android.nfc.tech.Ndef")) {
+          let uri;
+          if (nfcTag.ndefMessage.length === 1) {
+            uri = window.ndef.uriHelper.decodePayload(nfcTag.ndefMessage[0].payload);
+          } else if (nfcTag.ndefMessage.length === 2) {
+            const id = window.ndef.textHelper.decodePayload(nfcTag.ndefMessage[0].payload);
+            const amount = window.ndef.textHelper.decodePayload(nfcTag.ndefMessage[1].payload);
+
+            uri = `hello3://iizk.jp/?amount=${amount}&recipientId=${id}`;
+          }
+console.log(uri);
+
+          window.nfc.disableReaderMode();
+          callback(uri);
+        }
+      },
+      error => console.log('NFC reader mode failed', error)
+    );
+
+/*
     window.nfc.addNdefListener(
       function (nfcEvent) {
           window.nfc.removeNdefListener();
@@ -91,6 +115,7 @@ export default class SendPage extends React.Component {
         callback("");
       }
     );
+    */
   }
 
   scanQrCode(callback) {
