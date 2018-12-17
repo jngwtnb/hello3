@@ -72,15 +72,7 @@ export default class SendPage extends React.Component {
       nfcTag => {
         console.log("ReaderMode:\n" + JSON.stringify(nfcTag));
         if (nfcTag.techTypes.includes("android.nfc.tech.Ndef")) {
-          let uri;
-          if (nfcTag.ndefMessage.length === 1) {
-            uri = window.ndef.uriHelper.decodePayload(nfcTag.ndefMessage[0].payload);
-          } else if (nfcTag.ndefMessage.length === 2) {
-            const id = window.ndef.textHelper.decodePayload(nfcTag.ndefMessage[0].payload);
-            const amount = window.ndef.textHelper.decodePayload(nfcTag.ndefMessage[1].payload);
-
-            uri = `hello3://iizk.jp/?amount=${amount}&recipientId=${id}`;
-          }
+          const uri = window.ndef.uriHelper.decodePayload(nfcTag.ndefMessage[0].payload);
 console.log(uri);
 
           window.nfc.disableReaderMode();

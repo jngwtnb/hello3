@@ -44,17 +44,20 @@ export default class ReceivePage extends React.Component {
       ons.notification.toast('Could not enable HCE', { timeout: 1000, animation: 'fall' });
       return;
     }
-
+console.log(`hello3://iizk.jp/?amount=${this.state.amount}&recipientId=${this.state.wallet.address}`);
     const records = [
-        window.ndef.textRecord(this.state.wallet.deviceId),
-        window.ndef.textRecord(this.state.amount),
+//        window.ndef.textRecord(this.state.wallet.address),
+//        window.ndef.textRecord(this.state.amount),
+        window.ndef.uriRecord(`hello3://iizk.jp/?amount=${this.state.amount}&recipientId=${this.state.wallet.address}`),
     ];
     const message = window.ndef.encodeMessage(records);
     window.hce.setNdefMessage(message);
 
     window.hce.registerDeactivatedCallback(reason => {
       console.log('Deactivated ' + reason);
-//      window.hce.registerCommandCallback(null);
+
+      window.hce.registerCommandCallback(null);
+      window.hce.registerDeactivatedCallback(null);
       this.setState({modalOpened: false});
     });
 
