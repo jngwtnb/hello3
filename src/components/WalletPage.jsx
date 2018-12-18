@@ -13,7 +13,7 @@ export default class WalletPage extends React.Component {
     this.state = {
       selectedIndex: props.initialIndex,
       newWalletLabel: "",
-      newWalletTicker: "dngr",
+      newWalletTicker: "cwr",
       newWalletDeviceId: "",
       openedCreateDialog: false,
       deviceIdRandomizes: false,
@@ -116,12 +116,12 @@ export default class WalletPage extends React.Component {
           isOpen={this.state.openedCreateDialog}
           isCancelable={false}
           onPreShow={() => {
-            if (this.state.setting.debugModeEnabled) {
+//            if (this.state.setting.debugModeEnabled) {
               const wallets = ["suzuki", "ichirooooooh's", "鈴木一郎の財布"];
               this.setState({
                 newWalletLabel: wallets[Math.floor(Math.random() * wallets.length)],
               });
-            }
+//            }
           }}
         >
           <div className="alert-dialog-title"></div>
@@ -142,7 +142,7 @@ export default class WalletPage extends React.Component {
                       value={this.state.newWalletTicker}
                       onChange={(event) => this.setState({newWalletTicker: event.target.value})}
                     >
-                      <option value="dngr">DNGR</option>
+                      <option value="cwr">CWR</option>
                       <option value="btc">BTC</option>
                     </Select></td></tr>
                     {
@@ -177,7 +177,7 @@ export default class WalletPage extends React.Component {
                 this._onCreate(this.state.newWalletLabel, this.state.newWalletTicker, this.state.newWalletDeviceId, this.state.deviceIdRandomizes);
                 this.setState({
                   newWalletLabel: "",
-                  newWalletTicker: "dngr",
+                  newWalletTicker: "cwr",
                   newWalletDeviceId: "",
                   deviceIdRandomizes: false,
                   openedCreateDialog: false,

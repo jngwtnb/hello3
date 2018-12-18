@@ -19,7 +19,7 @@ import WalletPage from './components/WalletPage';
 import TabLikeButton from './components/TabLikeButton';
 import Util from './components/Util';
 
-import dngr from './images/dongri_logo.png';
+import cwr from './images/cowry_logo.jpg';
 
 import WalletsContext from './contexts/wallets';
 import SettingContext from './contexts/setting';
@@ -231,7 +231,7 @@ console.log("after FETCH");
       const wallet = {
         address: "WmjedSdfqYUkNEkKBgsNSrCUEZCYqkqNXd",
         deviceId: "13CZLXCy6MD2L4iwEeeyXTB8pDAmdQyhD5",
-        ticker: "DNGR",
+        ticker: "CWR",
       };
 
       const params = {
@@ -333,9 +333,9 @@ class LoginPage extends React.Component {
 
   render() {
     return (
-      <Page>
+      <Page className="login-page">
         <div className="login-form-container">
-          <img className="login-logo" src={dngr} alt="dngr" />
+          <img className="login-logo" src={cwr} alt="cwr" />
           <div className="login-form">
             <Input modifier="login-input-top" placeholder={'メールアドレス'} type={"text"} />
             <Input modifier="login-input-middle" placeholder={'パスワード'} type={"password"} />

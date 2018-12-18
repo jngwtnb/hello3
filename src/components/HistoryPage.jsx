@@ -149,7 +149,7 @@ export default class HistoryPage extends React.Component {
                     <span className="text">
                       <span className="amount" style={{color: data.price.color}}>{data.price.amount}</span>
                       <br/>
-                      <span className="ticker">DNGR</span>
+                      <span className="ticker">CWR</span>
                     </span>
                   </div>
                   <div className="cause">

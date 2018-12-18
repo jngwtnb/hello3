@@ -7,7 +7,7 @@ export default class BalancePage extends React.Component {
 
     this.state = {
       data: [
-        {icon: "coins-icon", ticker: "DNGR", amount: "968,164,923"},
+        {icon: "coins-icon", ticker: "CWR", amount: "968,164,923"},
         {icon: "coins-icon", ticker: "BTC",  amount: "365,015"},
       ],
     };

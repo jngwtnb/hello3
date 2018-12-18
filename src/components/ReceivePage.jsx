@@ -40,10 +40,16 @@ export default class ReceivePage extends React.Component {
   }
 
   handleNfc() {
+    if (!this.state.wallet) {
+      ons.notification.toast('Wallet is empty', { timeout: 1000, animation: 'fall' });
+      return;
+    }
+
     if (!window.cordova || !window.hce || !window.ndef) {
       ons.notification.toast('Could not enable HCE', { timeout: 1000, animation: 'fall' });
       return;
     }
+
 console.log(`hello3://iizk.jp/?amount=${this.state.amount}&recipientId=${this.state.wallet.address}`);
     const records = [
 //        window.ndef.textRecord(this.state.wallet.address),
@@ -91,14 +97,18 @@ console.log(`hello3://iizk.jp/?amount=${this.state.amount}&recipientId=${this.st
               }
             </WalletsContext.Consumer>
 {/*
+            <QRCode value={this.state.uri} renderAs="svg" className="receive-box" />
+            {
+              this.state.wallet
+              ? <QRCode value={`hello3://iizk.jp/?amount=${this.state.amount}&recipientId=${this.state.wallet.address}`} renderAs="svg" className="receive-box" />
+              : null
+            }
+*/}
             <WalletsContext.Consumer>
               {([wallets, index]) => 
                 wallets[index] && <QRCode value={`hello3://iizk.jp/?amount=${this.state.amount}&recipientId=${wallets[index].address}`} renderAs="svg" className="receive-box" />
               }
             </WalletsContext.Consumer>
-            <QRCode value={this.state.uri} renderAs="svg" className="receive-box" />
-*/}
-            <QRCode value={`hello3://iizk.jp/?amount=${this.state.amount}&recipientId=${this.state.wallet.address}`} renderAs="svg" className="receive-box" />
 
             <div className="receive-label">入金予定金額を入力してください:</div>
             <div className="receive-form">
