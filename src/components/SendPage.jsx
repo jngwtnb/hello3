@@ -65,6 +65,7 @@ export default class SendPage extends React.Component {
   scanNfc(callback) {
     if (!window.cordova || !window.nfc) {
       callback("");
+      return;
     }
 
     window.nfc.readerMode(

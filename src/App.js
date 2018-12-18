@@ -386,7 +386,7 @@ export default class App extends React.Component {
       <Navigator
         initialRoute={{ component: LoginPage, title: "LoginPage" }}
         renderPage={this.renderPage}
-      //   animation={"none"}
+         animation={"fade-md"}
       />
     );
   }
