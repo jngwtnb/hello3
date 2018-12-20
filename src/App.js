@@ -45,6 +45,15 @@ class MainPage extends React.Component {
 
     this.historyRef = React.createRef();
     this.sendRef = React.createRef();
+
+    if (window.nfc) {
+      window.nfc.disableReaderMode();
+    }
+
+    if (window.hce) {
+      window.hce.registerCommandCallback(null);
+      window.hce.registerDeactivatedCallback(null);
+    }
   }
 
   componentWillMount() {

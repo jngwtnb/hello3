@@ -64,19 +64,26 @@
   background: url('../images/deleteActive.png') center/cover no-repeat;
 }
 
-.nfc-icon {
+.nfc-send-icon {
   background: url('../images/2nfc.png') center/contain no-repeat;
 }
 
-.button.nfc-icon:active {
+.nfc-send-icon.button:active,
+.nfc-send-icon.button:disabled,
+.nfc-send-icon.button[disabled] {
   opacity: 1.0;
   background: url('../images/2nfcActive.png') center/contain no-repeat;
 }
 
-.nfc-icon.button:disabled,
-.nfc-icon.button[disabled] {
+.nfc-receive-icon {
+  background: url('../images/3nfcReceive.png') center/contain no-repeat;
+}
+
+.nfc-receive-icon.button:active,
+.nfc-receive-icon.button:disabled,
+.nfc-receive-icon.button[disabled] {
   opacity: 1.0;
-  background: url('../images/2nfcActive.png') center/contain no-repeat;
+  background: url('../images/3nfcReceiveActive.png') center/contain no-repeat;
 }
 
 .qr-icon {

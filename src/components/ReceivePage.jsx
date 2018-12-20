@@ -75,7 +75,7 @@ console.log(`hello3://iizk.jp/?amount=${this.state.amount}&recipientId=${this.st
     return (
       <Page>
         <div className="tab-like-bar">
-          <Button modifier="quiet" className="nfc-icon" disabled={this.state.nfcDisabled} onClick={this.handleNfc.bind(this)} />
+          <Button modifier="quiet" className="nfc-receive-icon" disabled={this.state.nfcDisabled} onClick={this.handleNfc.bind(this)} />
         </div>
 
         <div className="tab-like-bar__content">

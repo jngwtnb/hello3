@@ -276,7 +276,7 @@ console.log(uri);
             <div className="tab-like-bar">
               <Button
                 modifier="quiet"
-                className="nfc-icon"
+                className="nfc-send-icon"
                 disabled={this.state.nfcDisabled}
                 onClick={this.handleScanNfc.bind(this, wallets[index])}
               />
